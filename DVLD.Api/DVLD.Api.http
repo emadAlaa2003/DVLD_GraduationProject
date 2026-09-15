@@ -1,6 +1,6 @@
-@DVLD.Api_HostAddress = http://localhost:5277
+@DVLD.Api_HostAddress = https://localhost:7077
 
-GET {{DVLD.Api_HostAddress}}/weatherforecast/
+GET {{DVLD.Api_HostAddress}}/api/health
 Accept: application/json
 
 ###
