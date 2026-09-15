@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net48</TargetFramework>
+		<TargetFrameworks>net48;net10.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<RootNamespace>DVLD_DataAccess</RootNamespace>
 		<AssemblyName>DVLD_DataAccess</AssemblyName>
@@ -10,7 +10,7 @@
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 	</PropertyGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
 		<Reference Include="System" />
 		<Reference Include="System.Core" />
 		<Reference Include="System.Xml.Linq" />
@@ -41,7 +41,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.6" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.6" />
 	</ItemGroup>
 
 </Project>
