@@ -156,6 +156,15 @@ namespace DVLD_Buisness
         {
             return clsTestAppointmentData.GetTestID(TestAppointmentID);
         }
-
+        public static int GetTestAppointmentIDByRetakeApplicationID(
+    int RetakeTestApplicationID)
+        {
+            return clsTestAppointmentData.GetTestAppointmentIDByRetakeApplicationID(
+                RetakeTestApplicationID);
+        }
+        public static DataTable GetPersonTestAppointments(int PersonID)
+        {
+            return clsTestAppointmentData.GetPersonTestAppointments(PersonID);
+        }
     }
 }

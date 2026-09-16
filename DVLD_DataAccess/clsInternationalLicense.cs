@@ -344,5 +344,49 @@ namespace DVLD_DataAccess
 
             return InternationalLicenseID;
         }
+        public static int GetInternationalLicenseIDByApplicationID(int ApplicationID)
+        {
+            int InternationalLicenseID = -1;
+
+            SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = @"
+        SELECT InternationalLicenseID
+        FROM InternationalLicenses
+        WHERE ApplicationID = @ApplicationID";
+
+            SqlCommand command =
+                new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue(
+                "@ApplicationID", ApplicationID);
+
+            try
+            {
+                connection.Open();
+
+                object result = command.ExecuteScalar();
+
+                if (result != null &&
+                    int.TryParse(
+                        result.ToString(),
+                        out int returnedInternationalLicenseID))
+                {
+                    InternationalLicenseID =
+                        returnedInternationalLicenseID;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return InternationalLicenseID;
+        }
     }
 }

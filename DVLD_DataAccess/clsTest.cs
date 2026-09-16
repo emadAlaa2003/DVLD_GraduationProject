@@ -16,35 +16,35 @@ namespace DVLD_DataAccess
     public class clsTestData
     {
 
-        public static bool GetTestInfoByID(int TestID, 
-            ref int TestAppointmentID,ref bool TestResult, 
-            ref string Notes , ref int CreatedByUserID )
+        public static bool GetTestInfoByID(int TestID,
+            ref int TestAppointmentID, ref bool TestResult,
+            ref string Notes, ref int CreatedByUserID)
+        {
+            bool isFound = false;
+
+            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = "SELECT * FROM Tests WHERE TestID = @TestID";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@TestID", TestID);
+
+            try
             {
-                bool isFound = false;
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
 
-                SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
-
-                string query = "SELECT * FROM Tests WHERE TestID = @TestID";
-
-                SqlCommand command = new SqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@TestID", TestID);
-
-                try
+                if (reader.Read())
                 {
-                    connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
 
-                    if (reader.Read())
-                    {
-
-                        // The record was found
-                        isFound = true;
+                    // The record was found
+                    isFound = true;
 
                     TestAppointmentID = (int)reader["TestAppointmentID"];
                     TestResult = (bool)reader["TestResult"];
-                    if (reader["Notes"] ==DBNull.Value)
-                   
+                    if (reader["Notes"] == DBNull.Value)
+
                         Notes = "";
                     else
                         Notes = (string)reader["Notes"];
@@ -52,32 +52,31 @@ namespace DVLD_DataAccess
                     CreatedByUserID = (int)reader["CreatedByUserID"];
 
                 }
-                    else
-                    {
-                        // The record was not found
-                        isFound = false;
-                    }
-
-                    reader.Close();
-
-
-                }
-                catch (Exception ex)
+                else
                 {
-                    //Console.WriteLine("Error: " + ex.Message);
+                    // The record was not found
                     isFound = false;
                 }
-                finally
-                {
-                    connection.Close();
-                }
 
-                return isFound;
+                reader.Close();
+
+
             }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return isFound;
+        }
 
 
         public static bool GetLastTestByPersonAndTestTypeAndLicenseClass
-            (int PersonID,int LicenseClassID,int TestTypeID, ref int TestID,
+            (int PersonID, int LicenseClassID, int TestTypeID, ref int TestID,
               ref int TestAppointmentID, ref bool TestResult,
               ref string Notes, ref int CreatedByUserID)
         {
@@ -135,10 +134,9 @@ namespace DVLD_DataAccess
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-                isFound = false;
+                throw;
             }
             finally
             {
@@ -150,47 +148,47 @@ namespace DVLD_DataAccess
 
 
         public static DataTable GetAllTests()
+        {
+
+            DataTable dt = new DataTable();
+            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = "SELECT * FROM Tests order by TestID";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            try
             {
+                connection.Open();
 
-                DataTable dt = new DataTable();
-                SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+                SqlDataReader reader = command.ExecuteReader();
 
-                string query = "SELECT * FROM Tests order by TestID";
+                if (reader.HasRows)
 
-                SqlCommand command = new SqlCommand(query, connection);
-
-                try
                 {
-                    connection.Open();
-
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    if (reader.HasRows)
-
-                    {
-                        dt.Load(reader);
-                    }
-
-                    reader.Close();
-
-
+                    dt.Load(reader);
                 }
 
-                catch (Exception ex)
-                {
-                    // Console.WriteLine("Error: " + ex.Message);
-                }
-                finally
-                {
-                    connection.Close();
-                }
+                reader.Close();
 
-                return dt;
 
             }
 
-        public static int AddNewTest( int TestAppointmentID,  bool TestResult,
-             string Notes,  int CreatedByUserID)
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return dt;
+
+        }
+
+        public static int AddNewTest(int TestAppointmentID, bool TestResult,
+             string Notes, int CreatedByUserID)
         {
             int TestID = -1;
 
@@ -216,8 +214,8 @@ namespace DVLD_DataAccess
             else
                 command.Parameters.AddWithValue("@Notes", System.DBNull.Value);
 
-      
-            
+
+
             command.Parameters.AddWithValue("@CreatedByUserID", CreatedByUserID);
 
             try
@@ -232,10 +230,9 @@ namespace DVLD_DataAccess
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-
+                throw;
             }
 
             finally
@@ -318,10 +315,9 @@ namespace DVLD_DataAccess
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-
+                throw;
             }
 
             finally

@@ -397,6 +397,47 @@ namespace DVLD_DataAccess
             ;
 
         }
+        public static int GetDetainIDByReleaseApplicationID(int ReleaseApplicationID)
+        {
+            int DetainID = -1;
 
+            SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = @"
+        SELECT TOP 1 DetainID
+        FROM DetainedLicenses
+        WHERE ReleaseApplicationID = @ReleaseApplicationID
+        ORDER BY DetainID DESC";
+
+            SqlCommand command =
+                new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue(
+                "@ReleaseApplicationID", ReleaseApplicationID);
+
+            try
+            {
+                connection.Open();
+
+                object result = command.ExecuteScalar();
+
+                if (result != null &&
+                    int.TryParse(result.ToString(), out int returnedDetainID))
+                {
+                    DetainID = returnedDetainID;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return DetainID;
+        }
     }
 }

@@ -16,70 +16,69 @@ namespace DVLD_DataAccess
     public class clsTestAppointmentData
     {
 
-        public static bool GetTestAppointmentInfoByID(int TestAppointmentID, 
+        public static bool GetTestAppointmentInfoByID(int TestAppointmentID,
             ref int TestTypeID, ref int LocalDrivingLicenseApplicationID,
-            ref DateTime  AppointmentDate, ref float PaidFees, ref int CreatedByUserID, ref bool IsLocked, ref int RetakeTestApplicationID)
+            ref DateTime AppointmentDate, ref float PaidFees, ref int CreatedByUserID, ref bool IsLocked, ref int RetakeTestApplicationID)
+        {
+            bool isFound = false;
+
+            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = "SELECT * FROM TestAppointments WHERE TestAppointmentID = @TestAppointmentID";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@TestAppointmentID", TestAppointmentID);
+
+            try
             {
-                bool isFound = false;
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
 
-                SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
-
-                string query = "SELECT * FROM TestAppointments WHERE TestAppointmentID = @TestAppointmentID";
-
-                SqlCommand command = new SqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@TestAppointmentID", TestAppointmentID);
-
-                try
+                if (reader.Read())
                 {
-                    connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
 
-                    if (reader.Read())
-                    {
-
-                        // The record was found
-                        isFound = true;
+                    // The record was found
+                    isFound = true;
                     TestTypeID = (int)reader["TestTypeID"];
                     LocalDrivingLicenseApplicationID = (int)reader["LocalDrivingLicenseApplicationID"];
                     AppointmentDate = (DateTime)reader["AppointmentDate"];
                     CreatedByUserID = (int)reader["CreatedByUserID"];
-                    PaidFees = Convert.ToSingle( reader["PaidFees"]);
+                    PaidFees = Convert.ToSingle(reader["PaidFees"]);
                     IsLocked = (bool)reader["IsLocked"];
 
-                    if (reader["RetakeTestApplicationID"] ==DBNull.Value)
-                         RetakeTestApplicationID = -1;
+                    if (reader["RetakeTestApplicationID"] == DBNull.Value)
+                        RetakeTestApplicationID = -1;
                     else
                         RetakeTestApplicationID = (int)reader["RetakeTestApplicationID"];
 
                 }
-                    else
-                    {
-                        // The record was not found
-                        isFound = false;
-                    }
-
-                    reader.Close();
-
-
-                }
-                catch (Exception ex)
+                else
                 {
-                    //Console.WriteLine("Error: " + ex.Message);
+                    // The record was not found
                     isFound = false;
                 }
-                finally
-                {
-                    connection.Close();
-                }
 
-                return isFound;
+                reader.Close();
+
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
             }
 
-        public static bool GetLastTestAppointment( 
-             int LocalDrivingLicenseApplicationID,  int TestTypeID, 
-            ref int TestAppointmentID,ref DateTime AppointmentDate,
-            ref float PaidFees, ref int CreatedByUserID,ref bool IsLocked,ref int RetakeTestApplicationID)
+            return isFound;
+        }
+
+        public static bool GetLastTestAppointment(
+             int LocalDrivingLicenseApplicationID, int TestTypeID,
+            ref int TestAppointmentID, ref DateTime AppointmentDate,
+            ref float PaidFees, ref int CreatedByUserID, ref bool IsLocked, ref int RetakeTestApplicationID)
         {
             bool isFound = false;
 
@@ -131,10 +130,9 @@ namespace DVLD_DataAccess
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-                isFound = false;
+                throw;
             }
             finally
             {
@@ -145,48 +143,48 @@ namespace DVLD_DataAccess
         }
 
         public static DataTable GetAllTestAppointments()
-            {
+        {
 
-                DataTable dt = new DataTable();
-                SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+            DataTable dt = new DataTable();
+            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
 
-                 string query = @"select * from TestAppointments_View
+            string query = @"select * from TestAppointments_View
                                   order by AppointmentDate Desc";
 
 
-                SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command = new SqlCommand(query, connection);
 
-                try
+            try
+            {
+                connection.Open();
+
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.HasRows)
+
                 {
-                    connection.Open();
-
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    if (reader.HasRows)
-
-                    {
-                        dt.Load(reader);
-                    }
-
-                    reader.Close();
-
-
+                    dt.Load(reader);
                 }
 
-                catch (Exception ex)
-                {
-                    // Console.WriteLine("Error: " + ex.Message);
-                }
-                finally
-                {
-                    connection.Close();
-                }
+                reader.Close();
 
-                return dt;
 
             }
 
-        public static DataTable GetApplicationTestAppointmentsPerTestType(int LocalDrivingLicenseApplicationID,int TestTypeID)
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return dt;
+
+        }
+
+        public static DataTable GetApplicationTestAppointmentsPerTestType(int LocalDrivingLicenseApplicationID, int TestTypeID)
         {
 
             DataTable dt = new DataTable();
@@ -223,9 +221,9 @@ namespace DVLD_DataAccess
 
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Console.WriteLine("Error: " + ex.Message);
+                throw;
             }
             finally
             {
@@ -237,8 +235,8 @@ namespace DVLD_DataAccess
         }
 
         public static int AddNewTestAppointment(
-             int TestTypeID,  int LocalDrivingLicenseApplicationID,
-             DateTime AppointmentDate,  float PaidFees,  int CreatedByUserID,int RetakeTestApplicationID)
+             int TestTypeID, int LocalDrivingLicenseApplicationID,
+             DateTime AppointmentDate, float PaidFees, int CreatedByUserID, int RetakeTestApplicationID)
         {
             int TestAppointmentID = -1;
 
@@ -251,7 +249,7 @@ namespace DVLD_DataAccess
 
             SqlCommand command = new SqlCommand(query, connection);
 
-           
+
             command.Parameters.AddWithValue("@TestTypeID", TestTypeID);
             command.Parameters.AddWithValue("@LocalDrivingLicenseApplicationID", LocalDrivingLicenseApplicationID);
             command.Parameters.AddWithValue("@AppointmentDate", AppointmentDate);
@@ -296,9 +294,9 @@ namespace DVLD_DataAccess
 
         }
 
-        public static bool UpdateTestAppointment(int TestAppointmentID,  int TestTypeID,  int LocalDrivingLicenseApplicationID,
-             DateTime AppointmentDate,  float PaidFees, 
-             int CreatedByUserID,bool IsLocked,int RetakeTestApplicationID)
+        public static bool UpdateTestAppointment(int TestAppointmentID, int TestTypeID, int LocalDrivingLicenseApplicationID,
+             DateTime AppointmentDate, float PaidFees,
+             int CreatedByUserID, bool IsLocked, int RetakeTestApplicationID)
         {
 
             int rowsAffected = 0;
@@ -324,8 +322,8 @@ namespace DVLD_DataAccess
             command.Parameters.AddWithValue("@CreatedByUserID", CreatedByUserID);
             command.Parameters.AddWithValue("@IsLocked", IsLocked);
 
-            if (RetakeTestApplicationID==-1)
-            
+            if (RetakeTestApplicationID == -1)
+
                 command.Parameters.AddWithValue("@RetakeTestApplicationID", DBNull.Value);
             else
                 command.Parameters.AddWithValue("@RetakeTestApplicationID", RetakeTestApplicationID);
@@ -366,7 +364,7 @@ namespace DVLD_DataAccess
 
 
             command.Parameters.AddWithValue("@TestAppointmentID", TestAppointmentID);
-            
+
 
             try
             {
@@ -380,10 +378,9 @@ namespace DVLD_DataAccess
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-
+                throw;
             }
 
             finally
@@ -395,6 +392,128 @@ namespace DVLD_DataAccess
             return TestID;
 
         }
+        public static int GetTestAppointmentIDByRetakeApplicationID(
+    int RetakeTestApplicationID)
+        {
+            int TestAppointmentID = -1;
 
+            SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = @"
+        SELECT TOP 1 TestAppointmentID
+        FROM TestAppointments
+        WHERE RetakeTestApplicationID = @RetakeTestApplicationID
+        ORDER BY TestAppointmentID DESC";
+
+            SqlCommand command =
+                new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue(
+                "@RetakeTestApplicationID",
+                RetakeTestApplicationID);
+
+            try
+            {
+                connection.Open();
+
+                object result = command.ExecuteScalar();
+
+                if (result != null &&
+                    int.TryParse(
+                        result.ToString(),
+                        out int returnedTestAppointmentID))
+                {
+                    TestAppointmentID =
+                        returnedTestAppointmentID;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return TestAppointmentID;
+        }
+        public static DataTable GetPersonTestAppointments(int PersonID)
+        {
+            DataTable dt = new DataTable();
+
+            SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = @"
+        SELECT
+            TA.TestAppointmentID,
+            TA.TestTypeID,
+            TT.TestTypeTitle,
+            TA.LocalDrivingLicenseApplicationID,
+            LDLA.ApplicationID,
+            LDLA.LicenseClassID,
+            LC.ClassName,
+            TA.AppointmentDate,
+            TA.PaidFees,
+            TA.IsLocked,
+            TA.RetakeTestApplicationID,
+
+            T.TestID,
+            T.TestResult,
+            T.Notes
+
+        FROM TestAppointments TA
+
+        INNER JOIN LocalDrivingLicenseApplications LDLA
+            ON TA.LocalDrivingLicenseApplicationID =
+               LDLA.LocalDrivingLicenseApplicationID
+
+        INNER JOIN Applications A
+            ON LDLA.ApplicationID = A.ApplicationID
+
+        INNER JOIN TestTypes TT
+            ON TA.TestTypeID = TT.TestTypeID
+
+        INNER JOIN LicenseClasses LC
+            ON LDLA.LicenseClassID = LC.LicenseClassID
+
+        LEFT JOIN Tests T
+            ON TA.TestAppointmentID = T.TestAppointmentID
+
+        WHERE A.ApplicantPersonID = @PersonID
+
+        ORDER BY TA.AppointmentDate DESC";
+
+            SqlCommand command =
+                new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue(
+                "@PersonID", PersonID);
+
+            try
+            {
+                connection.Open();
+
+                SqlDataReader reader =
+                    command.ExecuteReader();
+
+                if (reader.HasRows)
+                    dt.Load(reader);
+
+                reader.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return dt;
+        }
     }
 }

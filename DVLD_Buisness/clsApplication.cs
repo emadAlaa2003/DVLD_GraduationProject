@@ -204,6 +204,13 @@ namespace DVLD_Buisness
         {
             return GetActiveApplicationID(this.ApplicantPersonID, ApplicationTypeID);
         }
-
+        public static DataTable GetPersonApplications(int PersonID)
+        {
+            return clsApplicationData.GetPersonApplications(PersonID);
+        }
+        public static DataTable GetPersonTestAppointments(int PersonID)
+        {
+            return clsTestAppointmentData.GetPersonTestAppointments(PersonID);
+        }
     }
 }

@@ -342,6 +342,9 @@ namespace DVLD_Buisness
 
             return NewLicense;
         }
-
+        public static int GetLicenseIDByApplicationID(int ApplicationID)
+        {
+            return clsLicenseData.GetLicenseIDByApplicationID(ApplicationID);
+        }
     }
 }

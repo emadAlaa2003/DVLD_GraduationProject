@@ -11,110 +11,109 @@ namespace DVLD_DataAccess
 {
     public class clsApplicationData
     {
-      
 
-        public static bool GetApplicationInfoByID(int ApplicationID, 
-            ref int ApplicantPersonID, ref DateTime ApplicationDate, ref int ApplicationTypeID, 
-            ref byte ApplicationStatus,ref DateTime LastStatusDate,
+
+        public static bool GetApplicationInfoByID(int ApplicationID,
+            ref int ApplicantPersonID, ref DateTime ApplicationDate, ref int ApplicationTypeID,
+            ref byte ApplicationStatus, ref DateTime LastStatusDate,
             ref float PaidFees, ref int CreatedByUserID)
+        {
+            bool isFound = false;
+
+            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = "SELECT * FROM Applications WHERE ApplicationID = @ApplicationID";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
+
+            try
             {
-                bool isFound = false;
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
 
-                SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
-
-                string query = "SELECT * FROM Applications WHERE ApplicationID = @ApplicationID";
-
-                SqlCommand command = new SqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
-
-                try
+                if (reader.Read())
                 {
-                    connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
 
-                    if (reader.Read())
-                    {
+                    // The record was found
+                    isFound = true;
 
-                        // The record was found
-                        isFound = true;
-
-                        ApplicantPersonID = (int)reader["ApplicantPersonID"];
-                        ApplicationDate = (DateTime) reader["ApplicationDate"];
-                        ApplicationTypeID = (int)reader["ApplicationTypeID"];
-                        ApplicationStatus = (byte)reader["ApplicationStatus"];
-                        LastStatusDate = (DateTime)reader["LastStatusDate"];
-                        PaidFees = Convert.ToSingle(reader["PaidFees"]);
-                        CreatedByUserID = (int)reader["CreatedByUserID"];
-
-
-                    }
-                    else
-                    {
-                        // The record was not found
-                        isFound = false;
-                    }
-
-                    reader.Close();
+                    ApplicantPersonID = (int)reader["ApplicantPersonID"];
+                    ApplicationDate = (DateTime)reader["ApplicationDate"];
+                    ApplicationTypeID = (int)reader["ApplicationTypeID"];
+                    ApplicationStatus = (byte)reader["ApplicationStatus"];
+                    LastStatusDate = (DateTime)reader["LastStatusDate"];
+                    PaidFees = Convert.ToSingle(reader["PaidFees"]);
+                    CreatedByUserID = (int)reader["CreatedByUserID"];
 
 
                 }
-                catch (Exception ex)
+                else
                 {
-                    //Console.WriteLine("Error: " + ex.Message);
+                    // The record was not found
                     isFound = false;
                 }
-                finally
-                {
-                    connection.Close();
-                }
 
-                return isFound;
+                reader.Close();
+
+
             }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return isFound;
+        }
 
         public static DataTable GetAllApplications()
+        {
+
+            DataTable dt = new DataTable();
+            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = "select * from ApplicationsList_View order by ApplicationDate desc";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            try
             {
+                connection.Open();
 
-                DataTable dt = new DataTable();
-                SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+                SqlDataReader reader = command.ExecuteReader();
 
-                string query = "select * from ApplicationsList_View order by ApplicationDate desc";
+                if (reader.HasRows)
 
-                SqlCommand command = new SqlCommand(query, connection);
-
-                try
                 {
-                    connection.Open();
-
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    if (reader.HasRows)
-
-                    {
-                        dt.Load(reader);
-                    }
-
-                    reader.Close();
-
-
+                    dt.Load(reader);
                 }
 
-                catch (Exception ex)
-                {
-                    // Console.WriteLine("Error: " + ex.Message);
-                }
-                finally
-                {
-                    connection.Close();
-                }
+                reader.Close();
 
-                return dt;
 
             }
 
-        public static int AddNewApplication( int ApplicantPersonID,  DateTime ApplicationDate,  int ApplicationTypeID,
-             byte ApplicationStatus,  DateTime LastStatusDate,
-             float PaidFees,  int CreatedByUserID)
+            catch (Exception ex)
+            {
+                // Console.WriteLine("Error: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return dt;
+
+        }
+
+        public static int AddNewApplication(int ApplicantPersonID, DateTime ApplicationDate, int ApplicationTypeID,
+             byte ApplicationStatus, DateTime LastStatusDate,
+             float PaidFees, int CreatedByUserID)
         {
 
             //this function will return the new person id if succeeded and -1 if not.
@@ -294,14 +293,14 @@ namespace DVLD_DataAccess
 
         public static bool DoesPersonHaveActiveApplication(int PersonID, int ApplicationTypeID)
         {
-           
-           //incase the ActiveApplication ID !=-1 return true.
-            return (GetActiveApplicationID(PersonID, ApplicationTypeID) !=-1);
+
+            //incase the ActiveApplication ID !=-1 return true.
+            return (GetActiveApplicationID(PersonID, ApplicationTypeID) != -1);
         }
 
         public static int GetActiveApplicationID(int PersonID, int ApplicationTypeID)
         {
-            int ActiveApplicationID =-1;
+            int ActiveApplicationID = -1;
 
             SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
 
@@ -316,7 +315,7 @@ namespace DVLD_DataAccess
             {
                 connection.Open();
                 object result = command.ExecuteScalar();
-             
+
 
                 if (result != null && int.TryParse(result.ToString(), out int AppID))
                 {
@@ -336,7 +335,7 @@ namespace DVLD_DataAccess
             return ActiveApplicationID;
         }
 
-        public static int GetActiveApplicationIDForLicenseClass(int PersonID, int ApplicationTypeID,int LicenseClassID)
+        public static int GetActiveApplicationIDForLicenseClass(int PersonID, int ApplicationTypeID, int LicenseClassID)
         {
             int ActiveApplicationID = -1;
 
@@ -379,7 +378,7 @@ namespace DVLD_DataAccess
 
             return ActiveApplicationID;
         }
-      
+
         public static bool UpdateStatus(int ApplicationID, short NewStatus)
         {
 
@@ -397,7 +396,7 @@ namespace DVLD_DataAccess
             command.Parameters.AddWithValue("@ApplicationID", ApplicationID);
             command.Parameters.AddWithValue("@NewStatus", NewStatus);
             command.Parameters.AddWithValue("LastStatusDate", DateTime.Now);
-            
+
 
             try
             {
@@ -418,6 +417,69 @@ namespace DVLD_DataAccess
 
             return (rowsAffected > 0);
         }
+        public static DataTable GetPersonApplications(int PersonID)
+        {
+            DataTable dt = new DataTable();
 
+            SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = @"
+        SELECT
+            A.ApplicationID,
+            A.ApplicantPersonID,
+            A.ApplicationDate,
+            A.ApplicationTypeID,
+            A.ApplicationStatus,
+            A.LastStatusDate,
+            A.PaidFees,
+
+            LDLA.LocalDrivingLicenseApplicationID,
+            LDLA.LicenseClassID,
+            LC.ClassName
+
+        FROM Applications A
+
+        LEFT JOIN LocalDrivingLicenseApplications LDLA
+            ON A.ApplicationID = LDLA.ApplicationID
+
+        LEFT JOIN LicenseClasses LC
+            ON LDLA.LicenseClassID = LC.LicenseClassID
+
+        WHERE A.ApplicantPersonID = @PersonID
+
+        ORDER BY A.ApplicationDate DESC";
+
+            SqlCommand command =
+                new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue(
+                "@PersonID", PersonID);
+
+            try
+            {
+                connection.Open();
+
+                SqlDataReader reader =
+                    command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    dt.Load(reader);
+                }
+
+                reader.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return dt;
+        }
     }
 }

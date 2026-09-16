@@ -473,5 +473,46 @@ namespace DVLD_DataAccess
 
             return (rowsAffected > 0);
         }
+        public static int GetLicenseIDByApplicationID(int ApplicationID)
+        {
+            int LicenseID = -1;
+
+            SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query =
+                @"SELECT LicenseID
+          FROM Licenses
+          WHERE ApplicationID = @ApplicationID";
+
+            SqlCommand command =
+                new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue(
+                "@ApplicationID", ApplicationID);
+
+            try
+            {
+                connection.Open();
+
+                object result = command.ExecuteScalar();
+
+                if (result != null &&
+                    int.TryParse(result.ToString(), out int returnedLicenseID))
+                {
+                    LicenseID = returnedLicenseID;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return LicenseID;
+        }
     }
 }
