@@ -1,12 +1,18 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
 
+// Centralized API error responses
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
+
+// Handle unhandled exceptions centrally.
+// The API will return HTTP 500 instead of exposing technical details.
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -85,11 +85,9 @@ namespace DVLD_DataAccess
 
                 reader.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-                
-                isFound = false;
+                throw;
             }
             finally
             {
@@ -178,10 +176,9 @@ namespace DVLD_DataAccess
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-                isFound = false;
+                throw;
             }
             finally
             {
@@ -387,9 +384,9 @@ namespace DVLD_DataAccess
 
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Console.WriteLine("Error: " + ex.Message);
+                throw;
             }
             finally
             {

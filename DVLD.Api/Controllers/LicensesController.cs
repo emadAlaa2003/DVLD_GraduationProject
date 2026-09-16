@@ -11,13 +11,12 @@ namespace DVLD.Api.Controllers
     public class LicensesController : ControllerBase
     {
         // GET: /api/people/{personId}/licenses
-        // يرجع الرخص المحلية الفعالة فقط الخاصة بالمواطن
+        // يرجع الرخص المحلية الفعالة وغير المنتهية فقط
         [HttpGet]
         public IActionResult GetPersonLicenses(int personId)
         {
             clsPerson person = clsPerson.Find(personId);
 
-            // الشخص غير موجود أصلاً
             if (person == null)
             {
                 return NotFound();
@@ -25,7 +24,6 @@ namespace DVLD.Api.Controllers
 
             clsDriver driver = clsDriver.FindByPersonID(personId);
 
-            // الشخص موجود لكنه ليس Driver بعد
             if (driver == null)
             {
                 return Ok(new List<object>());
@@ -37,20 +35,45 @@ namespace DVLD.Api.Controllers
 
             foreach (DataRow row in licenses.Rows)
             {
-                // الموبايل يعرض الرخص الفعالة فقط
-                if (!Convert.ToBoolean(row["IsActive"]))
+                int licenseID =
+                    Convert.ToInt32(row["LicenseID"]);
+
+                bool isActive =
+                    Convert.ToBoolean(row["IsActive"]);
+
+                DateTime expirationDate =
+                    Convert.ToDateTime(row["ExpirationDate"]);
+
+                // نعرض فقط الرخص الفعالة وغير المنتهية
+                if (!isActive || expirationDate < DateTime.Now)
                 {
                     continue;
                 }
 
+                bool isDetained =
+                    clsDetainedLicense.IsLicenseDetained(licenseID);
+
                 result.Add(new
                 {
-                    LicenseID = Convert.ToInt32(row["LicenseID"]),
-                    ApplicationID = Convert.ToInt32(row["ApplicationID"]),
-                    ClassName = Convert.ToString(row["ClassName"]),
-                    IssueDate = Convert.ToDateTime(row["IssueDate"]),
-                    ExpirationDate = Convert.ToDateTime(row["ExpirationDate"]),
-                    IsActive = Convert.ToBoolean(row["IsActive"])
+                    LicenseID = licenseID,
+
+                    ApplicationID =
+                        Convert.ToInt32(row["ApplicationID"]),
+
+                    ClassName =
+                        Convert.ToString(row["ClassName"]),
+
+                    IssueDate =
+                        Convert.ToDateTime(row["IssueDate"]),
+
+                    ExpirationDate =
+                        expirationDate,
+
+                    IsActive =
+                        isActive,
+
+                    IsDetained =
+                        isDetained
                 });
             }
 

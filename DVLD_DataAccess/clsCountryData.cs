@@ -10,97 +10,54 @@ namespace DVLD_DataAccess
 {
     public class clsCountryData
     {
-        public enum enGendor { Male = 0, Female = 1 };
+        public enum enGendor
+        {
+            Male = 0,
+            Female = 1
+        };
 
-        public static bool GetCountryInfoByID(int ID, ref string CountryName)
-            {
-                bool isFound = false;
-
-                SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
-
-                string query = "SELECT * FROM Countries WHERE CountryID = @CountryID";
-
-                SqlCommand command = new SqlCommand(query, connection);
-
-                command.Parameters.AddWithValue("@CountryID", ID);
-
-                try
-                {
-                    connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-
-                        // The record was found
-                        isFound = true;
-
-                        CountryName = (string)reader["CountryName"];
-
-                    }
-                    else
-                    {
-                        // The record was not found
-                        isFound = false;
-                    }
-
-                    reader.Close();
-
-
-                }
-                catch (Exception ex)
-                {
-                    //Console.WriteLine("Error: " + ex.Message);
-                    isFound = false;
-                }
-                finally
-                {
-                    connection.Close();
-                }
-
-                return isFound;
-            }
-
-        public static bool GetCountryInfoByName(string CountryName, ref int ID)
+        public static bool GetCountryInfoByID(
+            int ID,
+            ref string CountryName)
         {
             bool isFound = false;
 
-            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+            SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString);
 
-            string query = "SELECT * FROM Countries WHERE CountryName = @CountryName";
+            string query =
+                "SELECT * FROM Countries WHERE CountryID = @CountryID";
 
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command =
+                new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@CountryName", CountryName);
+            command.Parameters.AddWithValue(
+                "@CountryID", ID);
 
             try
             {
                 connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
+
+                SqlDataReader reader =
+                    command.ExecuteReader();
 
                 if (reader.Read())
                 {
-
-                    // The record was found
                     isFound = true;
 
-                    ID = (int)reader["CountryID"];
-
+                    CountryName =
+                        (string)reader["CountryName"];
                 }
                 else
                 {
-                    // The record was not found
                     isFound = false;
                 }
 
                 reader.Close();
-
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-                isFound = false;
+                throw;
             }
             finally
             {
@@ -110,36 +67,89 @@ namespace DVLD_DataAccess
             return isFound;
         }
 
-        public static DataTable GetAllCountries()
+
+        public static bool GetCountryInfoByName(
+            string CountryName,
+            ref int ID)
         {
+            bool isFound = false;
 
-            DataTable dt = new DataTable();
-            SqlConnection connection = new SqlConnection(clsDataAccessSettings.ConnectionString);
+            SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString);
 
-            string query = "SELECT * FROM Countries order by CountryName";
+            string query =
+                "SELECT * FROM Countries WHERE CountryName = @CountryName";
 
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command =
+                new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue(
+                "@CountryName", CountryName);
 
             try
             {
                 connection.Open();
 
-                SqlDataReader reader = command.ExecuteReader();
+                SqlDataReader reader =
+                    command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    isFound = true;
+
+                    ID =
+                        (int)reader["CountryID"];
+                }
+                else
+                {
+                    isFound = false;
+                }
+
+                reader.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return isFound;
+        }
+
+
+        public static DataTable GetAllCountries()
+        {
+            DataTable dt = new DataTable();
+
+            SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query =
+                "SELECT * FROM Countries ORDER BY CountryName";
+
+            SqlCommand command =
+                new SqlCommand(query, connection);
+
+            try
+            {
+                connection.Open();
+
+                SqlDataReader reader =
+                    command.ExecuteReader();
 
                 if (reader.HasRows)
-
                 {
                     dt.Load(reader);
                 }
 
                 reader.Close();
-
-
             }
-
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Console.WriteLine("Error: " + ex.Message);
+                throw;
             }
             finally
             {
@@ -147,8 +157,6 @@ namespace DVLD_DataAccess
             }
 
             return dt;
-
         }
-
     }
 }
