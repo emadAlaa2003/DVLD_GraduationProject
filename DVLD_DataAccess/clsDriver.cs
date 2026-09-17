@@ -54,12 +54,11 @@ namespace DVLD_DataAccess
 
 
                 }
-                catch (Exception ex)
-                {
-                    //Console.WriteLine("Error: " + ex.Message);
-                    isFound = false;
-                }
-                finally
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
                 {
                     connection.Close();
                 }
@@ -106,10 +105,9 @@ namespace DVLD_DataAccess
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-                isFound = false;
+                throw;
             }
             finally
             {
@@ -145,12 +143,12 @@ namespace DVLD_DataAccess
 
 
                 }
+            catch (Exception)
+            {
+                throw;
+            }
 
-                catch (Exception ex)
-                {
-                    // Console.WriteLine("Error: " + ex.Message);
-                }
-                finally
+            finally
                 {
                     connection.Close();
                 }

@@ -18,24 +18,46 @@ namespace DVLD.People
     public partial class frmListPeople : Form
     {
 
-      private static DataTable _dtAllPeople = clsPerson.GetAllPeople();
-        
-        //only select the columns that you want to show in the grid
-      private DataTable _dtPeople = _dtAllPeople.DefaultView.ToTable(false, "PersonID", "NationalNo",
-                                                       "FirstName", "SecondName", "ThirdName", "LastName",
-                                                       "GendorCaption", "DateOfBirth", "CountryName",
-                                                       "Phone", "Email");
+        private DataTable _dtAllPeople = new DataTable();
+        private DataTable _dtPeople = new DataTable();
 
         private void _RefreshPeoplList()
         {
-            _dtAllPeople = clsPerson.GetAllPeople();
-            _dtPeople = _dtAllPeople.DefaultView.ToTable(false, "PersonID", "NationalNo",
-                                                       "FirstName", "SecondName", "ThirdName", "LastName",
-                                                       "GendorCaption", "DateOfBirth", "CountryName",
-                                                       "Phone", "Email");
+            try
+            {
+                _dtAllPeople = clsPerson.GetAllPeople();
 
-            dgvPeople.DataSource = _dtPeople;
-            lblRecordsCount.Text = dgvPeople.Rows.Count.ToString();
+                _dtPeople = _dtAllPeople.DefaultView.ToTable(
+                    false,
+                    "PersonID",
+                    "NationalNo",
+                    "FirstName",
+                    "SecondName",
+                    "ThirdName",
+                    "LastName",
+                    "GendorCaption",
+                    "DateOfBirth",
+                    "CountryName",
+                    "Phone",
+                    "Email");
+
+                dgvPeople.DataSource = _dtPeople;
+                lblRecordsCount.Text = dgvPeople.Rows.Count.ToString();
+            }
+            catch (Exception ex)
+            {
+                _dtAllPeople = new DataTable();
+                _dtPeople = new DataTable();
+
+                dgvPeople.DataSource = null;
+                lblRecordsCount.Text = "0";
+
+                MessageBox.Show(
+                    "Could not load people data.\n\n" + ex.Message,
+                    "Database Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         public frmListPeople()
@@ -45,7 +67,8 @@ namespace DVLD.People
 
         private void frmListPeople_Load(object sender, EventArgs e)
         {
-                 
+            _RefreshPeoplList();
+
             dgvPeople.DataSource = _dtPeople;
             cbFilterBy.SelectedIndex = 0;
             lblRecordsCount.Text = dgvPeople.Rows.Count.ToString();
