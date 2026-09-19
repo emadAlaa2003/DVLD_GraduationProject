@@ -25,6 +25,7 @@
 		<Compile Include="clsDetainedLicense.cs" />
 		<Compile Include="clsDriver.cs" />
 		<Compile Include="clsInternationalLicense.cs" />
+		<Compile Include="clsKnowledgeDocumentData.cs" />
 		<Compile Include="clsLicense.cs" />
 		<Compile Include="clsTestAppointment.cs" />
 		<Compile Include="clsTest.cs" />
