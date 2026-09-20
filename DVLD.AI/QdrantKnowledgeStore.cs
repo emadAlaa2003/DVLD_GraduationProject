@@ -1,6 +1,6 @@
 ﻿using Qdrant.Client;
 using Qdrant.Client.Grpc;
-
+using static Qdrant.Client.Grpc.Conditions;
 namespace DVLD.AI
 {
     public static class QdrantKnowledgeStore
@@ -93,6 +93,29 @@ namespace DVLD.AI
 
 
             return results;
+        }
+        public static async Task DeleteDocumentChunksAsync(
+    int documentID)
+        {
+            if (documentID <= 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(documentID));
+            }
+
+
+            QdrantClient client =
+                QdrantConnection.CreateClient();
+
+
+            await client.DeleteAsync(
+                collectionName:
+                    QdrantConnection.KnowledgeCollectionName,
+
+                filter:
+                    Match(
+                        "document_id",
+                        documentID));
         }
     }
 }

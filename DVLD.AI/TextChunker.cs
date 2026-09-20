@@ -112,6 +112,7 @@
                 return string.Empty;
             }
 
+
             text =
                 text.Replace(
                     "\r",

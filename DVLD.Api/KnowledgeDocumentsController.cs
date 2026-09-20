@@ -304,9 +304,11 @@ namespace DVLD.Api.Controllers
                         embedding.Length
                 });
         }
+
+
         [HttpPost("search")]
         public async Task<IActionResult> SearchKnowledge(
-    [FromBody] KnowledgeSearchRequest request)
+            [FromBody] KnowledgeSearchRequest request)
         {
             if (request == null ||
                 string.IsNullOrWhiteSpace(request.Question))
@@ -318,41 +320,118 @@ namespace DVLD.Api.Controllers
             }
 
 
+            // 1. نحول سؤال المستخدم إلى Query Embedding
             float[] queryEmbedding =
                 await OllamaEmbeddingService
-                    .GenerateEmbeddingAsync(
+                    .GenerateQueryEmbeddingAsync(
                         request.Question);
 
 
-            var results =
+            // 2. Qdrant يرجع أفضل 8 مرشحين
+            var searchResults =
                 await QdrantKnowledgeStore.SearchAsync(
                     queryEmbedding,
-                    5);
+                    8);
 
 
-            var response =
-                results.Select(result => new
-                {
-                    Score =
-                        result.Score,
+            // 3. نستبعد نقطة الاختبار
+            // وأي نتيجة لا تحتوي على نص
+            var candidates =
+                searchResults
+                    .Where(result =>
+                        result.Payload.ContainsKey(
+                            "document_id") &&
 
-                    DocumentID =
                         result.Payload["document_id"]
-                            .IntegerValue,
+                            .IntegerValue > 0 &&
 
-                    PageNumber =
-                        result.Payload["page_number"]
-                            .IntegerValue,
+                        result.Payload.ContainsKey(
+                            "text") &&
 
-                    ChunkIndex =
-                        result.Payload["chunk_index"]
-                            .IntegerValue,
+                        !string.IsNullOrWhiteSpace(
+                            result.Payload["text"]
+                                .StringValue))
+                    .ToList();
 
-                    Text =
+
+            if (candidates.Count == 0)
+            {
+                return Ok(new
+                {
+                    Question =
+                        request.Question,
+
+                    Results =
+                        new List<object>()
+                });
+            }
+
+
+            // 4. نرسل نصوص الـChunks
+            // إلى الـCross-Encoder Reranker
+            List<string> texts =
+                candidates
+                    .Select(result =>
                         result.Payload["text"]
-                            .StringValue
-                })
-                .ToList();
+                            .StringValue)
+                    .ToList();
+
+
+            // 5. الـReranker يفحص:
+            // السؤال + كل Chunk
+            // ويرتبهم حسب مدى ارتباطهم الحقيقي
+            List<RerankerResult> rerankedResults =
+                await LocalRerankerService.RerankAsync(
+                    request.Question,
+                    texts);
+
+
+            // 6. نرجع أفضل 5 نتائج فقط
+            var response =
+                rerankedResults
+                    .Where(result =>
+                        result.Index >= 0 &&
+                        result.Index <
+                            candidates.Count)
+
+                    .Take(5)
+
+                    .Select(result =>
+                    {
+                        var candidate =
+                            candidates[
+                                result.Index];
+
+                        return new
+                        {
+                            RerankerScore =
+                                result.Score,
+
+                            SemanticScore =
+                                candidate.Score,
+
+                            DocumentID =
+                                candidate.Payload[
+                                    "document_id"]
+                                    .IntegerValue,
+
+                            PageNumber =
+                                candidate.Payload[
+                                    "page_number"]
+                                    .IntegerValue,
+
+                            ChunkIndex =
+                                candidate.Payload[
+                                    "chunk_index"]
+                                    .IntegerValue,
+
+                            Text =
+                                candidate.Payload[
+                                    "text"]
+                                    .StringValue
+                        };
+                    })
+                    .ToList();
 
 
             return Ok(new
@@ -363,6 +442,118 @@ namespace DVLD.Api.Controllers
                 Results =
                     response
             });
+        }
+        [HttpPost("{documentID:int}/reprocess")]
+        public async Task<IActionResult> ReprocessDocument(
+    int documentID)
+        {
+            if (documentID <= 0)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid document ID."
+                });
+            }
+
+
+            string filePath =
+                clsKnowledgeDocument
+                    .GetFilePathByDocumentID(
+                        documentID);
+
+
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return NotFound(new
+                {
+                    message = "Document was not found."
+                });
+            }
+
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound(new
+                {
+                    message = "The PDF file does not exist on disk."
+                });
+            }
+
+
+            try
+            {
+                // استخراج النص من ملف الـ PDF الموجود
+                PdfExtractionResult extractionResult =
+                    PdfTextExtractor.Extract(
+                        filePath);
+
+
+                // إنشاء Chunks جديدة بالحجم الحالي
+                // حالياً 700 / 120
+                List<TextChunk> chunks =
+                    TextChunker.CreateChunks(
+                        extractionResult);
+
+
+                if (chunks.Count == 0)
+                {
+                    throw new InvalidOperationException(
+                        "No text chunks were created.");
+                }
+
+
+                // تحديث حالة الوثيقة
+                clsKnowledgeDocument
+                    .UpdateAfterTextExtraction(
+                        documentID,
+                        extractionResult.TotalPages);
+
+
+                // حذف الـ Vectors القديمة لهذه الوثيقة فقط
+                await QdrantKnowledgeStore
+                    .DeleteDocumentChunksAsync(
+                        documentID);
+
+
+                // إنشاء Embeddings جديدة
+                // وحفظ الـ Chunks الجديدة في Qdrant
+                await KnowledgeDocumentVectorProcessor
+                    .ProcessAsync(
+                        documentID,
+                        chunks);
+
+
+                // تحديث SQL بعد النجاح
+                clsKnowledgeDocument
+                    .MarkProcessingCompleted(
+                        documentID,
+                        chunks.Count);
+
+
+                return Ok(new
+                {
+                    DocumentID =
+                        documentID,
+
+                    TotalPages =
+                        extractionResult.TotalPages,
+
+                    ChunkCount =
+                        chunks.Count,
+
+                    ProcessingStatus =
+                        "Ready"
+                });
+            }
+            catch (Exception ex)
+            {
+                clsKnowledgeDocument
+                    .MarkProcessingFailed(
+                        documentID,
+                        ex.Message);
+
+                throw;
+            }
         }
     }
 }

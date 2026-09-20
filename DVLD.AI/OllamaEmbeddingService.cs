@@ -11,9 +11,41 @@ namespace DVLD.AI
         private const string ModelName =
             "qwen3-embedding:0.6b";
 
+        private const string RetrievalInstruction =
+            "Given a web search query, retrieve relevant passages that answer the query";
 
+
+        // تستخدم للـChunks / Documents
         public static async Task<float[]> GenerateEmbeddingAsync(
             string text)
+        {
+            return await GenerateEmbeddingInternalAsync(text);
+        }
+
+
+        // تستخدم للأسئلة فقط
+        public static async Task<float[]> GenerateQueryEmbeddingAsync(
+            string question)
+        {
+            if (string.IsNullOrWhiteSpace(question))
+            {
+                throw new ArgumentException(
+                    "Question is required.",
+                    nameof(question));
+            }
+
+            string instructedQuery =
+                $"Instruct: {RetrievalInstruction}\n" +
+                $"Query: {question}";
+
+            return await GenerateEmbeddingInternalAsync(
+                instructedQuery);
+        }
+
+
+        private static async Task<float[]>
+            GenerateEmbeddingInternalAsync(
+                string text)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -30,8 +62,11 @@ namespace DVLD.AI
             OllamaEmbedRequest request =
                 new OllamaEmbedRequest
                 {
-                    Model = ModelName,
-                    Input = text
+                    Model =
+                        ModelName,
+
+                    Input =
+                        text
                 };
 
 

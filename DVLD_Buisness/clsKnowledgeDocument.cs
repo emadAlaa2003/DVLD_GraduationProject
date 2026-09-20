@@ -54,5 +54,12 @@ namespace DVLD_Buisness
                 DocumentID,
                 ChunkCount);
         }
+        public static string GetFilePathByDocumentID(
+    int DocumentID)
+        {
+            return clsKnowledgeDocumentData
+                .GetFilePathByDocumentID(
+                    DocumentID);
+        }
     }
 }

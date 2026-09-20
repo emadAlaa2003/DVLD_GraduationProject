@@ -234,7 +234,7 @@ namespace DVLD_DataAccess
     int ChunkCount)
         {
             using (SqlConnection connection =
-                   new SqlConnection(clsDataAccessSettings.ConnectionString))
+                new SqlConnection(clsDataAccessSettings.ConnectionString))
             {
                 string query = @"
             UPDATE KnowledgeDocuments
@@ -267,5 +267,49 @@ namespace DVLD_DataAccess
                 }
             }
         }
+        public static string GetFilePathByDocumentID(
+    int DocumentID)
+        {
+            using (SqlConnection connection =
+                   new SqlConnection(
+                       clsDataAccessSettings.ConnectionString))
+            {
+                string query = @"
+            SELECT FilePath
+            FROM KnowledgeDocuments
+            WHERE DocumentID = @DocumentID
+              AND IsActive = 1;";
+
+
+                using (SqlCommand command =
+                       new SqlCommand(
+                           query,
+                           connection))
+                {
+                    command.Parameters.AddWithValue(
+                        "@DocumentID",
+                        DocumentID);
+
+
+                    connection.Open();
+
+
+                    object result =
+                        command.ExecuteScalar();
+
+
+                    if (result == null ||
+                        result == DBNull.Value)
+                    {
+                        return null;
+                    }
+
+
+                    return result.ToString();
+                }
+            }
+        }
+
     }
+
 }
