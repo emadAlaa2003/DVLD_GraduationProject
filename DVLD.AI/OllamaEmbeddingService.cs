@@ -15,15 +15,21 @@ namespace DVLD.AI
             "Given a web search query, retrieve relevant passages that answer the query";
 
 
-        // تستخدم للـChunks / Documents
+        // تستخدم للـ Chunks / Documents
+        // هنا نترك الموديل في الذاكرة لأننا قد نعالج
+        // عدداً كبيراً من الـ Chunks وراء بعض.
         public static async Task<float[]> GenerateEmbeddingAsync(
             string text)
         {
-            return await GenerateEmbeddingInternalAsync(text);
+            return await GenerateEmbeddingInternalAsync(
+                text,
+                unloadAfterRequest: false);
         }
 
 
-        // تستخدم للأسئلة فقط
+        // تستخدم للأسئلة فقط.
+        // بعد إنشاء Query Embedding نفرغ موديل الـ Embedding
+        // من الذاكرة حتى نتيح مساحة لموديل الـ Chat.
         public static async Task<float[]> GenerateQueryEmbeddingAsync(
             string question)
         {
@@ -39,13 +45,15 @@ namespace DVLD.AI
                 $"Query: {question}";
 
             return await GenerateEmbeddingInternalAsync(
-                instructedQuery);
+                instructedQuery,
+                unloadAfterRequest: true);
         }
 
 
         private static async Task<float[]>
             GenerateEmbeddingInternalAsync(
-                string text)
+                string text,
+                bool unloadAfterRequest)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -66,7 +74,15 @@ namespace DVLD.AI
                         ModelName,
 
                     Input =
-                        text
+                        text,
+
+                    // 0 = Ollama يفرغ الموديل من الذاكرة
+                    // مباشرة بعد انتهاء الطلب.
+                    // null = نستخدم السلوك الطبيعي لـ Ollama.
+                    KeepAlive =
+                        unloadAfterRequest
+                            ? 0
+                            : null
                 };
 
 
@@ -103,9 +119,17 @@ namespace DVLD.AI
             public string Model { get; set; } =
                 string.Empty;
 
+
             [JsonPropertyName("input")]
             public string Input { get; set; } =
                 string.Empty;
+
+
+            [JsonPropertyName("keep_alive")]
+            [JsonIgnore(
+                Condition =
+                    JsonIgnoreCondition.WhenWritingNull)]
+            public int? KeepAlive { get; set; }
         }
 
 

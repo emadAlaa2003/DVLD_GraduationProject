@@ -443,6 +443,183 @@ namespace DVLD.Api.Controllers
                     response
             });
         }
+
+        [HttpPost("chat")]
+        public async Task<IActionResult> Chat(
+            [FromBody] KnowledgeSearchRequest request)
+        {
+            if (request == null ||
+                string.IsNullOrWhiteSpace(request.Question))
+            {
+                return BadRequest(new
+                {
+                    message = "Question is required."
+                });
+            }
+
+
+            float[] queryEmbedding =
+                await OllamaEmbeddingService
+                    .GenerateQueryEmbeddingAsync(
+                        request.Question);
+
+
+            var searchResults =
+                await QdrantKnowledgeStore.SearchAsync(
+                    queryEmbedding,
+                    8);
+
+
+            var candidates =
+                searchResults
+                    .Where(result =>
+                        result.Payload.ContainsKey(
+                            "document_id") &&
+
+                        result.Payload["document_id"]
+                            .IntegerValue > 0 &&
+
+                        result.Payload.ContainsKey(
+                            "text") &&
+
+                        !string.IsNullOrWhiteSpace(
+                            result.Payload["text"]
+                                .StringValue))
+                    .ToList();
+
+
+            if (candidates.Count == 0)
+            {
+                return Ok(new
+                {
+                    Question =
+                        request.Question,
+
+                    Answer =
+                        "لم أجد معلومات كافية في المصادر للإجابة عن هذا السؤال.",
+
+                    Sources =
+                        Array.Empty<object>()
+                });
+            }
+
+
+            List<string> texts =
+                candidates
+                    .Select(result =>
+                        result.Payload["text"]
+                            .StringValue)
+                    .ToList();
+
+
+            List<RerankerResult> rerankedResults =
+                await LocalRerankerService.RerankAsync(
+                    request.Question,
+                    texts);
+
+
+            var bestResults =
+                rerankedResults
+                    .Where(result =>
+                        result.Index >= 0 &&
+                        result.Index < candidates.Count)
+                    .Take(5)
+                    .Select(result => new
+                    {
+                        Candidate =
+                            candidates[result.Index],
+
+                        RerankerScore =
+                            result.Score
+                    })
+                    .ToList();
+
+
+            if (bestResults.Count == 0)
+            {
+                return Ok(new
+                {
+                    Question =
+                        request.Question,
+
+                    Answer =
+                        "لم أجد معلومات كافية في المصادر للإجابة عن هذا السؤال.",
+
+                    Sources =
+                        Array.Empty<object>()
+                });
+            }
+
+
+            List<string> contextChunks =
+                bestResults
+                    .Select(item =>
+                    {
+                        long pageNumber =
+                            item.Candidate.Payload[
+                                "page_number"]
+                                .IntegerValue;
+
+                        string chunkText =
+                            item.Candidate.Payload[
+                                "text"]
+                                .StringValue;
+
+                        return
+                            $"[الصفحة {pageNumber}]\n{chunkText}";
+                    })
+                    .ToList();
+
+
+            string answer =
+                await OllamaChatService
+                    .GenerateAnswerAsync(
+                        request.Question,
+                        contextChunks);
+
+
+            var sources =
+                bestResults
+                    .Select(item => new
+                    {
+                        DocumentID =
+                            item.Candidate.Payload[
+                                "document_id"]
+                                .IntegerValue,
+
+                        PageNumber =
+                            item.Candidate.Payload[
+                                "page_number"]
+                                .IntegerValue,
+
+                        ChunkIndex =
+                            item.Candidate.Payload[
+                                "chunk_index"]
+                                .IntegerValue,
+
+                        SemanticScore =
+                            item.Candidate.Score,
+
+                        RerankerScore =
+                            item.RerankerScore
+                    })
+                    .ToList();
+
+
+            return Ok(new
+            {
+                Question =
+                    request.Question,
+
+                Answer =
+                    answer,
+
+                Sources =
+                    sources
+            });
+        }
+
+
         [HttpPost("{documentID:int}/reprocess")]
         public async Task<IActionResult> ReprocessDocument(
     int documentID)
@@ -489,7 +666,7 @@ namespace DVLD.Api.Controllers
 
 
                 // إنشاء Chunks جديدة بالحجم الحالي
-                // حالياً 700 / 120
+                // حالياً 1200 / 200
                 List<TextChunk> chunks =
                     TextChunker.CreateChunks(
                         extractionResult);
