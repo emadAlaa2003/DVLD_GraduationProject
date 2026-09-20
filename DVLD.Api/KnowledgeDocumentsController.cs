@@ -732,5 +732,405 @@ namespace DVLD.Api.Controllers
                 throw;
             }
         }
+        // =====================================================
+        // Diagnostic: عرض النص المستخرج من صفحة محددة
+        // لا يحفظ ولا يعدل أي بيانات
+        // =====================================================
+
+        [HttpGet("{documentID:int}/page-text/{pageNumber:int}")]
+        public IActionResult GetExtractedPageText(
+            int documentID,
+            int pageNumber)
+        {
+            if (documentID <= 0)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid document ID."
+                });
+            }
+
+
+            if (pageNumber <= 0)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid page number."
+                });
+            }
+
+
+            string filePath =
+                clsKnowledgeDocument
+                    .GetFilePathByDocumentID(
+                        documentID);
+
+
+            if (string.IsNullOrWhiteSpace(
+                    filePath))
+            {
+                return NotFound(new
+                {
+                    message = "Document was not found."
+                });
+            }
+
+
+            if (!System.IO.File.Exists(
+                    filePath))
+            {
+                return NotFound(new
+                {
+                    message =
+                        "The PDF file does not exist on disk."
+                });
+            }
+
+
+            PdfExtractionResult extractionResult =
+                PdfTextExtractor.Extract(
+                    filePath);
+
+
+            if (pageNumber >
+                extractionResult.TotalPages)
+            {
+                return BadRequest(new
+                {
+                    message =
+                        $"Page number must be between 1 and " +
+                        $"{extractionResult.TotalPages}."
+                });
+            }
+
+
+            PdfPageText page =
+                extractionResult.Pages
+                    .FirstOrDefault(
+                        item =>
+                            item.PageNumber ==
+                            pageNumber);
+
+
+            if (page == null)
+            {
+                return NotFound(new
+                {
+                    message =
+                        "Page text was not found."
+                });
+            }
+
+
+            return Ok(new
+            {
+                DocumentID =
+                    documentID,
+
+                PageNumber =
+                    page.PageNumber,
+
+                TotalPages =
+                    extractionResult.TotalPages,
+
+                TextLength =
+                    page.Text?.Length ?? 0,
+
+                Text =
+                    page.Text
+            });
+        }
+        // =====================================================
+        // Diagnostic: فحص ترتيب كلمات PDF ومواقعها
+        // لا يحفظ ولا يعدل أي بيانات
+        // =====================================================
+
+        [HttpGet("{documentID:int}/layout-diagnostic/{pageNumber:int}")]
+        public IActionResult GetLayoutDiagnostic(
+            int documentID,
+            int pageNumber)
+        {
+            if (documentID <= 0)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid document ID."
+                });
+            }
+
+
+            if (pageNumber <= 0)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid page number."
+                });
+            }
+
+
+            string filePath =
+                clsKnowledgeDocument
+                    .GetFilePathByDocumentID(
+                        documentID);
+
+
+            if (string.IsNullOrWhiteSpace(
+                    filePath))
+            {
+                return NotFound(new
+                {
+                    message = "Document was not found."
+                });
+            }
+
+
+            if (!System.IO.File.Exists(
+                    filePath))
+            {
+                return NotFound(new
+                {
+                    message =
+                        "The PDF file does not exist on disk."
+                });
+            }
+
+
+            PdfLayoutDiagnosticResult result =
+                PdfLayoutDiagnostic.AnalyzePage(
+                    filePath,
+                    pageNumber,
+                    maximumWords: 250);
+
+
+            return Ok(result);
+        }
+        // =====================================================
+        // Diagnostic: اختبار إعادة بناء RTL بدون تعديل النظام
+        // =====================================================
+
+        [HttpGet("{documentID:int}/rtl-reconstructed/{pageNumber:int}")]
+        public IActionResult GetRtlReconstructedText(
+            int documentID,
+            int pageNumber)
+        {
+            if (documentID <= 0 ||
+                pageNumber <= 0)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid document or page number."
+                });
+            }
+
+
+            string filePath =
+                clsKnowledgeDocument
+                    .GetFilePathByDocumentID(
+                        documentID);
+
+
+            if (string.IsNullOrWhiteSpace(filePath) ||
+                !System.IO.File.Exists(filePath))
+            {
+                return NotFound(new
+                {
+                    message = "Document was not found."
+                });
+            }
+
+
+            using var document =
+                UglyToad.PdfPig.PdfDocument.Open(
+                    filePath);
+
+
+            if (pageNumber >
+                document.NumberOfPages)
+            {
+                return BadRequest(new
+                {
+                    message =
+                        $"Page number must be between 1 and {document.NumberOfPages}."
+                });
+            }
+
+
+            var page =
+                document.GetPage(
+                    pageNumber);
+
+
+            string reconstructedText =
+                PdfRtlTextReconstructor
+                    .Reconstruct(
+                        page);
+
+
+            return Ok(new
+            {
+                DocumentID =
+                    documentID,
+
+                PageNumber =
+                    pageNumber,
+
+                TextLength =
+                    reconstructedText.Length,
+
+                Text =
+                    reconstructedText
+            });
+        }
+        // =====================================================
+        // Diagnostic: مقارنة جودة الاستخراج العادي مع RTL
+        // لا يحفظ ولا يعدل أي بيانات
+        // =====================================================
+
+        [HttpGet("{documentID:int}/compare-extraction/{pageNumber:int}")]
+        public IActionResult CompareExtraction(
+            int documentID,
+            int pageNumber)
+        {
+            if (documentID <= 0 ||
+                pageNumber <= 0)
+            {
+                return BadRequest(new
+                {
+                    message =
+                        "Invalid document or page number."
+                });
+            }
+
+
+            string filePath =
+                clsKnowledgeDocument
+                    .GetFilePathByDocumentID(
+                        documentID);
+
+
+            if (string.IsNullOrWhiteSpace(filePath) ||
+                !System.IO.File.Exists(filePath))
+            {
+                return NotFound(new
+                {
+                    message = "Document was not found."
+                });
+            }
+
+
+            // =============================================
+            // الاستخراج الحالي
+            // =============================================
+
+            PdfExtractionResult normalExtraction =
+                PdfTextExtractor.Extract(
+                    filePath);
+
+
+            if (pageNumber >
+                normalExtraction.TotalPages)
+            {
+                return BadRequest(new
+                {
+                    message =
+                        $"Page number must be between 1 and " +
+                        $"{normalExtraction.TotalPages}."
+                });
+            }
+
+
+            PdfPageText normalPage =
+                normalExtraction.Pages
+                    .FirstOrDefault(
+                        page =>
+                            page.PageNumber ==
+                            pageNumber);
+
+
+            string normalText =
+                normalPage?.Text ??
+                string.Empty;
+
+
+            // =============================================
+            // إعادة بناء RTL
+            // =============================================
+
+            using var document =
+                UglyToad.PdfPig.PdfDocument.Open(
+                    filePath);
+
+
+            var pdfPage =
+                document.GetPage(
+                    pageNumber);
+
+
+            string rtlText =
+                PdfRtlTextReconstructor
+                    .Reconstruct(
+                        pdfPage);
+
+
+            // =============================================
+            // تقييم الطريقتين
+            // =============================================
+
+            PdfTextQualityResult normalQuality =
+                PdfTextQualityEvaluator
+                    .Evaluate(
+                        normalText);
+
+
+            PdfTextQualityResult rtlQuality =
+                PdfTextQualityEvaluator
+                    .Evaluate(
+                        rtlText);
+
+
+            string recommendedMethod =
+                rtlQuality.Score >
+                normalQuality.Score
+                    ? "RTL"
+                    : "Normal";
+
+
+            return Ok(new
+            {
+                DocumentID =
+                    documentID,
+
+                PageNumber =
+                    pageNumber,
+
+                RecommendedMethod =
+                    recommendedMethod,
+
+                Normal = new
+                {
+                    Quality =
+                        normalQuality,
+
+                    TextLength =
+                        normalText.Length,
+
+                    Text =
+                        normalText
+                },
+
+                RTL = new
+                {
+                    Quality =
+                        rtlQuality,
+
+                    TextLength =
+                        rtlText.Length,
+
+                    Text =
+                        rtlText
+                }
+            });
+        }
     }
+
 }

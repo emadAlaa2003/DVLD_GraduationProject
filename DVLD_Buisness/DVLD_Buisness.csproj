@@ -27,6 +27,7 @@
 		<Compile Include="clsInternationalLicense.cs" />
 		<Compile Include="clsKnowledgeDocument.cs" />
 		<Compile Include="clsLicense.cs" />
+		<Compile Include="clsQuestionBank.cs" />
 		<Compile Include="clsTestAppointment.cs" />
 		<Compile Include="clsTest.cs" />
 		<Compile Include="clsTestType.cs" />
