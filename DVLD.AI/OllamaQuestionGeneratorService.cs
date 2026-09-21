@@ -28,6 +28,11 @@ namespace DVLD.AI
 
         public string Explanation { get; set; } =
             string.Empty;
+
+        // نص قصير من المصدر نفسه، منسوخ حرفياً،
+        // يثبت المعلومة التي بُني عليها السؤال.
+        public string SourceEvidence { get; set; } =
+            string.Empty;
     }
 
 
@@ -83,14 +88,21 @@ namespace DVLD.AI
 
                 --- نهاية المصدر ---
 
-                أنشئ الآن سؤالاً امتحانياً واحداً فقط
-                اعتماداً على معلومة واضحة ومباشرة من المصدر.
+                أنشئ سؤالاً امتحانياً واحداً فقط من حقيقة أو قاعدة
+                أو إجراء أو رقم أو تعليمات واضحة ومحددة في المصدر.
 
-                لا تشرح المطلوب.
-                لا تكرر التعليمات.
-                لا تذكر نوع السؤال داخل نص السؤال.
-                لا تنشئ سؤالاً عن طريقة إنشاء الأسئلة.
-                أرجع JSON فقط.
+                مهم جداً:
+                - SourceEvidence يجب أن يكون مقتطفاً قصيراً من النص
+                  المصدر نفسه، منسوخاً حرفياً دون إعادة صياغة.
+                - SourceEvidence يجب أن يحتوي على 5 كلمات عربية على الأقل،
+                  وأن يكون عبارة مكتملة تحمل المعلومة نفسها، وليس مجرد
+                  عنوان قسم أو عنوان فرعي أو نصاً مقطوعاً.
+                - لا تنشئ سؤالاً عاماً إذا كان المصدر يحتوي معلومة
+                  أكثر تحديداً.
+                - لا تستخدم معرفة خارج المصدر.
+                - لا تذكر "النص" أو "المصدر" داخل السؤال.
+                - لا تكرر التعليمات.
+                - أرجع JSON فقط.
                 """;
 
 
@@ -122,8 +134,8 @@ namespace DVLD.AI
                 options = new
                 {
                     num_ctx = 2048,
-                    num_predict = 600,
-                    temperature = 0.3
+                    num_predict = 650,
+                    temperature = 0.2
                 }
             };
 
@@ -187,33 +199,34 @@ namespace DVLD.AI
             {
                 return
                     """
-                    أنت مولد أسئلة لامتحان قيادة باللغة العربية.
+                    أنت مولد أسئلة احترافي لامتحان قيادة باللغة العربية.
 
-                    مهمتك إنشاء سؤال صح أو خطأ واحد فقط
-                    من النص المصدر الذي سيرسله المستخدم.
+                    أنشئ سؤال صح أو خطأ واحداً فقط من النص المصدر.
 
-                    شروط إلزامية:
+                    الشروط الإلزامية:
 
-                    1. السؤال يجب أن يكون باللغة العربية.
-                    2. السؤال يجب أن يعتمد على معلومة موجودة
-                       بوضوح في النص المصدر.
-                    3. لا تستخدم معلومات من ذاكرتك أو من خارج المصدر.
-                    4. لا تكرر أي تعليمات موجودة في الطلب.
-                    5. لا تكتب:
-                       "نوع السؤال المطلوب"
-                       أو "TrueFalse"
-                       أو "MultipleChoice"
-                       داخل QuestionText.
-                    6. QuestionText يجب أن يكون عبارة أو سؤالاً
-                       معرفياً حقيقياً عن السلامة المرورية.
-                    7. OptionA يجب أن تكون "صح".
-                    8. OptionB يجب أن تكون "خطأ".
-                    9. OptionC و OptionD يجب أن تكونا فارغتين.
-                    10. CorrectOption يجب أن تكون A أو B فقط.
-                    11. Explanation يجب أن يشرح سبب الإجابة
-                        اعتماداً على المصدر فقط.
-                    12. لا تكتب Markdown.
-                    13. أرجع JSON فقط.
+                    1. استخدم فقط معلومة واضحة ومباشرة في المصدر.
+                    2. اجعل العبارة محددة وليست عامة أو فضفاضة.
+                    3. QuestionText يجب أن يكون عبارة تقريرية يمكن الحكم
+                       عليها بصح أو خطأ، وليس سؤالاً استفهامياً.
+                    4. لا تبدأ QuestionText بكلمات مثل:
+                       هل، ما، ماذا، كيف، لماذا، متى، أين، من.
+                    5. لا تنه QuestionText بعلامة استفهام.
+                    6. يجب أن تكون العربية طبيعية وسليمة.
+                    7. لا تستخدم معرفة خارج المصدر.
+                    8. لا تذكر "المصدر" أو "النص" داخل السؤال.
+                    9. OptionA = "صح".
+                    10. OptionB = "خطأ".
+                    11. OptionC و OptionD فارغان.
+                    12. CorrectOption يجب أن تكون A أو B فقط.
+                    13. Explanation يشرح سبب الإجابة باختصار.
+                    14. SourceEvidence يجب أن يكون مقتطفاً حرفياً
+                        من المصدر يثبت الحقيقة الأساسية مباشرة.
+                    15. SourceEvidence يجب أن يحتوي على 5 كلمات عربية
+                        على الأقل وأن يكون عبارة مكتملة، وليس عنوان قسم
+                        أو عنواناً فرعياً أو نصاً مقطوعاً.
+                    16. لا تكتب Markdown.
+                    17. أرجع JSON فقط.
 
                     الشكل المطلوب:
 
@@ -225,7 +238,8 @@ namespace DVLD.AI
                       "optionC": "",
                       "optionD": "",
                       "correctOption": "",
-                      "explanation": ""
+                      "explanation": "",
+                      "sourceEvidence": ""
                     }
                     """;
             }
@@ -233,34 +247,40 @@ namespace DVLD.AI
 
             return
                 """
-                أنت مولد أسئلة لامتحان قيادة باللغة العربية.
+                أنت مولد أسئلة احترافي لامتحان قيادة باللغة العربية.
 
-                مهمتك إنشاء سؤال اختيار من متعدد واحد فقط
-                من النص المصدر الذي سيرسله المستخدم.
+                أنشئ سؤال اختيار من متعدد واحداً فقط من النص المصدر.
 
-                شروط إلزامية:
+                الشروط الإلزامية:
 
-                1. السؤال يجب أن يكون باللغة العربية.
-                2. السؤال يجب أن يعتمد على معلومة موجودة
-                   بوضوح في النص المصدر.
-                3. لا تستخدم معلومات من ذاكرتك أو من خارج المصدر.
-                4. لا تكرر أي تعليمات موجودة في الطلب.
-                5. لا تكتب:
-                   "نوع السؤال المطلوب"
-                   أو "TrueFalse"
-                   أو "MultipleChoice"
-                   داخل QuestionText.
-                6. QuestionText يجب أن يكون سؤالاً حقيقياً
-                   عن السلامة المرورية أو القيادة.
-                7. أنشئ أربعة خيارات A و B و C و D.
-                8. يجب أن تكون الخيارات الأربعة مختلفة.
-                9. يوجد جواب صحيح واحد فقط.
-                10. CorrectOption يجب أن تكون
-                    A أو B أو C أو D فقط.
-                11. Explanation يجب أن يشرح الإجابة الصحيحة
-                    اعتماداً على المصدر فقط.
-                12. لا تكتب Markdown.
-                13. أرجع JSON فقط.
+                1. استخدم حقيقة أو قاعدة أو إجراء أو رقم أو تعليمات
+                   واضحة ومحددة في المصدر.
+                2. لا تنشئ سؤالاً عاماً مثل:
+                   "ما الممارسة المرورية الآمنة؟"
+                   إذا كان بالإمكان إنشاء سؤال أكثر تحديداً.
+                3. السؤال يجب أن يكون واضحاً ومستقلاً ومفيداً للمتدرب.
+                4. يجب أن تكون العربية طبيعية وسليمة.
+                5. أنشئ أربعة خيارات A و B و C و D.
+                6. يجب أن تكون الخيارات الأربعة مختلفة وواضحة.
+                7. يجب أن تكون الخيارات من نفس النوع اللغوي والمنطقي.
+                8. كل خيار يجب أن يكون بالعربية، ولا يحتوي حروفاً
+                   لاتينية أو صينية أو أي حروف من لغة أخرى.
+                9. امنع الخيارات الركيكة أو غير الطبيعية أو المتداخلة.
+                10. يوجد جواب صحيح واحد فقط.
+                11. CorrectOption يجب أن تكون A أو B أو C أو D فقط.
+                12. الإجابة الصحيحة يجب أن تكون مثبتة مباشرة بالمصدر.
+                13. الخيارات الخاطئة يجب أن تكون معقولة لغوياً،
+                    لكنها غير صحيحة حسب المعلومة المحددة.
+                14. Explanation يشرح الإجابة الصحيحة باختصار.
+                15. SourceEvidence يجب أن يكون مقتطفاً حرفياً
+                    من المصدر يثبت الإجابة الصحيحة مباشرة.
+                16. SourceEvidence يجب أن يحتوي على 5 كلمات عربية
+                    على الأقل وأن يكون عبارة مكتملة، وليس عنوان قسم
+                    أو عنواناً فرعياً أو نصاً مقطوعاً.
+                17. لا تستخدم معرفة خارج المصدر.
+                18. لا تذكر "المصدر" أو "النص" داخل السؤال.
+                19. لا تكتب Markdown.
+                20. أرجع JSON فقط.
 
                 الشكل المطلوب:
 
@@ -272,7 +292,8 @@ namespace DVLD.AI
                   "optionC": "",
                   "optionD": "",
                   "correctOption": "",
-                  "explanation": ""
+                  "explanation": "",
+                  "sourceEvidence": ""
                 }
                 """;
         }
@@ -313,13 +334,15 @@ namespace DVLD.AI
                 string.Empty;
 
             question.CorrectOption =
-                question.CorrectOption?
-                    .Trim()
-                    .ToUpperInvariant() ??
-                string.Empty;
+                NormalizeCorrectOption(
+                    question.CorrectOption);
 
             question.Explanation =
                 question.Explanation?.Trim() ??
+                string.Empty;
+
+            question.SourceEvidence =
+                question.SourceEvidence?.Trim() ??
                 string.Empty;
 
 
@@ -347,9 +370,26 @@ namespace DVLD.AI
             }
 
 
+            if (string.IsNullOrWhiteSpace(
+                    question.SourceEvidence) ||
+                question.SourceEvidence.Length < 15)
+            {
+                throw new InvalidOperationException(
+                    "AI did not return sufficient source evidence.");
+            }
+
+
             if (expectedQuestionType ==
                 "TrueFalse")
             {
+                if (LooksLikeQuestion(
+                        question.QuestionText))
+                {
+                    throw new InvalidOperationException(
+                        "AI returned a question instead of a TrueFalse statement.");
+                }
+
+
                 question.OptionA = "صح";
                 question.OptionB = "خطأ";
                 question.OptionC = string.Empty;
@@ -392,21 +432,24 @@ namespace DVLD.AI
             }
 
 
+            if (ContainsForeignLetters(question.OptionA) ||
+                ContainsForeignLetters(question.OptionB) ||
+                ContainsForeignLetters(question.OptionC) ||
+                ContainsForeignLetters(question.OptionD))
+            {
+                throw new InvalidOperationException(
+                    "AI returned answer choices containing non-Arabic letters.");
+            }
+
+
             HashSet<string> uniqueOptions =
                 new HashSet<string>(
                     StringComparer.OrdinalIgnoreCase)
                 {
-                    NormalizeOption(
-                        question.OptionA),
-
-                    NormalizeOption(
-                        question.OptionB),
-
-                    NormalizeOption(
-                        question.OptionC),
-
-                    NormalizeOption(
-                        question.OptionD)
+                    NormalizeOption(question.OptionA),
+                    NormalizeOption(question.OptionB),
+                    NormalizeOption(question.OptionC),
+                    NormalizeOption(question.OptionD)
                 };
 
 
@@ -423,7 +466,8 @@ namespace DVLD.AI
                 question.CorrectOption != "D")
             {
                 throw new InvalidOperationException(
-                    "AI returned an invalid correct option.");
+                    $"AI returned an invalid correct option. " +
+                    $"CorrectOption=[{question.CorrectOption}]");
             }
         }
 
@@ -490,6 +534,149 @@ namespace DVLD.AI
 
 
             return false;
+        }
+
+
+        private static bool LooksLikeQuestion(
+            string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return true;
+            }
+
+
+            string trimmed =
+                text.Trim();
+
+
+            if (trimmed.EndsWith("؟") ||
+                trimmed.EndsWith("?"))
+            {
+                return true;
+            }
+
+
+            string[] questionStarters =
+            {
+                "هل ",
+                "ما ",
+                "ماذا ",
+                "كيف ",
+                "لماذا ",
+                "متى ",
+                "أين ",
+                "اين ",
+                "من ",
+                "أي ",
+                "اي "
+            };
+
+
+            foreach (string starter
+                     in questionStarters)
+            {
+                if (trimmed.StartsWith(
+                        starter,
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+
+            return false;
+        }
+
+
+        private static bool ContainsForeignLetters(
+            string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return false;
+            }
+
+
+            foreach (char character
+                     in text)
+            {
+                if (!char.IsLetter(character))
+                {
+                    continue;
+                }
+
+
+                bool isArabic =
+                    (character >= '\u0600' &&
+                     character <= '\u06FF') ||
+
+                    (character >= '\u0750' &&
+                     character <= '\u077F') ||
+
+                    (character >= '\u08A0' &&
+                     character <= '\u08FF');
+
+
+                if (!isArabic)
+                {
+                    return true;
+                }
+            }
+
+
+            return false;
+        }
+
+
+        private static string NormalizeCorrectOption(
+            string correctOption)
+        {
+            if (string.IsNullOrWhiteSpace(correctOption))
+            {
+                return string.Empty;
+            }
+
+
+            string normalized =
+                correctOption
+                    .Trim()
+                    .ToUpperInvariant()
+                    .Replace(" ", string.Empty)
+                    .Replace("_", string.Empty)
+                    .Replace("-", string.Empty)
+                    .Replace(":", string.Empty);
+
+
+            if (normalized == "A" ||
+                normalized == "B" ||
+                normalized == "C" ||
+                normalized == "D")
+            {
+                return normalized;
+            }
+
+
+            if (normalized.StartsWith(
+                    "OPTION",
+                    StringComparison.Ordinal))
+            {
+                string optionLetter =
+                    normalized.Substring(
+                        "OPTION".Length);
+
+
+                if (optionLetter == "A" ||
+                    optionLetter == "B" ||
+                    optionLetter == "C" ||
+                    optionLetter == "D")
+                {
+                    return optionLetter;
+                }
+            }
+
+
+            return normalized;
         }
 
 

@@ -8,9 +8,13 @@ namespace DVLD.Api.Controllers
     [Route("api/question-bank")]
     public class QuestionBankController : ControllerBase
     {
+        // نحافظ على الجودة بدون جعل المستخدم ينتظر عشرات
+        // استدعاءات Ollama. لكل سؤال: مصدر أساسي + مصدر بديل واحد.
+        private const int MaxSourceAttemptsPerQuestion = 2;
+
+
         // =====================================================
         // توليد سؤال واحد من نص محدد
-        // نحتفظ به للاختبار والاستخدام الداخلي
         // =====================================================
 
         [HttpPost("generate")]
@@ -25,6 +29,7 @@ namespace DVLD.Api.Controllers
                 });
             }
 
+
             if (string.IsNullOrWhiteSpace(request.SourceText))
             {
                 return BadRequest(new
@@ -33,8 +38,8 @@ namespace DVLD.Api.Controllers
                 });
             }
 
-            if (!IsValidQuestionType(
-                    request.QuestionType))
+
+            if (!IsValidQuestionType(request.QuestionType))
             {
                 return BadRequest(new
                 {
@@ -44,21 +49,27 @@ namespace DVLD.Api.Controllers
             }
 
 
-            GeneratedQuestion generatedQuestion =
-                await OllamaQuestionGeneratorService
-                    .GenerateQuestionAsync(
+            EvidenceBackedGeneratedQuestion validatedQuestion;
+
+            try
+            {
+                validatedQuestion =
+                    await GenerateEvidenceBackedQuestion(
                         request.SourceText,
                         request.QuestionType);
-
-
-            PrepareAndValidateQuestion(
-                generatedQuestion,
-                request.QuestionType);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
 
 
             int questionID =
                 SaveQuestion(
-                    generatedQuestion,
+                    validatedQuestion.Question,
                     request.SourceDocumentID,
                     request.SourcePageNumber);
 
@@ -69,28 +80,34 @@ namespace DVLD.Api.Controllers
                     questionID,
 
                 QuestionText =
-                    generatedQuestion.QuestionText,
+                    validatedQuestion.Question.QuestionText,
 
                 QuestionType =
-                    generatedQuestion.QuestionType,
+                    validatedQuestion.Question.QuestionType,
 
                 OptionA =
-                    generatedQuestion.OptionA,
+                    validatedQuestion.Question.OptionA,
 
                 OptionB =
-                    generatedQuestion.OptionB,
+                    validatedQuestion.Question.OptionB,
 
                 OptionC =
-                    generatedQuestion.OptionC,
+                    validatedQuestion.Question.OptionC,
 
                 OptionD =
-                    generatedQuestion.OptionD,
+                    validatedQuestion.Question.OptionD,
 
                 CorrectOption =
-                    generatedQuestion.CorrectOption,
+                    validatedQuestion.Question.CorrectOption,
 
                 Explanation =
-                    generatedQuestion.Explanation,
+                    validatedQuestion.Question.Explanation,
+
+                SourceEvidence =
+                    validatedQuestion.Question.SourceEvidence,
+
+                EvidenceValidated =
+                    validatedQuestion.EvidenceValidation.IsValid,
 
                 SourceDocumentID =
                     request.SourceDocumentID,
@@ -102,7 +119,7 @@ namespace DVLD.Api.Controllers
 
 
         // =====================================================
-        // توليد مجموعة أسئلة موزعة على كامل الكتاب
+        // توليد مجموعة أسئلة من كتاب كامل
         // =====================================================
 
         [HttpPost("generate-from-document")]
@@ -153,8 +170,6 @@ namespace DVLD.Api.Controllers
             }
 
 
-            // حماية مؤقتة حتى لا يطلب المستخدم
-            // عدداً ضخماً بالخطأ.
             if (totalQuestions > 100)
             {
                 return BadRequest(new
@@ -165,7 +180,6 @@ namespace DVLD.Api.Controllers
             }
 
 
-            // نجيب ملف الـ PDF المرتبط بالوثيقة
             string filePath =
                 clsKnowledgeDocument
                     .GetFilePathByDocumentID(
@@ -176,7 +190,8 @@ namespace DVLD.Api.Controllers
             {
                 return NotFound(new
                 {
-                    message = "Document was not found."
+                    message =
+                        "Document was not found."
                 });
             }
 
@@ -191,8 +206,6 @@ namespace DVLD.Api.Controllers
             }
 
 
-            // استخراج الكتاب وتقسيمه بنفس
-            // TextChunker المستخدم في الـ RAG.
             PdfExtractionResult extractionResult =
                 PdfTextExtractor.Extract(
                     filePath);
@@ -217,8 +230,6 @@ namespace DVLD.Api.Controllers
             }
 
 
-            // اختيار مصادر الأسئلة أصبح مسؤولية
-            // QuestionSourceSelector وليس الـ Controller.
             List<QuestionSourceCandidate> selectedSources;
 
             try
@@ -240,7 +251,19 @@ namespace DVLD.Api.Controllers
             }
 
 
-            // نوزع أنواع الأسئلة على العدد المطلوب.
+            // Pool احتياطي للمصدر البديل فقط.
+            List<QuestionSourceCandidate> fallbackSources =
+                allChunks
+                    .Select(chunk =>
+                        QuestionSourceSelector
+                            .EvaluateChunk(chunk))
+                    .Where(candidate =>
+                        candidate.IsSuitable)
+                    .OrderByDescending(candidate =>
+                        candidate.QualityScore)
+                    .ToList();
+
+
             List<string> questionTypes =
                 BuildQuestionTypes(
                     request.MultipleChoiceCount,
@@ -251,47 +274,117 @@ namespace DVLD.Api.Controllers
                 new List<PendingGeneratedQuestion>();
 
 
+            HashSet<int> usedChunkIndexes =
+                new HashSet<int>();
+
+
+            int rejectedSourceAttempts =
+                0;
+
+
             for (int i = 0;
-                 i < selectedSources.Count;
+                 i < totalQuestions;
                  i++)
             {
-                QuestionSourceCandidate sourceCandidate =
-                    selectedSources[i];
-
-                TextChunk sourceChunk =
-                    sourceCandidate.Chunk;
-
                 string questionType =
                     questionTypes[i];
 
 
-                GeneratedQuestion generatedQuestion =
-                    await GenerateValidQuestionWithRetry(
-                        sourceChunk.Text,
-                        questionType,
-                        maxAttempts: 3);
+                QuestionSourceCandidate primarySource =
+                    selectedSources[i];
+
+
+                List<QuestionSourceCandidate> sourcesForQuestion =
+                    BuildSourceAttempts(
+                        primarySource,
+                        fallbackSources,
+                        usedChunkIndexes,
+                        MaxSourceAttemptsPerQuestion);
+
+
+                PendingGeneratedQuestion acceptedQuestion =
+                    null;
+
+
+                Exception lastException =
+                    null;
+
+
+                foreach (QuestionSourceCandidate sourceCandidate
+                         in sourcesForQuestion)
+                {
+                    TextChunk sourceChunk =
+                        sourceCandidate.Chunk;
+
+
+                    usedChunkIndexes.Add(
+                        sourceChunk.ChunkIndex);
+
+
+                    try
+                    {
+                        EvidenceBackedGeneratedQuestion validatedQuestion =
+                            await GenerateEvidenceBackedQuestion(
+                                sourceChunk.Text,
+                                questionType);
+
+
+                        acceptedQuestion =
+                            new PendingGeneratedQuestion
+                            {
+                                Question =
+                                    validatedQuestion.Question,
+
+                                EvidenceValidation =
+                                    validatedQuestion.EvidenceValidation,
+
+                                SourcePageNumber =
+                                    sourceChunk.PageNumber,
+
+                                SourceChunkIndex =
+                                    sourceChunk.ChunkIndex,
+
+                                SourceQualityScore =
+                                    sourceCandidate.QualityScore
+                            };
+
+
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        lastException =
+                            ex;
+
+                        rejectedSourceAttempts++;
+                    }
+                }
+
+
+                if (acceptedQuestion == null)
+                {
+                    return BadRequest(new
+                    {
+                        message =
+                            $"Could not generate an evidence-backed " +
+                            $"{questionType} question after trying " +
+                            $"the primary and fallback source.",
+
+                        questionNumber =
+                            i + 1,
+
+                        lastError =
+                            lastException?.Message
+                    });
+                }
 
 
                 pendingQuestions.Add(
-                    new PendingGeneratedQuestion
-                    {
-                        Question =
-                            generatedQuestion,
-
-                        SourcePageNumber =
-                            sourceChunk.PageNumber,
-
-                        SourceChunkIndex =
-                            sourceChunk.ChunkIndex,
-
-                        SourceQualityScore =
-                            sourceCandidate.QualityScore
-                    });
+                    acceptedQuestion);
             }
 
 
-            // لا نحفظ أي سؤال إلا بعد نجاح توليد
-            // والتحقق من جميع الأسئلة المطلوبة.
+            // لا نحفظ أي سؤال إلا بعد نجاح كل الأسئلة المطلوبة.
             List<object> generatedQuestions =
                 new List<object>();
 
@@ -335,6 +428,12 @@ namespace DVLD.Api.Controllers
                     Explanation =
                         pending.Question.Explanation,
 
+                    SourceEvidence =
+                        pending.Question.SourceEvidence,
+
+                    EvidenceValidated =
+                        pending.EvidenceValidation.IsValid,
+
                     SourceDocumentID =
                         request.DocumentID,
 
@@ -376,6 +475,9 @@ namespace DVLD.Api.Controllers
                 GeneratedQuestions =
                     generatedQuestions.Count,
 
+                RejectedSourceAttempts =
+                    rejectedSourceAttempts,
+
                 Questions =
                     generatedQuestions
             });
@@ -383,7 +485,55 @@ namespace DVLD.Api.Controllers
 
 
         // =====================================================
-        // Helpers
+        // التوليد + التحقق البرمجي من الدليل
+        // =====================================================
+
+        private static async Task<EvidenceBackedGeneratedQuestion>
+            GenerateEvidenceBackedQuestion(
+                string sourceText,
+                string questionType)
+        {
+            GeneratedQuestion question =
+                await OllamaQuestionGeneratorService
+                    .GenerateQuestionAsync(
+                        sourceText,
+                        questionType);
+
+
+            PrepareAndValidateQuestion(
+                question,
+                questionType);
+
+
+            QuestionEvidenceValidationResult evidenceValidation =
+                QuestionEvidenceValidator.Validate(
+                    sourceText,
+                    question.SourceEvidence);
+
+
+            if (!evidenceValidation.IsValid)
+            {
+                throw new InvalidOperationException(
+                    "Generated question failed deterministic " +
+                    "source-evidence validation. " +
+                    evidenceValidation.FailureReason +
+                    $" SourceEvidence=[{question.SourceEvidence}]");
+            }
+
+
+            return new EvidenceBackedGeneratedQuestion
+            {
+                Question =
+                    question,
+
+                EvidenceValidation =
+                    evidenceValidation
+            };
+        }
+
+
+        // =====================================================
+        // Structural validation
         // =====================================================
 
         private static bool IsValidQuestionType(
@@ -414,23 +564,6 @@ namespace DVLD.Api.Controllers
             }
 
 
-            // نرفض أي مخرجات أعاد فيها الـ AI تعليمات الـ Prompt
-            // بدل إنشاء سؤال فعلي.
-            if (question.QuestionText.Contains(
-                    "نوع السؤال المطلوب",
-                    StringComparison.OrdinalIgnoreCase) ||
-                question.QuestionText.Contains(
-                    "TrueFalse",
-                    StringComparison.OrdinalIgnoreCase) ||
-                question.QuestionText.Contains(
-                    "MultipleChoice",
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                throw new InvalidOperationException(
-                    "AI returned instructions instead of a valid question.");
-            }
-
-
             question.QuestionType =
                 questionType;
 
@@ -450,19 +583,17 @@ namespace DVLD.Api.Controllers
                         "AI returned an invalid TrueFalse answer.");
                 }
 
+
                 return;
             }
 
 
             if (string.IsNullOrWhiteSpace(
                     question.OptionA) ||
-
                 string.IsNullOrWhiteSpace(
                     question.OptionB) ||
-
                 string.IsNullOrWhiteSpace(
                     question.OptionC) ||
-
                 string.IsNullOrWhiteSpace(
                     question.OptionD))
             {
@@ -482,46 +613,79 @@ namespace DVLD.Api.Controllers
         }
 
 
-        private static async Task<GeneratedQuestion>
-            GenerateValidQuestionWithRetry(
-                string sourceText,
-                string questionType,
-                int maxAttempts)
+        // =====================================================
+        // مصدر أساسي + مصدر بديل واحد
+        // =====================================================
+
+        private static List<QuestionSourceCandidate>
+            BuildSourceAttempts(
+                QuestionSourceCandidate primarySource,
+                List<QuestionSourceCandidate> fallbackSources,
+                HashSet<int> usedChunkIndexes,
+                int maxSources)
         {
-            Exception lastException = null;
+            List<QuestionSourceCandidate> result =
+                new List<QuestionSourceCandidate>();
 
 
-            for (int attempt = 1;
-                 attempt <= maxAttempts;
-                 attempt++)
+            if (primarySource != null &&
+                primarySource.Chunk != null &&
+                !usedChunkIndexes.Contains(
+                    primarySource.Chunk.ChunkIndex))
             {
-                try
-                {
-                    GeneratedQuestion question =
-                        await OllamaQuestionGeneratorService
-                            .GenerateQuestionAsync(
-                                sourceText,
-                                questionType);
-
-
-                    PrepareAndValidateQuestion(
-                        question,
-                        questionType);
-
-
-                    return question;
-                }
-                catch (Exception ex)
-                {
-                    lastException = ex;
-                }
+                result.Add(
+                    primarySource);
             }
 
 
-            throw new InvalidOperationException(
-                $"AI could not generate a valid {questionType} " +
-                $"question after {maxAttempts} attempts.",
-                lastException);
+            int referencePage =
+                primarySource?.Chunk?.PageNumber ??
+                1;
+
+
+            IEnumerable<QuestionSourceCandidate> orderedFallbacks =
+                fallbackSources
+                    .Where(candidate =>
+                        candidate?.Chunk != null &&
+
+                        !usedChunkIndexes.Contains(
+                            candidate.Chunk.ChunkIndex) &&
+
+                        (primarySource == null ||
+                         candidate.Chunk.ChunkIndex !=
+                         primarySource.Chunk.ChunkIndex))
+                    .OrderBy(candidate =>
+                        Math.Abs(
+                            candidate.Chunk.PageNumber -
+                            referencePage))
+                    .ThenByDescending(candidate =>
+                        candidate.QualityScore);
+
+
+            foreach (QuestionSourceCandidate fallback
+                     in orderedFallbacks)
+            {
+                if (result.Count >=
+                    maxSources)
+                {
+                    break;
+                }
+
+
+                if (result.Any(existing =>
+                        existing.Chunk.ChunkIndex ==
+                        fallback.Chunk.ChunkIndex))
+                {
+                    continue;
+                }
+
+
+                result.Add(
+                    fallback);
+            }
+
+
+            return result;
         }
 
 
@@ -569,8 +733,8 @@ namespace DVLD.Api.Controllers
                 new List<string>();
 
 
-            int trueFalseAdded = 0;
-            int multipleChoiceAdded = 0;
+            int trueFalseAdded =
+                0;
 
 
             for (int i = 0;
@@ -595,8 +759,6 @@ namespace DVLD.Api.Controllers
                 {
                     types.Add(
                         "MultipleChoice");
-
-                    multipleChoiceAdded++;
                 }
             }
 
@@ -606,9 +768,23 @@ namespace DVLD.Api.Controllers
     }
 
 
+    internal class EvidenceBackedGeneratedQuestion
+    {
+        public GeneratedQuestion Question { get; set; }
+
+        public QuestionEvidenceValidationResult
+            EvidenceValidation
+        { get; set; }
+    }
+
+
     internal class PendingGeneratedQuestion
     {
         public GeneratedQuestion Question { get; set; }
+
+        public QuestionEvidenceValidationResult
+            EvidenceValidation
+        { get; set; }
 
         public int SourcePageNumber { get; set; }
 
@@ -617,10 +793,6 @@ namespace DVLD.Api.Controllers
         public double SourceQualityScore { get; set; }
     }
 
-
-    // =========================================================
-    // Request لتوليد سؤال واحد من نص
-    // =========================================================
 
     public class GenerateQuestionRequest
     {
@@ -635,10 +807,6 @@ namespace DVLD.Api.Controllers
         public int? SourcePageNumber { get; set; }
     }
 
-
-    // =========================================================
-    // Request لتوليد مجموعة أسئلة من كامل الوثيقة
-    // =========================================================
 
     public class GenerateQuestionsFromDocumentRequest
     {
