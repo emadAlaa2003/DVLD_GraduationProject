@@ -189,6 +189,31 @@
     <Compile Include="Applications\Rlease Detained License\frmReleaseDetainedLicenseApplication.Designer.cs">
       <DependentUpon>frmReleaseDetainedLicenseApplication.cs</DependentUpon>
     </Compile>
+    <Compile Include="Documents\controls\ctrlDecoumentDetiels.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Documents\controls\ctrlDecoumentDetiels.Designer.cs">
+      <DependentUpon>ctrlDecoumentDetiels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\frmAddDecoument.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\frmAddDecoument.Designer.cs">
+      <DependentUpon>frmAddDecoument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\frmManageDocuments.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\frmManageDocuments.Designer.cs">
+      <DependentUpon>frmManageDocuments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\frmShowDecoumentInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Documents\frmShowDecoumentInfo.Designer.cs">
+      <DependentUpon>frmShowDecoumentInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Documents\ProgressableStreamContent.cs" />
     <Compile Include="Licenses\Detain License\frmDetainLicenseApplication.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -311,6 +336,30 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="QuestionBank\Controls\ctrlQuestionInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="QuestionBank\Controls\ctrlQuestionInfo.Designer.cs">
+      <DependentUpon>ctrlQuestionInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="QuestionBank\frmAddUpdateQuestion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QuestionBank\frmAddUpdateQuestion.Designer.cs">
+      <DependentUpon>frmAddUpdateQuestion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="QuestionBank\frmManageQuestions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QuestionBank\frmManageQuestions.Designer.cs">
+      <DependentUpon>frmManageQuestions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="QuestionBank\frmShowQuestionInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QuestionBank\frmShowQuestionInfo.Designer.cs">
+      <DependentUpon>frmShowQuestionInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="User\ctrlUserCard.cs">
       <SubType>UserControl</SubType>
@@ -452,6 +501,18 @@
     <EmbeddedResource Include="Applications\Rlease Detained License\frmReleaseDetainedLicenseApplication.resx">
       <DependentUpon>frmReleaseDetainedLicenseApplication.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Documents\controls\ctrlDecoumentDetiels.resx">
+      <DependentUpon>ctrlDecoumentDetiels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\frmAddDecoument.resx">
+      <DependentUpon>frmAddDecoument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\frmManageDocuments.resx">
+      <DependentUpon>frmManageDocuments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Documents\frmShowDecoumentInfo.resx">
+      <DependentUpon>frmShowDecoumentInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Licenses\Detain License\frmDetainLicenseApplication.resx">
       <DependentUpon>frmDetainLicenseApplication.cs</DependentUpon>
     </EmbeddedResource>
@@ -508,6 +569,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="People\Controls\ctrlPersonCardWithFilter.resx">
       <DependentUpon>ctrlPersonCardWithFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QuestionBank\Controls\ctrlQuestionInfo.resx">
+      <DependentUpon>ctrlQuestionInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QuestionBank\frmAddUpdateQuestion.resx">
+      <DependentUpon>frmAddUpdateQuestion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QuestionBank\frmManageQuestions.resx">
+      <DependentUpon>frmManageQuestions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QuestionBank\frmShowQuestionInfo.resx">
+      <DependentUpon>frmShowQuestionInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="User\ctrlUserCard.resx">
       <DependentUpon>ctrlUserCard.cs</DependentUpon>
@@ -931,7 +1004,129 @@
   <ItemGroup>
     <None Include="Resources\Release Detained License 512.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\icons8-add-to-clipboard-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\questiontext.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\questionType.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\reviewstatues.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\correctanswer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Magic Wand80.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-one-page-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\A64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\B64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\C.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\D.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explintion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Checkbox.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explintion1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Attachment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add-question_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\show-details_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit-question_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\approve-question_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\reject-question_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\deactivate-question_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\activate-question_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\deactivate-question_321.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete-question_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\refresh_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\questiontext1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\questiontext2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add-question_321.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explintion2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-add-file-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-opened-folder-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-info-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-upload-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-info-481.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-pdf-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\reject-question_321.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\questiontext3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-pdf-1001.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\activate-question_321.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\deactivate-question_322.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\refresh_24.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\Microsoft.Data.SqlClient.SNI.6.0.2\build\net462\Microsoft.Data.SqlClient.SNI.targets" Condition="Exists('packages\Microsoft.Data.SqlClient.SNI.6.0.2\build\net462\Microsoft.Data.SqlClient.SNI.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

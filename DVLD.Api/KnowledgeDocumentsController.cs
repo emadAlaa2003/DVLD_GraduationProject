@@ -1,4 +1,5 @@
 ﻿using DVLD.AI;
+using DVLD.Api.Services;
 using DVLD_Buisness;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,16 @@ namespace DVLD.Api.Controllers
     {
         private readonly IWebHostEnvironment _environment;
 
+        private readonly IKnowledgeDocumentProcessingQueue
+            _processingQueue;
+
+
         public KnowledgeDocumentsController(
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            IKnowledgeDocumentProcessingQueue processingQueue)
         {
             _environment = environment;
+            _processingQueue = processingQueue;
         }
 
 
@@ -29,8 +36,10 @@ namespace DVLD.Api.Controllers
                 });
             }
 
+
             string extension =
                 Path.GetExtension(file.FileName);
+
 
             if (!string.Equals(
                     extension,
@@ -44,9 +53,11 @@ namespace DVLD.Api.Controllers
             }
 
 
-            string documentsFolder = Path.Combine(
-                _environment.ContentRootPath,
-                "KnowledgeDocuments");
+            string documentsFolder =
+                Path.Combine(
+                    _environment.ContentRootPath,
+                    "KnowledgeDocuments");
+
 
             Directory.CreateDirectory(
                 documentsFolder);
@@ -55,9 +66,11 @@ namespace DVLD.Api.Controllers
             string storedFileName =
                 Guid.NewGuid().ToString() + ".pdf";
 
-            string fullPath = Path.Combine(
-                documentsFolder,
-                storedFileName);
+
+            string fullPath =
+                Path.Combine(
+                    documentsFolder,
+                    storedFileName);
 
 
             try
@@ -83,6 +96,7 @@ namespace DVLD.Api.Controllers
 
             int documentID;
 
+
             try
             {
                 documentID =
@@ -92,7 +106,8 @@ namespace DVLD.Api.Controllers
                         fullPath,
                         file.Length);
 
-                if (documentID == -1)
+
+                if (documentID <= 0)
                 {
                     throw new Exception(
                         "Could not save document information.");
@@ -111,69 +126,33 @@ namespace DVLD.Api.Controllers
 
             try
             {
-                PdfExtractionResult extractionResult =
-                    PdfTextExtractor.Extract(
+                KnowledgeDocumentProcessingJob job =
+                    new KnowledgeDocumentProcessingJob(
+                        documentID,
                         fullPath);
 
 
-                clsKnowledgeDocument.UpdateAfterTextExtraction(
-                    documentID,
-                    extractionResult.TotalPages);
+                await _processingQueue.QueueAsync(
+                    job);
 
 
-                List<TextChunk> chunks =
-                    TextChunker.CreateChunks(
-                        extractionResult);
+                return Accepted(new
+                {
+                    DocumentID =
+                        documentID,
 
+                    OriginalFileName =
+                        Path.GetFileName(file.FileName),
 
-                clsKnowledgeDocument.UpdateChunkCount(
-                    documentID,
-                    chunks.Count);
+                    FileSizeBytes =
+                        file.Length,
 
+                    ProcessingStatus =
+                        "Pending",
 
-                await KnowledgeDocumentVectorProcessor.ProcessAsync(
-                    documentID,
-                    chunks);
-
-
-                clsKnowledgeDocument.MarkProcessingCompleted(
-                    documentID,
-                    chunks.Count);
-
-
-                return Created(
-                    $"/api/knowledge-documents/{documentID}",
-                    new
-                    {
-                        DocumentID =
-                            documentID,
-
-                        OriginalFileName =
-                            Path.GetFileName(
-                                file.FileName),
-
-                        FileSizeBytes =
-                            file.Length,
-
-                        TotalPages =
-                            extractionResult.TotalPages,
-
-                        ChunkCount =
-                            chunks.Count,
-
-                        FirstChunkPage =
-                            chunks.Count > 0
-                                ? chunks[0].PageNumber
-                                : (int?)null,
-
-                        FirstChunkPreview =
-                            chunks.Count > 0
-                                ? chunks[0].Text
-                                : null,
-
-                        ProcessingStatus =
-                            "Ready"
-                    });
+                    Message =
+                        "Document uploaded successfully. Processing will continue in the background."
+                });
             }
             catch (Exception ex)
             {
@@ -184,6 +163,9 @@ namespace DVLD.Api.Controllers
                 throw;
             }
         }
+
+
+
 
 
         [HttpGet("qdrant-health")]
@@ -332,26 +314,33 @@ namespace DVLD.Api.Controllers
                 await QdrantKnowledgeStore.SearchAsync(
                     queryEmbedding,
                     8);
-
+            HashSet<int> activeReadyDocumentIDs =
+    clsKnowledgeDocument
+        .GetActiveReadyDocumentIDs();
 
             // 3. نستبعد نقطة الاختبار
             // وأي نتيجة لا تحتوي على نص
             var candidates =
-                searchResults
-                    .Where(result =>
-                        result.Payload.ContainsKey(
-                            "document_id") &&
+            searchResults
+                .Where(result =>
+                    result.Payload.ContainsKey(
+                        "document_id") &&
 
-                        result.Payload["document_id"]
-                            .IntegerValue > 0 &&
+                    result.Payload["document_id"]
+                        .IntegerValue > 0 &&
 
-                        result.Payload.ContainsKey(
-                            "text") &&
+                    activeReadyDocumentIDs.Contains(
+                        Convert.ToInt32(
+                            result.Payload["document_id"]
+                                .IntegerValue)) &&
 
-                        !string.IsNullOrWhiteSpace(
-                            result.Payload["text"]
-                                .StringValue))
-                    .ToList();
+                    result.Payload.ContainsKey(
+                        "text") &&
+
+                    !string.IsNullOrWhiteSpace(
+                        result.Payload["text"]
+                            .StringValue))
+                .ToList();
 
 
             if (candidates.Count == 0)
@@ -468,7 +457,9 @@ namespace DVLD.Api.Controllers
                 await QdrantKnowledgeStore.SearchAsync(
                     queryEmbedding,
                     8);
-
+            HashSet<int> activeReadyDocumentIDs =
+    clsKnowledgeDocument
+        .GetActiveReadyDocumentIDs();
 
             var candidates =
                 searchResults
@@ -478,6 +469,11 @@ namespace DVLD.Api.Controllers
 
                         result.Payload["document_id"]
                             .IntegerValue > 0 &&
+
+                        activeReadyDocumentIDs.Contains(
+                            Convert.ToInt32(
+                                result.Payload["document_id"]
+                                    .IntegerValue)) &&
 
                         result.Payload.ContainsKey(
                             "text") &&

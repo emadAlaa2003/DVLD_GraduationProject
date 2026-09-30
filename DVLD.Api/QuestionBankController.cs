@@ -1,6 +1,7 @@
 ﻿using DVLD.AI;
 using DVLD_Buisness;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace DVLD.Api.Controllers
 {
@@ -10,7 +11,7 @@ namespace DVLD.Api.Controllers
     {
         // نحافظ على الجودة بدون جعل المستخدم ينتظر عشرات
         // استدعاءات Ollama. لكل سؤال: مصدر أساسي + مصدر بديل واحد.
-        private const int MaxSourceAttemptsPerQuestion = 2;
+        private const int MaxSourceAttemptsPerQuestion = 3;
 
 
         // =====================================================
@@ -71,7 +72,8 @@ namespace DVLD.Api.Controllers
                 SaveQuestion(
                     validatedQuestion.Question,
                     request.SourceDocumentID,
-                    request.SourcePageNumber);
+                    request.SourcePageNumber,
+                    sourceChunkIndex: null);
 
 
             return Ok(new
@@ -109,11 +111,82 @@ namespace DVLD.Api.Controllers
                 EvidenceValidated =
                     validatedQuestion.EvidenceValidation.IsValid,
 
+                ReviewStatus =
+                    "Draft",
+
                 SourceDocumentID =
                     request.SourceDocumentID,
 
                 SourcePageNumber =
                     request.SourcePageNumber
+            });
+        }
+
+
+        // =====================================================
+        // مراجعة السؤال: Approved / Rejected
+        // =====================================================
+
+        [HttpPatch("{questionID:int}/review-status")]
+        public IActionResult UpdateReviewStatus(
+            int questionID,
+            [FromBody] UpdateQuestionReviewStatusRequest request)
+        {
+            if (questionID <= 0)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid question ID."
+                });
+            }
+
+
+            if (request == null)
+            {
+                return BadRequest(new
+                {
+                    message = "Request is required."
+                });
+            }
+
+
+            if (request.ReviewStatus != "Approved" &&
+                request.ReviewStatus != "Rejected")
+            {
+                return BadRequest(new
+                {
+                    message =
+                        "ReviewStatus must be Approved or Rejected."
+                });
+            }
+
+
+            bool updated =
+                clsQuestionBank.UpdateReviewStatus(
+                    questionID,
+                    request.ReviewStatus);
+
+
+            if (!updated)
+            {
+                return NotFound(new
+                {
+                    message =
+                        "Question was not found."
+                });
+            }
+
+
+            return Ok(new
+            {
+                QuestionID =
+                    questionID,
+
+                ReviewStatus =
+                    request.ReviewStatus,
+
+                message =
+                    "Question review status updated successfully."
             });
         }
 
@@ -126,6 +199,9 @@ namespace DVLD.Api.Controllers
         public async Task<IActionResult> GenerateFromDocument(
             [FromBody] GenerateQuestionsFromDocumentRequest request)
         {
+            Stopwatch totalStopwatch =
+                Stopwatch.StartNew();
+
             if (request == null)
             {
                 return BadRequest(new
@@ -206,18 +282,24 @@ namespace DVLD.Api.Controllers
             }
 
 
-            PdfExtractionResult extractionResult =
-                PdfTextExtractor.Extract(
-                    filePath);
+            Stopwatch qdrantStopwatch =
+                Stopwatch.StartNew();
 
 
             List<TextChunk> allChunks =
-                TextChunker.CreateChunks(
-                    extractionResult)
-                    .Where(chunk =>
-                        !string.IsNullOrWhiteSpace(
-                            chunk.Text))
-                    .ToList();
+                await QdrantKnowledgeStore
+                    .GetDocumentChunksAsync(
+                        request.DocumentID);
+
+
+            qdrantStopwatch.Stop();
+
+
+            int totalPages =
+                allChunks.Count > 0
+                    ? allChunks.Max(chunk =>
+                        chunk.PageNumber)
+                    : 0;
 
 
             if (allChunks.Count == 0)
@@ -230,6 +312,10 @@ namespace DVLD.Api.Controllers
             }
 
 
+            Stopwatch sourceSelectionStopwatch =
+                Stopwatch.StartNew();
+
+
             List<QuestionSourceCandidate> selectedSources;
 
             try
@@ -238,17 +324,35 @@ namespace DVLD.Api.Controllers
                     QuestionSourceSelector
                         .SelectBestSources(
                             allChunks,
-                            extractionResult.TotalPages,
+                            totalPages,
                             totalQuestions);
             }
             catch (InvalidOperationException ex)
             {
+                sourceSelectionStopwatch.Stop();
+                totalStopwatch.Stop();
+
                 return BadRequest(new
                 {
                     message =
-                        ex.Message
+                        ex.Message,
+
+                    performance = new
+                    {
+                        QdrantLoadMs =
+                            qdrantStopwatch.ElapsedMilliseconds,
+
+                        SourceSelectionMs =
+                            sourceSelectionStopwatch.ElapsedMilliseconds,
+
+                        TotalMs =
+                            totalStopwatch.ElapsedMilliseconds
+                    }
                 });
             }
+
+
+            sourceSelectionStopwatch.Stop();
 
 
             // Pool احتياطي للمصدر البديل فقط.
@@ -260,6 +364,8 @@ namespace DVLD.Api.Controllers
                     .Where(candidate =>
                         candidate.IsSuitable)
                     .OrderByDescending(candidate =>
+                        candidate.ExamValueScore)
+                    .ThenByDescending(candidate =>
                         candidate.QualityScore)
                     .ToList();
 
@@ -280,6 +386,14 @@ namespace DVLD.Api.Controllers
 
             int rejectedSourceAttempts =
                 0;
+
+
+            List<object> generationAttemptTimings =
+                new List<object>();
+
+
+            List<object> failedQuestions =
+                new List<object>();
 
 
             for (int i = 0;
@@ -321,12 +435,59 @@ namespace DVLD.Api.Controllers
                         sourceChunk.ChunkIndex);
 
 
+                    Stopwatch generationAttemptStopwatch =
+                        Stopwatch.StartNew();
+
+
                     try
                     {
                         EvidenceBackedGeneratedQuestion validatedQuestion =
                             await GenerateEvidenceBackedQuestion(
                                 sourceChunk.Text,
                                 questionType);
+
+
+                        bool isDuplicate =
+                            clsQuestionBank.IsDuplicateQuestion(
+                                validatedQuestion.Question.QuestionText,
+                                request.DocumentID,
+                                validatedQuestion.Question.SourceEvidence);
+
+
+                        if (isDuplicate)
+                        {
+                            throw new InvalidOperationException(
+                                "Generated question duplicates an existing active question from the same document.");
+                        }
+
+
+                        generationAttemptStopwatch.Stop();
+
+
+                        generationAttemptTimings.Add(
+                            new
+                            {
+                                QuestionNumber =
+                                    i + 1,
+
+                                QuestionType =
+                                    questionType,
+
+                                SourceChunkIndex =
+                                    sourceChunk.ChunkIndex,
+
+                                SourcePageNumber =
+                                    sourceChunk.PageNumber,
+
+                                Success =
+                                    true,
+
+                                ElapsedMs =
+                                    generationAttemptStopwatch.ElapsedMilliseconds,
+
+                                Error =
+                                    (string)null
+                            });
 
 
                         acceptedQuestion =
@@ -353,6 +514,35 @@ namespace DVLD.Api.Controllers
                     }
                     catch (Exception ex)
                     {
+                        generationAttemptStopwatch.Stop();
+
+
+                        generationAttemptTimings.Add(
+                            new
+                            {
+                                QuestionNumber =
+                                    i + 1,
+
+                                QuestionType =
+                                    questionType,
+
+                                SourceChunkIndex =
+                                    sourceChunk.ChunkIndex,
+
+                                SourcePageNumber =
+                                    sourceChunk.PageNumber,
+
+                                Success =
+                                    false,
+
+                                ElapsedMs =
+                                    generationAttemptStopwatch.ElapsedMilliseconds,
+
+                                Error =
+                                    ex.Message
+                            });
+
+
                         lastException =
                             ex;
 
@@ -363,19 +553,25 @@ namespace DVLD.Api.Controllers
 
                 if (acceptedQuestion == null)
                 {
-                    return BadRequest(new
+                    failedQuestions.Add(new
                     {
-                        message =
-                            $"Could not generate an evidence-backed " +
-                            $"{questionType} question after trying " +
-                            $"the primary and fallback source.",
-
-                        questionNumber =
+                        QuestionNumber =
                             i + 1,
 
-                        lastError =
+                        QuestionType =
+                            questionType,
+
+                        Attempts =
+                            sourcesForQuestion.Count,
+
+                        LastError =
                             lastException?.Message
                     });
+
+
+                    // فشل سؤال واحد لا يوقف بقية الدفعة.
+                    // نكمل للأسئلة التالية، ونرجع ملخصاً كاملاً في النهاية.
+                    continue;
                 }
 
 
@@ -384,9 +580,55 @@ namespace DVLD.Api.Controllers
             }
 
 
-            // لا نحفظ أي سؤال إلا بعد نجاح كل الأسئلة المطلوبة.
+            if (pendingQuestions.Count == 0)
+            {
+                totalStopwatch.Stop();
+
+                return BadRequest(new
+                {
+                    message =
+                        "No questions could be generated from the requested batch.",
+
+                    RequestedQuestions =
+                        totalQuestions,
+
+                    GeneratedQuestions =
+                        0,
+
+                    FailedQuestions =
+                        failedQuestions.Count,
+
+                    RejectedSourceAttempts =
+                        rejectedSourceAttempts,
+
+                    QuestionFailures =
+                        failedQuestions,
+
+                    Performance = new
+                    {
+                        QdrantLoadMs =
+                            qdrantStopwatch.ElapsedMilliseconds,
+
+                        SourceSelectionMs =
+                            sourceSelectionStopwatch.ElapsedMilliseconds,
+
+                        GenerationAttempts =
+                            generationAttemptTimings,
+
+                        TotalMs =
+                            totalStopwatch.ElapsedMilliseconds
+                    }
+                });
+            }
+
+
+            // نحفظ كل سؤال نجح، حتى لو فشلت بعض أسئلة الدفعة.
             List<object> generatedQuestions =
                 new List<object>();
+
+
+            Stopwatch saveStopwatch =
+                Stopwatch.StartNew();
 
 
             foreach (PendingGeneratedQuestion pending
@@ -396,7 +638,8 @@ namespace DVLD.Api.Controllers
                     SaveQuestion(
                         pending.Question,
                         request.DocumentID,
-                        pending.SourcePageNumber);
+                        pending.SourcePageNumber,
+                        pending.SourceChunkIndex);
 
 
                 generatedQuestions.Add(new
@@ -434,6 +677,9 @@ namespace DVLD.Api.Controllers
                     EvidenceValidated =
                         pending.EvidenceValidation.IsValid,
 
+                    ReviewStatus =
+                        "Draft",
+
                     SourceDocumentID =
                         request.DocumentID,
 
@@ -449,13 +695,17 @@ namespace DVLD.Api.Controllers
             }
 
 
+            saveStopwatch.Stop();
+            totalStopwatch.Stop();
+
+
             return Ok(new
             {
                 DocumentID =
                     request.DocumentID,
 
                 TotalPages =
-                    extractionResult.TotalPages,
+                    totalPages,
 
                 TotalChunks =
                     allChunks.Count,
@@ -475,8 +725,36 @@ namespace DVLD.Api.Controllers
                 GeneratedQuestions =
                     generatedQuestions.Count,
 
+                FailedQuestions =
+                    failedQuestions.Count,
+
+                IsComplete =
+                    generatedQuestions.Count ==
+                    totalQuestions,
+
                 RejectedSourceAttempts =
                     rejectedSourceAttempts,
+
+                QuestionFailures =
+                    failedQuestions,
+
+                Performance = new
+                {
+                    QdrantLoadMs =
+                        qdrantStopwatch.ElapsedMilliseconds,
+
+                    SourceSelectionMs =
+                        sourceSelectionStopwatch.ElapsedMilliseconds,
+
+                    GenerationAttempts =
+                        generationAttemptTimings,
+
+                    SqlSaveMs =
+                        saveStopwatch.ElapsedMilliseconds,
+
+                    TotalMs =
+                        totalStopwatch.ElapsedMilliseconds
+                },
 
                 Questions =
                     generatedQuestions
@@ -655,9 +933,12 @@ namespace DVLD.Api.Controllers
                          candidate.Chunk.ChunkIndex !=
                          primarySource.Chunk.ChunkIndex))
                     .OrderBy(candidate =>
-                        Math.Abs(
-                            candidate.Chunk.PageNumber -
-                            referencePage))
+                        candidate.Chunk.PageNumber ==
+                            referencePage
+                                ? 1
+                                : 0)
+                    .ThenByDescending(candidate =>
+                        candidate.ExamValueScore)
                     .ThenByDescending(candidate =>
                         candidate.QualityScore);
 
@@ -692,7 +973,8 @@ namespace DVLD.Api.Controllers
         private static int SaveQuestion(
             GeneratedQuestion question,
             int? sourceDocumentID,
-            int? sourcePageNumber)
+            int? sourcePageNumber,
+            int? sourceChunkIndex)
         {
             int questionID =
                 clsQuestionBank.AddNewQuestion(
@@ -705,7 +987,10 @@ namespace DVLD.Api.Controllers
                     question.CorrectOption,
                     question.Explanation,
                     sourceDocumentID,
-                    sourcePageNumber);
+                    sourcePageNumber,
+                    question.SourceEvidence,
+                    sourceChunkIndex,
+                    reviewStatus: "Draft");
 
 
             if (questionID <= 0)
@@ -805,6 +1090,13 @@ namespace DVLD.Api.Controllers
         public int? SourceDocumentID { get; set; }
 
         public int? SourcePageNumber { get; set; }
+    }
+
+
+    public class UpdateQuestionReviewStatusRequest
+    {
+        public string ReviewStatus { get; set; } =
+            string.Empty;
     }
 
 

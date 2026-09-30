@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.msMainMenue = new System.Windows.Forms.MenuStrip();
+            this.lblLoggedInUser = new System.Windows.Forms.Label();
             this.servicesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drivingLicensesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.oNewDrivingLicenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +61,8 @@
             this.changePasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.signOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblLoggedInUser = new System.Windows.Forms.Label();
+            this.manageQuestionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mangeDecumentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.msMainMenue.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -75,14 +77,26 @@
             this.peopleToolStripMenuItem,
             this.driversToolStripMenuItem,
             this.employeesToolStripMenuItem,
-            this.closeToolStripMenuItem});
+            this.closeToolStripMenuItem,
+            this.manageQuestionsToolStripMenuItem,
+            this.mangeDecumentsToolStripMenuItem});
             this.msMainMenue.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.msMainMenue.Location = new System.Drawing.Point(0, 0);
             this.msMainMenue.Name = "msMainMenue";
             this.msMainMenue.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.msMainMenue.Size = new System.Drawing.Size(1924, 72);
+            this.msMainMenue.Size = new System.Drawing.Size(1370, 91);
             this.msMainMenue.TabIndex = 1;
             this.msMainMenue.Text = "menuStrip1";
+            // 
+            // lblLoggedInUser
+            // 
+            this.lblLoggedInUser.AutoSize = true;
+            this.lblLoggedInUser.BackColor = System.Drawing.SystemColors.Control;
+            this.lblLoggedInUser.Location = new System.Drawing.Point(1201, 1067);
+            this.lblLoggedInUser.Name = "lblLoggedInUser";
+            this.lblLoggedInUser.Size = new System.Drawing.Size(81, 16);
+            this.lblLoggedInUser.TabIndex = 4;
+            this.lblLoggedInUser.Text = "[UserName]";
             // 
             // servicesToolStripMenuItem
             // 
@@ -359,15 +373,23 @@
             this.signOutToolStripMenuItem.Text = "Sign &Out";
             this.signOutToolStripMenuItem.Click += new System.EventHandler(this.signOutToolStripMenuItem_Click);
             // 
-            // lblLoggedInUser
+            // manageQuestionsToolStripMenuItem
             // 
-            this.lblLoggedInUser.AutoSize = true;
-            this.lblLoggedInUser.BackColor = System.Drawing.SystemColors.Control;
-            this.lblLoggedInUser.Location = new System.Drawing.Point(1201, 1067);
-            this.lblLoggedInUser.Name = "lblLoggedInUser";
-            this.lblLoggedInUser.Size = new System.Drawing.Size(81, 16);
-            this.lblLoggedInUser.TabIndex = 4;
-            this.lblLoggedInUser.Text = "[UserName]";
+            this.manageQuestionsToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI Black", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.manageQuestionsToolStripMenuItem.Image = global::DVLD.Properties.Resources.List_32;
+            this.manageQuestionsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.manageQuestionsToolStripMenuItem.Name = "manageQuestionsToolStripMenuItem";
+            this.manageQuestionsToolStripMenuItem.Size = new System.Drawing.Size(315, 41);
+            this.manageQuestionsToolStripMenuItem.Text = " Manage Questions";
+            this.manageQuestionsToolStripMenuItem.Click += new System.EventHandler(this.manageQuestionsToolStripMenuItem_Click);
+            // 
+            // mangeDecumentsToolStripMenuItem
+            // 
+            this.mangeDecumentsToolStripMenuItem.Image = global::DVLD.Properties.Resources.explintion2;
+            this.mangeDecumentsToolStripMenuItem.Name = "mangeDecumentsToolStripMenuItem";
+            this.mangeDecumentsToolStripMenuItem.Size = new System.Drawing.Size(181, 25);
+            this.mangeDecumentsToolStripMenuItem.Text = "mange Decuments";
+            this.mangeDecumentsToolStripMenuItem.Click += new System.EventHandler(this.mangeDecumentsToolStripMenuItem_Click);
             // 
             // pictureBox1
             // 
@@ -377,7 +399,7 @@
             this.pictureBox1.Image = global::DVLD.Properties.Resources.Logo_Final;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1924, 1061);
+            this.pictureBox1.Size = new System.Drawing.Size(1370, 749);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 6;
             this.pictureBox1.TabStop = false;
@@ -389,7 +411,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(1924, 1061);
+            this.ClientSize = new System.Drawing.Size(1370, 749);
             this.Controls.Add(this.lblLoggedInUser);
             this.Controls.Add(this.msMainMenue);
             this.Controls.Add(this.pictureBox1);
@@ -447,6 +469,8 @@
         private System.Windows.Forms.ToolStripMenuItem detainLicenseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem releaseDetainedLicenseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ManageDetainedLicensestoolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem manageQuestionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mangeDecumentsToolStripMenuItem;
     }
 }
 

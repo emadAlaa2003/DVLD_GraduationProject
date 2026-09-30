@@ -1,14 +1,16 @@
-﻿using DVLD.Applications;
+﻿ using DVLD.Applications;
 using DVLD.Applications.Detain_License;
 using DVLD.Applications.International_License;
 using DVLD.Applications.ReplaceLostOrDamagedLicense;
 using DVLD.Applications.Rlease_Detained_License;
 using DVLD.Classes;
+using DVLD.Documents;
 using DVLD.Drivers;
 using DVLD.Licenses;
 using DVLD.Licenses.International_License;
 using DVLD.Login;
 using DVLD.People;
+using DVLD.QuestionBank;
 using DVLD.Tests;
 using DVLD.User;
 using System;
@@ -174,6 +176,18 @@ namespace DVLD
             frmReleaseDetainedLicenseApplication frm= new frmReleaseDetainedLicenseApplication();   
             frm.ShowDialog();
 
+        }
+
+        private void manageQuestionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmManageQuestions frm = new frmManageQuestions();
+            frm.ShowDialog();
+        }
+
+        private void mangeDecumentsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmManageDocuments frm=new frmManageDocuments();
+            frm.ShowDialog();
         }
     }
 }

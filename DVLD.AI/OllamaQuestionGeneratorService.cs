@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace DVLD.AI
 {
@@ -29,8 +31,10 @@ namespace DVLD.AI
         public string Explanation { get; set; } =
             string.Empty;
 
-        // نص قصير من المصدر نفسه، منسوخ حرفياً،
-        // يثبت المعلومة التي بُني عليها السؤال.
+        // Ollama يرجع رقم مقطع الدليل فقط.
+        // التطبيق نفسه ينسخ النص الأصلي حرفياً من المصدر.
+        public int SourceEvidenceIndex { get; set; } = -1;
+
         public string SourceEvidence { get; set; } =
             string.Empty;
     }
@@ -73,6 +77,23 @@ namespace DVLD.AI
             }
 
 
+            List<string> evidenceSegments =
+                BuildEvidenceSegments(
+                    sourceText);
+
+
+            if (evidenceSegments.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    "Source chunk does not contain a complete evidence segment suitable for question generation.");
+            }
+
+
+            string numberedSource =
+                BuildNumberedSource(
+                    evidenceSegments);
+
+
             string systemPrompt =
                 BuildSystemPrompt(
                     questionType);
@@ -80,25 +101,24 @@ namespace DVLD.AI
 
             string userPrompt =
                 $"""
-                هذا هو النص المصدر الوحيد المسموح لك بالاعتماد عليه:
+                هذا هو النص المصدر الوحيد المسموح لك بالاعتماد عليه.
+                تم تقسيمه إلى مقاطع دليل مرقمة.
 
                 --- بداية المصدر ---
 
-                {sourceText}
+                {numberedSource}
 
                 --- نهاية المصدر ---
 
                 أنشئ سؤالاً امتحانياً واحداً فقط من حقيقة أو قاعدة
-                أو إجراء أو رقم أو تعليمات واضحة ومحددة في المصدر.
+                أو إجراء أو رقم أو تعليمات واضحة ومحددة في أحد المقاطع.
 
                 مهم جداً:
-                - SourceEvidence يجب أن يكون مقتطفاً قصيراً من النص
-                  المصدر نفسه، منسوخاً حرفياً دون إعادة صياغة.
-                - SourceEvidence يجب أن يحتوي على 5 كلمات عربية على الأقل،
-                  وأن يكون عبارة مكتملة تحمل المعلومة نفسها، وليس مجرد
-                  عنوان قسم أو عنوان فرعي أو نصاً مقطوعاً.
-                - لا تنشئ سؤالاً عاماً إذا كان المصدر يحتوي معلومة
-                  أكثر تحديداً.
+                - اختر مقطع دليل واحداً يثبت الإجابة مباشرة.
+                - لا تنسخ نص الدليل بنفسك.
+                - أرجع فقط رقم المقطع في SourceEvidenceIndex.
+                - يجب أن يكون SourceEvidenceIndex رقماً صحيحاً موجوداً
+                  بين المقاطع المعروضة أعلاه.
                 - لا تستخدم معرفة خارج المصدر.
                 - لا تذكر "النص" أو "المصدر" داخل السؤال.
                 - لا تكرر التعليمات.
@@ -134,8 +154,8 @@ namespace DVLD.AI
                 options = new
                 {
                     num_ctx = 2048,
-                    num_predict = 650,
-                    temperature = 0.2
+                    num_predict = 320,
+                    temperature = 0.1
                 }
             };
 
@@ -183,12 +203,209 @@ namespace DVLD.AI
                     });
 
 
+            if (question == null)
+            {
+                throw new InvalidOperationException(
+                    "Ollama returned an invalid question.");
+            }
+
+
+            ResolveSourceEvidence(
+                question,
+                evidenceSegments);
+
+
             ValidateGeneratedQuestion(
                 question,
                 questionType);
 
 
+            question.Explanation =
+                BuildDeterministicExplanation(
+                    question);
+
+
             return question;
+        }
+
+
+        // =====================================================
+        // الدليل: Ollama يختار رقم المقطع فقط
+        // والتطبيق ينسخ المقطع الأصلي حرفياً
+        // =====================================================
+
+        private static List<string> BuildEvidenceSegments(
+            string sourceText)
+        {
+            List<string> segments =
+                new List<string>();
+
+
+            // نحمي النقطة الواقعة بين رقمين قبل تقسيم الجمل.
+            // مثال: 6.0 أو 3.5 يجب أن تبقى داخل نفس المقطع
+            // وألا تُعامل كنهاية جملة.
+            const string numericDotToken =
+                "__DVLD_NUMERIC_DOT__";
+
+
+            string protectedSource =
+                Regex.Replace(
+                    sourceText,
+                    @"(?<=\p{Nd})\.(?=\p{Nd})",
+                    numericDotToken);
+
+
+            MatchCollection matches =
+                Regex.Matches(
+                    protectedSource,
+                    @"[^\.!\?؟؛\r\n]+[\.!\?؟؛]?");
+
+
+            foreach (Match match
+                     in matches)
+            {
+                string segment =
+                    match.Value
+                        .Replace(
+                            numericDotToken,
+                            ".")
+                        .Trim();
+
+
+                if (!IsSuitableEvidenceSegment(
+                        segment))
+                {
+                    continue;
+                }
+
+
+                segments.Add(
+                    segment);
+            }
+
+
+            return segments;
+        }
+
+
+        private static bool IsSuitableEvidenceSegment(
+            string segment)
+        {
+            if (string.IsNullOrWhiteSpace(segment) ||
+                segment.Length < 25)
+            {
+                return false;
+            }
+
+
+            MatchCollection arabicWords =
+                Regex.Matches(
+                    segment,
+                    @"[\u0600-\u06FF]+");
+
+
+            if (arabicWords.Count < 5)
+            {
+                return false;
+            }
+
+
+            // لا نسمح بمقطع ينتهي بمقدمة لقائمة مثل:
+            // "يجب مراعاة الأمور التالية:"
+            // حتى لو أضاف استخراج الـPDF نقطة أو فاصل بعدها.
+            // هذا فحص عام وليس مرتبطاً بمحتوى كتاب معين.
+            string normalizedEnding =
+                Regex.Replace(
+                    segment.Trim(),
+                    @"\s+",
+                    " ");
+
+
+            if (Regex.IsMatch(
+                    normalizedEnding,
+                    @"[:：]\s*[\.\،,؛;!\?؟]*$"))
+            {
+                return false;
+            }
+
+
+            string lastArabicWord =
+                arabicWords
+                    .Cast<Match>()
+                    .Last()
+                    .Value;
+
+
+            string[] invalidEndingWords =
+            {
+                "ال",
+                "و",
+                "في",
+                "من",
+                "إلى",
+                "الى",
+                "على",
+                "عن",
+                "أو",
+                "او",
+                "أن",
+                "ان",
+                "مع"
+            };
+
+
+            if (invalidEndingWords.Contains(
+                    lastArabicWord))
+            {
+                return false;
+            }
+
+
+            return true;
+        }
+
+
+        private static string BuildNumberedSource(
+            IReadOnlyList<string> evidenceSegments)
+        {
+            StringBuilder builder =
+                new StringBuilder();
+
+
+            for (int i = 0;
+                 i < evidenceSegments.Count;
+                 i++)
+            {
+                builder.Append("[E");
+                builder.Append(i);
+                builder.Append("] ");
+                builder.AppendLine(
+                    evidenceSegments[i]);
+            }
+
+
+            return builder.ToString();
+        }
+
+
+        private static void ResolveSourceEvidence(
+            GeneratedQuestion question,
+            IReadOnlyList<string> evidenceSegments)
+        {
+            if (question.SourceEvidenceIndex < 0 ||
+                question.SourceEvidenceIndex >=
+                    evidenceSegments.Count)
+            {
+                throw new InvalidOperationException(
+                    $"AI returned an invalid SourceEvidenceIndex. " +
+                    $"Index=[{question.SourceEvidenceIndex}], " +
+                    $"AvailableSegments=[{evidenceSegments.Count}].");
+            }
+
+
+            question.SourceEvidence =
+                evidenceSegments[
+                    question.SourceEvidenceIndex];
         }
 
 
@@ -199,13 +416,13 @@ namespace DVLD.AI
             {
                 return
                     """
-                    أنت مولد أسئلة احترافي لامتحان قيادة باللغة العربية.
+                    أنت مولد أسئلة احترافي باللغة العربية.
 
-                    أنشئ سؤال صح أو خطأ واحداً فقط من النص المصدر.
+                    أنشئ عبارة صح أو خطأ واحدة فقط من المصدر.
 
                     الشروط الإلزامية:
 
-                    1. استخدم فقط معلومة واضحة ومباشرة في المصدر.
+                    1. استخدم فقط معلومة واضحة ومباشرة من أحد مقاطع المصدر.
                     2. اجعل العبارة محددة وليست عامة أو فضفاضة.
                     3. QuestionText يجب أن يكون عبارة تقريرية يمكن الحكم
                        عليها بصح أو خطأ، وليس سؤالاً استفهامياً.
@@ -214,19 +431,20 @@ namespace DVLD.AI
                     5. لا تنه QuestionText بعلامة استفهام.
                     6. يجب أن تكون العربية طبيعية وسليمة.
                     7. لا تستخدم معرفة خارج المصدر.
-                    8. لا تذكر "المصدر" أو "النص" داخل السؤال.
-                    9. OptionA = "صح".
-                    10. OptionB = "خطأ".
-                    11. OptionC و OptionD فارغان.
-                    12. CorrectOption يجب أن تكون A أو B فقط.
-                    13. Explanation يشرح سبب الإجابة باختصار.
-                    14. SourceEvidence يجب أن يكون مقتطفاً حرفياً
-                        من المصدر يثبت الحقيقة الأساسية مباشرة.
-                    15. SourceEvidence يجب أن يحتوي على 5 كلمات عربية
-                        على الأقل وأن يكون عبارة مكتملة، وليس عنوان قسم
-                        أو عنواناً فرعياً أو نصاً مقطوعاً.
-                    16. لا تكتب Markdown.
-                    17. أرجع JSON فقط.
+                    8. OptionA = "صح".
+                    9. OptionB = "خطأ".
+                    10. OptionC و OptionD فارغان.
+                    11. CorrectOption يجب أن تكون A أو B فقط.
+                    12. SourceEvidenceIndex يجب أن يكون رقم مقطع واحد
+                        من المقاطع [E0] [E1] ... يثبت الإجابة مباشرة.
+                    13. لا تكتب Explanation؛ التطبيق سيبنيه من الدليل.
+                    14. لا تكتب SourceEvidence بنفسك.
+                    15. راجع QuestionText قبل الإرجاع:
+                        يجب أن تكون عبارة تقريرية وليست سؤالاً.
+                    16. لا تذكر أرقام المقاطع مثل [E0] أو [E1]
+                        داخل QuestionText.
+                    17. لا تكتب Markdown.
+                    18. أرجع JSON فقط.
 
                     الشكل المطلوب:
 
@@ -238,8 +456,7 @@ namespace DVLD.AI
                       "optionC": "",
                       "optionD": "",
                       "correctOption": "",
-                      "explanation": "",
-                      "sourceEvidence": ""
+                      "sourceEvidenceIndex": 0
                     }
                     """;
             }
@@ -247,40 +464,37 @@ namespace DVLD.AI
 
             return
                 """
-                أنت مولد أسئلة احترافي لامتحان قيادة باللغة العربية.
+                أنت مولد أسئلة احترافي باللغة العربية.
 
-                أنشئ سؤال اختيار من متعدد واحداً فقط من النص المصدر.
+                أنشئ سؤال اختيار من متعدد واحداً فقط من المصدر.
 
                 الشروط الإلزامية:
 
                 1. استخدم حقيقة أو قاعدة أو إجراء أو رقم أو تعليمات
-                   واضحة ومحددة في المصدر.
-                2. لا تنشئ سؤالاً عاماً مثل:
-                   "ما الممارسة المرورية الآمنة؟"
-                   إذا كان بالإمكان إنشاء سؤال أكثر تحديداً.
-                3. السؤال يجب أن يكون واضحاً ومستقلاً ومفيداً للمتدرب.
+                   واضحة ومحددة من أحد مقاطع المصدر.
+                2. السؤال يجب أن يكون واضحاً ومستقلاً ومفيداً.
+                3. لا تنشئ سؤالاً عاماً إذا كان بالإمكان إنشاء
+                   سؤال أكثر تحديداً.
                 4. يجب أن تكون العربية طبيعية وسليمة.
                 5. أنشئ أربعة خيارات A و B و C و D.
                 6. يجب أن تكون الخيارات الأربعة مختلفة وواضحة.
                 7. يجب أن تكون الخيارات من نفس النوع اللغوي والمنطقي.
-                8. كل خيار يجب أن يكون بالعربية، ولا يحتوي حروفاً
-                   لاتينية أو صينية أو أي حروف من لغة أخرى.
-                9. امنع الخيارات الركيكة أو غير الطبيعية أو المتداخلة.
-                10. يوجد جواب صحيح واحد فقط.
-                11. CorrectOption يجب أن تكون A أو B أو C أو D فقط.
-                12. الإجابة الصحيحة يجب أن تكون مثبتة مباشرة بالمصدر.
-                13. الخيارات الخاطئة يجب أن تكون معقولة لغوياً،
+                8. كل خيار يجب أن يكون بالعربية ولا يحتوي حروفاً
+                   من لغة أخرى.
+                9. يوجد جواب صحيح واحد فقط.
+                10. CorrectOption يجب أن تكون A أو B أو C أو D فقط.
+                11. الإجابة الصحيحة يجب أن تكون مثبتة مباشرة بالمصدر.
+                12. الخيارات الخاطئة يجب أن تكون معقولة لغوياً،
                     لكنها غير صحيحة حسب المعلومة المحددة.
-                14. Explanation يشرح الإجابة الصحيحة باختصار.
-                15. SourceEvidence يجب أن يكون مقتطفاً حرفياً
-                    من المصدر يثبت الإجابة الصحيحة مباشرة.
-                16. SourceEvidence يجب أن يحتوي على 5 كلمات عربية
-                    على الأقل وأن يكون عبارة مكتملة، وليس عنوان قسم
-                    أو عنواناً فرعياً أو نصاً مقطوعاً.
+                13. SourceEvidenceIndex يجب أن يكون رقم مقطع واحد
+                    من المقاطع [E0] [E1] ... يثبت الإجابة مباشرة.
+                14. لا تكتب Explanation؛ التطبيق سيبنيه من الدليل.
+                15. لا تكتب SourceEvidence بنفسك.
+                16. لا تذكر أرقام المقاطع مثل [E0] أو [E1]
+                    داخل QuestionText.
                 17. لا تستخدم معرفة خارج المصدر.
-                18. لا تذكر "المصدر" أو "النص" داخل السؤال.
-                19. لا تكتب Markdown.
-                20. أرجع JSON فقط.
+                18. لا تكتب Markdown.
+                19. أرجع JSON فقط.
 
                 الشكل المطلوب:
 
@@ -292,8 +506,7 @@ namespace DVLD.AI
                   "optionC": "",
                   "optionD": "",
                   "correctOption": "",
-                  "explanation": "",
-                  "sourceEvidence": ""
+                  "sourceEvidenceIndex": 0
                 }
                 """;
         }
@@ -338,8 +551,8 @@ namespace DVLD.AI
                     question.CorrectOption);
 
             question.Explanation =
-                question.Explanation?.Trim() ??
-                string.Empty;
+                SanitizeExplanation(
+                    question.Explanation);
 
             question.SourceEvidence =
                 question.SourceEvidence?.Trim() ??
@@ -375,7 +588,7 @@ namespace DVLD.AI
                 question.SourceEvidence.Length < 15)
             {
                 throw new InvalidOperationException(
-                    "AI did not return sufficient source evidence.");
+                    "AI did not resolve sufficient source evidence.");
             }
 
 
@@ -472,9 +685,110 @@ namespace DVLD.AI
         }
 
 
+        private static string BuildDeterministicExplanation(
+            GeneratedQuestion question)
+        {
+            string evidence =
+                question.SourceEvidence?.Trim() ??
+                string.Empty;
+
+
+            if (question.QuestionType == "TrueFalse")
+            {
+                string answerText =
+                    question.CorrectOption == "A"
+                        ? "صح"
+                        : "خطأ";
+
+
+                return
+                    $"الإجابة الصحيحة هي {answerText}. " +
+                    $"الدليل: {evidence}";
+            }
+
+
+            string correctAnswerText =
+                question.CorrectOption switch
+                {
+                    "A" => question.OptionA,
+                    "B" => question.OptionB,
+                    "C" => question.OptionC,
+                    "D" => question.OptionD,
+                    _ => string.Empty
+                };
+
+
+            return
+                $"الإجابة الصحيحة هي {correctAnswerText}. " +
+                $"الدليل: {evidence}";
+        }
+
+
+        private static string SanitizeExplanation(
+            string explanation)
+        {
+            if (string.IsNullOrWhiteSpace(
+                    explanation))
+            {
+                return string.Empty;
+            }
+
+
+            string cleaned =
+                explanation.Trim();
+
+
+            // إزالة أي مراجع داخلية لمقاطع الدليل مثل [E7].
+            cleaned =
+                Regex.Replace(
+                    cleaned,
+                    @"\[(?:E|e)\d+\]",
+                    string.Empty);
+
+
+            // إذا صاغ النموذج جملة تشير إلى رقم المقطع الداخلي،
+            // نحذف العبارة التقنية نفسها حتى لا تظهر للمستخدم.
+            cleaned =
+                Regex.Replace(
+                    cleaned,
+                    @"\s*(?:كما\s+)?(?:يوضح|يوضّح|ورد\s+في|مذكور\s+في)?\s*(?:المصدر|مصدر|المقطع|مقطع)\s*(?:رقم)?\s*(?=[\.\،\,؛;:]|$)",
+                    string.Empty,
+                    RegexOptions.IgnoreCase);
+
+
+            cleaned =
+                Regex.Replace(
+                    cleaned,
+                    @"\s+",
+                    " ");
+
+
+            cleaned =
+                Regex.Replace(
+                    cleaned,
+                    @"\s+([\.\،\,؛;:])",
+                    "$1");
+
+
+            cleaned =
+                cleaned.Trim();
+
+
+            return cleaned;
+        }
+
+
         private static bool ContainsMetaInstructions(
             string text)
         {
+            if (Regex.IsMatch(
+                    text,
+                    @"\[(?:E|e)\d+\]"))
+            {
+                return true;
+            }
+
+
             string[] forbiddenTexts =
             {
                 "نوع السؤال المطلوب",
@@ -487,6 +801,7 @@ namespace DVLD.AI
                 "optionB",
                 "optionC",
                 "optionD",
+                "SourceEvidenceIndex",
                 "أنشئ سؤال",
                 "أرجع JSON"
             };

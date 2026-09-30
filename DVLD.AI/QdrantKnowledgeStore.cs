@@ -1,6 +1,7 @@
 ﻿using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using static Qdrant.Client.Grpc.Conditions;
+
 namespace DVLD.AI
 {
     public static class QdrantKnowledgeStore
@@ -66,10 +67,12 @@ namespace DVLD.AI
                     point
                 });
         }
+
+
         public static async Task<IReadOnlyList<ScoredPoint>>
-    SearchAsync(
-        float[] queryEmbedding,
-        ulong limit = 5)
+            SearchAsync(
+                float[] queryEmbedding,
+                ulong limit = 5)
         {
             if (queryEmbedding == null ||
                 queryEmbedding.Length !=
@@ -94,8 +97,98 @@ namespace DVLD.AI
 
             return results;
         }
+
+
+        public static async Task<List<TextChunk>>
+            GetDocumentChunksAsync(
+                int documentID)
+        {
+            if (documentID <= 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(documentID));
+            }
+
+
+            QdrantClient client =
+                QdrantConnection.CreateClient();
+
+
+            List<TextChunk> chunks =
+                new List<TextChunk>();
+
+
+            PointId? offset =
+                null;
+
+
+            do
+            {
+                ScrollResponse response =
+                    await client.ScrollAsync(
+                        collectionName:
+                            QdrantConnection.KnowledgeCollectionName,
+
+                        filter:
+                            Match(
+                                "document_id",
+                                documentID),
+
+                        limit:
+                            100,
+
+                        offset:
+                            offset);
+
+
+                foreach (RetrievedPoint point
+                         in response.Result)
+                {
+                    if (!point.Payload.ContainsKey(
+                            "text") ||
+                        !point.Payload.ContainsKey(
+                            "page_number") ||
+                        !point.Payload.ContainsKey(
+                            "chunk_index"))
+                    {
+                        continue;
+                    }
+
+
+                    chunks.Add(
+                        new TextChunk
+                        {
+                            Text =
+                                point.Payload["text"]
+                                    .StringValue,
+
+                            PageNumber =
+                                (int)point.Payload["page_number"]
+                                    .IntegerValue,
+
+                            ChunkIndex =
+                                (int)point.Payload["chunk_index"]
+                                    .IntegerValue
+                        });
+                }
+
+
+                offset =
+                    response.NextPageOffset;
+
+            }
+            while (offset != null);
+
+
+            return chunks
+                .OrderBy(chunk =>
+                    chunk.ChunkIndex)
+                .ToList();
+        }
+
+
         public static async Task DeleteDocumentChunksAsync(
-    int documentID)
+            int documentID)
         {
             if (documentID <= 0)
             {

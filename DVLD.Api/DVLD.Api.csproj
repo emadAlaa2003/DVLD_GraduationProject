@@ -15,4 +15,6 @@
     <ProjectReference Include="..\DVLD_Buisness\DVLD_Buisness.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://www.schemastore.org/zuul.json" /></VisualStudio></ProjectExtensions>
+
 </Project>
