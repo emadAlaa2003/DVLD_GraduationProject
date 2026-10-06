@@ -2,13 +2,22 @@
 using DVLD_Buisness;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-
+using DVLD.Api.Services;
 namespace DVLD.Api.Controllers
 {
     [ApiController]
     [Route("api/question-bank")]
     public class QuestionBankController : ControllerBase
     {
+        private readonly IQuestionGenerationProcessingQueue
+    _questionGenerationQueue;
+
+        public QuestionBankController(
+            IQuestionGenerationProcessingQueue questionGenerationQueue)
+        {
+            _questionGenerationQueue =
+                questionGenerationQueue;
+        }
         // نحافظ على الجودة بدون جعل المستخدم ينتظر عشرات
         // استدعاءات Ollama. لكل سؤال: مصدر أساسي + مصدر بديل واحد.
         private const int MaxSourceAttemptsPerQuestion = 3;
@@ -192,16 +201,12 @@ namespace DVLD.Api.Controllers
 
 
         // =====================================================
-        // توليد مجموعة أسئلة من كتاب كامل
+        // توليد مجموعة أسئلة من كتاب كامل بالخلفية
         // =====================================================
-
         [HttpPost("generate-from-document")]
         public async Task<IActionResult> GenerateFromDocument(
             [FromBody] GenerateQuestionsFromDocumentRequest request)
         {
-            Stopwatch totalStopwatch =
-                Stopwatch.StartNew();
-
             if (request == null)
             {
                 return BadRequest(new
@@ -282,439 +287,76 @@ namespace DVLD.Api.Controllers
             }
 
 
-            Stopwatch qdrantStopwatch =
-                Stopwatch.StartNew();
+            int questionGenerationJobID = -1;
 
-
-            List<TextChunk> allChunks =
-                await QdrantKnowledgeStore
-                    .GetDocumentChunksAsync(
-                        request.DocumentID);
-
-
-            qdrantStopwatch.Stop();
-
-
-            int totalPages =
-                allChunks.Count > 0
-                    ? allChunks.Max(chunk =>
-                        chunk.PageNumber)
-                    : 0;
-
-
-            if (allChunks.Count == 0)
-            {
-                return BadRequest(new
-                {
-                    message =
-                        "No text chunks were found in the document."
-                });
-            }
-
-
-            Stopwatch sourceSelectionStopwatch =
-                Stopwatch.StartNew();
-
-
-            List<QuestionSourceCandidate> selectedSources;
 
             try
             {
-                selectedSources =
-                    QuestionSourceSelector
-                        .SelectBestSources(
-                            allChunks,
-                            totalPages,
-                            totalQuestions);
-            }
-            catch (InvalidOperationException ex)
-            {
-                sourceSelectionStopwatch.Stop();
-                totalStopwatch.Stop();
+                questionGenerationJobID =
+                    clsQuestionGenerationJob
+                        .AddNewJob(
+                            request.DocumentID,
+                            request.MultipleChoiceCount,
+                            request.TrueFalseCount);
 
-                return BadRequest(new
+
+                if (questionGenerationJobID <= 0)
                 {
-                    message =
-                        ex.Message,
+                    return StatusCode(
+                        StatusCodes.Status500InternalServerError,
+                        new
+                        {
+                            message =
+                                "Question generation job could not be created."
+                        });
+                }
 
-                    performance = new
-                    {
-                        QdrantLoadMs =
-                            qdrantStopwatch.ElapsedMilliseconds,
 
-                        SourceSelectionMs =
-                            sourceSelectionStopwatch.ElapsedMilliseconds,
+                QuestionGenerationProcessingJob job =
+                    new QuestionGenerationProcessingJob(
+                        questionGenerationJobID,
+                        request.DocumentID,
+                        request.MultipleChoiceCount,
+                        request.TrueFalseCount);
 
-                        TotalMs =
-                            totalStopwatch.ElapsedMilliseconds
-                    }
-                });
+
+                await _questionGenerationQueue
+                    .QueueAsync(job);
             }
-
-
-            sourceSelectionStopwatch.Stop();
-
-
-            // Pool احتياطي للمصدر البديل فقط.
-            List<QuestionSourceCandidate> fallbackSources =
-                allChunks
-                    .Select(chunk =>
-                        QuestionSourceSelector
-                            .EvaluateChunk(chunk))
-                    .Where(candidate =>
-                        candidate.IsSuitable)
-                    .OrderByDescending(candidate =>
-                        candidate.ExamValueScore)
-                    .ThenByDescending(candidate =>
-                        candidate.QualityScore)
-                    .ToList();
-
-
-            List<string> questionTypes =
-                BuildQuestionTypes(
-                    request.MultipleChoiceCount,
-                    request.TrueFalseCount);
-
-
-            List<PendingGeneratedQuestion> pendingQuestions =
-                new List<PendingGeneratedQuestion>();
-
-
-            HashSet<int> usedChunkIndexes =
-                new HashSet<int>();
-
-
-            int rejectedSourceAttempts =
-                0;
-
-
-            List<object> generationAttemptTimings =
-                new List<object>();
-
-
-            List<object> failedQuestions =
-                new List<object>();
-
-
-            for (int i = 0;
-                 i < totalQuestions;
-                 i++)
+            catch (Exception ex)
             {
-                string questionType =
-                    questionTypes[i];
-
-
-                QuestionSourceCandidate primarySource =
-                    selectedSources[i];
-
-
-                List<QuestionSourceCandidate> sourcesForQuestion =
-                    BuildSourceAttempts(
-                        primarySource,
-                        fallbackSources,
-                        usedChunkIndexes,
-                        MaxSourceAttemptsPerQuestion);
-
-
-                PendingGeneratedQuestion acceptedQuestion =
-                    null;
-
-
-                Exception lastException =
-                    null;
-
-
-                foreach (QuestionSourceCandidate sourceCandidate
-                         in sourcesForQuestion)
+                if (questionGenerationJobID > 0)
                 {
-                    TextChunk sourceChunk =
-                        sourceCandidate.Chunk;
-
-
-                    usedChunkIndexes.Add(
-                        sourceChunk.ChunkIndex);
-
-
-                    Stopwatch generationAttemptStopwatch =
-                        Stopwatch.StartNew();
-
-
                     try
                     {
-                        EvidenceBackedGeneratedQuestion validatedQuestion =
-                            await GenerateEvidenceBackedQuestion(
-                                sourceChunk.Text,
-                                questionType);
-
-
-                        bool isDuplicate =
-                            clsQuestionBank.IsDuplicateQuestion(
-                                validatedQuestion.Question.QuestionText,
-                                request.DocumentID,
-                                validatedQuestion.Question.SourceEvidence);
-
-
-                        if (isDuplicate)
-                        {
-                            throw new InvalidOperationException(
-                                "Generated question duplicates an existing active question from the same document.");
-                        }
-
-
-                        generationAttemptStopwatch.Stop();
-
-
-                        generationAttemptTimings.Add(
-                            new
-                            {
-                                QuestionNumber =
-                                    i + 1,
-
-                                QuestionType =
-                                    questionType,
-
-                                SourceChunkIndex =
-                                    sourceChunk.ChunkIndex,
-
-                                SourcePageNumber =
-                                    sourceChunk.PageNumber,
-
-                                Success =
-                                    true,
-
-                                ElapsedMs =
-                                    generationAttemptStopwatch.ElapsedMilliseconds,
-
-                                Error =
-                                    (string)null
-                            });
-
-
-                        acceptedQuestion =
-                            new PendingGeneratedQuestion
-                            {
-                                Question =
-                                    validatedQuestion.Question,
-
-                                EvidenceValidation =
-                                    validatedQuestion.EvidenceValidation,
-
-                                SourcePageNumber =
-                                    sourceChunk.PageNumber,
-
-                                SourceChunkIndex =
-                                    sourceChunk.ChunkIndex,
-
-                                SourceQualityScore =
-                                    sourceCandidate.QualityScore
-                            };
-
-
-                        break;
+                        clsQuestionGenerationJob
+                            .MarkFailed(
+                                questionGenerationJobID,
+                                ex.Message);
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        generationAttemptStopwatch.Stop();
-
-
-                        generationAttemptTimings.Add(
-                            new
-                            {
-                                QuestionNumber =
-                                    i + 1,
-
-                                QuestionType =
-                                    questionType,
-
-                                SourceChunkIndex =
-                                    sourceChunk.ChunkIndex,
-
-                                SourcePageNumber =
-                                    sourceChunk.PageNumber,
-
-                                Success =
-                                    false,
-
-                                ElapsedMs =
-                                    generationAttemptStopwatch.ElapsedMilliseconds,
-
-                                Error =
-                                    ex.Message
-                            });
-
-
-                        lastException =
-                            ex;
-
-                        rejectedSourceAttempts++;
                     }
                 }
 
 
-                if (acceptedQuestion == null)
-                {
-                    failedQuestions.Add(new
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new
                     {
-                        QuestionNumber =
-                            i + 1,
-
-                        QuestionType =
-                            questionType,
-
-                        Attempts =
-                            sourcesForQuestion.Count,
-
-                        LastError =
-                            lastException?.Message
+                        message =
+                            "Question generation request could not be queued."
                     });
-
-
-                    // فشل سؤال واحد لا يوقف بقية الدفعة.
-                    // نكمل للأسئلة التالية، ونرجع ملخصاً كاملاً في النهاية.
-                    continue;
-                }
-
-
-                pendingQuestions.Add(
-                    acceptedQuestion);
             }
 
 
-            if (pendingQuestions.Count == 0)
+            return Accepted(new
             {
-                totalStopwatch.Stop();
+                QuestionGenerationJobID =
+                    questionGenerationJobID,
 
-                return BadRequest(new
-                {
-                    message =
-                        "No questions could be generated from the requested batch.",
-
-                    RequestedQuestions =
-                        totalQuestions,
-
-                    GeneratedQuestions =
-                        0,
-
-                    FailedQuestions =
-                        failedQuestions.Count,
-
-                    RejectedSourceAttempts =
-                        rejectedSourceAttempts,
-
-                    QuestionFailures =
-                        failedQuestions,
-
-                    Performance = new
-                    {
-                        QdrantLoadMs =
-                            qdrantStopwatch.ElapsedMilliseconds,
-
-                        SourceSelectionMs =
-                            sourceSelectionStopwatch.ElapsedMilliseconds,
-
-                        GenerationAttempts =
-                            generationAttemptTimings,
-
-                        TotalMs =
-                            totalStopwatch.ElapsedMilliseconds
-                    }
-                });
-            }
-
-
-            // نحفظ كل سؤال نجح، حتى لو فشلت بعض أسئلة الدفعة.
-            List<object> generatedQuestions =
-                new List<object>();
-
-
-            Stopwatch saveStopwatch =
-                Stopwatch.StartNew();
-
-
-            foreach (PendingGeneratedQuestion pending
-                     in pendingQuestions)
-            {
-                int questionID =
-                    SaveQuestion(
-                        pending.Question,
-                        request.DocumentID,
-                        pending.SourcePageNumber,
-                        pending.SourceChunkIndex);
-
-
-                generatedQuestions.Add(new
-                {
-                    QuestionID =
-                        questionID,
-
-                    QuestionText =
-                        pending.Question.QuestionText,
-
-                    QuestionType =
-                        pending.Question.QuestionType,
-
-                    OptionA =
-                        pending.Question.OptionA,
-
-                    OptionB =
-                        pending.Question.OptionB,
-
-                    OptionC =
-                        pending.Question.OptionC,
-
-                    OptionD =
-                        pending.Question.OptionD,
-
-                    CorrectOption =
-                        pending.Question.CorrectOption,
-
-                    Explanation =
-                        pending.Question.Explanation,
-
-                    SourceEvidence =
-                        pending.Question.SourceEvidence,
-
-                    EvidenceValidated =
-                        pending.EvidenceValidation.IsValid,
-
-                    ReviewStatus =
-                        "Draft",
-
-                    SourceDocumentID =
-                        request.DocumentID,
-
-                    SourcePageNumber =
-                        pending.SourcePageNumber,
-
-                    SourceChunkIndex =
-                        pending.SourceChunkIndex,
-
-                    SourceQualityScore =
-                        pending.SourceQualityScore
-                });
-            }
-
-
-            saveStopwatch.Stop();
-            totalStopwatch.Stop();
-
-
-            return Ok(new
-            {
                 DocumentID =
                     request.DocumentID,
-
-                TotalPages =
-                    totalPages,
-
-                TotalChunks =
-                    allChunks.Count,
-
-                SelectedSources =
-                    selectedSources.Count,
-
-                RequestedQuestions =
-                    totalQuestions,
 
                 MultipleChoiceCount =
                     request.MultipleChoiceCount,
@@ -722,50 +364,89 @@ namespace DVLD.Api.Controllers
                 TrueFalseCount =
                     request.TrueFalseCount,
 
-                GeneratedQuestions =
-                    generatedQuestions.Count,
-
-                FailedQuestions =
-                    failedQuestions.Count,
-
-                IsComplete =
-                    generatedQuestions.Count ==
+                TotalQuestions =
                     totalQuestions,
 
-                RejectedSourceAttempts =
-                    rejectedSourceAttempts,
+                Status =
+                    "Pending",
 
-                QuestionFailures =
-                    failedQuestions,
-
-                Performance = new
-                {
-                    QdrantLoadMs =
-                        qdrantStopwatch.ElapsedMilliseconds,
-
-                    SourceSelectionMs =
-                        sourceSelectionStopwatch.ElapsedMilliseconds,
-
-                    GenerationAttempts =
-                        generationAttemptTimings,
-
-                    SqlSaveMs =
-                        saveStopwatch.ElapsedMilliseconds,
-
-                    TotalMs =
-                        totalStopwatch.ElapsedMilliseconds
-                },
-
-                Questions =
-                    generatedQuestions
+                message =
+                    "Question generation started in the background."
             });
         }
 
+        // =====================================================
+        // متابعة حالة توليد الأسئلة بالخلفية
+        // =====================================================
+        [HttpGet("generation-jobs/{questionGenerationJobID:int}")]
+        public IActionResult GetGenerationJobStatus(
+            int questionGenerationJobID)
+        {
+            if (questionGenerationJobID <= 0)
+            {
+                return BadRequest(new
+                {
+                    message =
+                        "Invalid question generation job ID."
+                });
+            }
 
+
+            clsQuestionGenerationJob job =
+                clsQuestionGenerationJob.Find(
+                    questionGenerationJobID);
+
+
+            if (job == null)
+            {
+                return NotFound(new
+                {
+                    message =
+                        "Question generation job was not found."
+                });
+            }
+
+
+            return Ok(new
+            {
+                QuestionGenerationJobID =
+                    job.QuestionGenerationJobID,
+
+                DocumentID =
+                    job.DocumentID,
+
+                MultipleChoiceCount =
+                    job.MultipleChoiceCount,
+
+                TrueFalseCount =
+                    job.TrueFalseCount,
+
+                TotalQuestions =
+                    job.MultipleChoiceCount +
+                    job.TrueFalseCount,
+
+                Status =
+                    job.Status,
+
+                RequestedAt =
+                    job.RequestedAt,
+
+                StartedAt =
+                    job.StartedAt,
+
+                FinishedAt =
+                    job.FinishedAt,
+
+                GeneratedQuestionsCount =
+                    job.GeneratedQuestionsCount,
+
+                ErrorMessage =
+                    job.ErrorMessage
+            });
+        }
         // =====================================================
         // التوليد + التحقق البرمجي من الدليل
         // =====================================================
-
         private static async Task<EvidenceBackedGeneratedQuestion>
             GenerateEvidenceBackedQuestion(
                 string sourceText,
@@ -808,7 +489,6 @@ namespace DVLD.Api.Controllers
                     evidenceValidation
             };
         }
-
 
         // =====================================================
         // Structural validation

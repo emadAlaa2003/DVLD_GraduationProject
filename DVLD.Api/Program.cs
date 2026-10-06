@@ -10,6 +10,12 @@ builder.Services.AddSingleton<
 
 builder.Services.AddHostedService<
     KnowledgeDocumentBackgroundWorker>();
+builder.Services.AddSingleton<
+    IQuestionGenerationProcessingQueue,
+    QuestionGenerationProcessingQueue>();
+
+builder.Services.AddHostedService<
+    QuestionGenerationBackgroundWorker>();
 builder.Services.AddOpenApi();
 
 // Centralized API error responses

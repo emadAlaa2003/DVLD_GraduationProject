@@ -349,6 +349,12 @@
     <Compile Include="QuestionBank\frmAddUpdateQuestion.Designer.cs">
       <DependentUpon>frmAddUpdateQuestion.cs</DependentUpon>
     </Compile>
+    <Compile Include="QuestionBank\frmGenerateQuestions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="QuestionBank\frmGenerateQuestions.Designer.cs">
+      <DependentUpon>frmGenerateQuestions.cs</DependentUpon>
+    </Compile>
     <Compile Include="QuestionBank\frmManageQuestions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -575,6 +581,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="QuestionBank\frmAddUpdateQuestion.resx">
       <DependentUpon>frmAddUpdateQuestion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="QuestionBank\frmGenerateQuestions.resx">
+      <DependentUpon>frmGenerateQuestions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="QuestionBank\frmManageQuestions.resx">
       <DependentUpon>frmManageQuestions.cs</DependentUpon>
@@ -1126,6 +1135,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\refresh_24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Magic Wand801.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Magic Wand40.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Magic Wand802.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\Microsoft.Data.SqlClient.SNI.6.0.2\build\net462\Microsoft.Data.SqlClient.SNI.targets" Condition="Exists('packages\Microsoft.Data.SqlClient.SNI.6.0.2\build\net462\Microsoft.Data.SqlClient.SNI.targets')" />

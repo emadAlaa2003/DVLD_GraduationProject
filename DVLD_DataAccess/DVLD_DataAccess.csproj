@@ -31,6 +31,7 @@
 		<Compile Include="clsOfficialExamSessionData.cs" />
 		<Compile Include="clsOfficialExamStartData.cs" />
 		<Compile Include="clsQuestionBankData.cs" />
+		<Compile Include="clsQuestionGenerationJobData.cs" />
 		<Compile Include="clsTestAppointment.cs" />
 		<Compile Include="clsTest.cs" />
 		<Compile Include="clsTestType.cs" />

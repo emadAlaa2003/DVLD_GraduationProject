@@ -32,9 +32,18 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvQuestions = new System.Windows.Forms.DataGridView();
             this.cmsQuestions = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addNewQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.approveQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rejectQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.activateQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deactivateQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.deleteQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label2 = new System.Windows.Forms.Label();
             this.lblRecordsCount = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -43,16 +52,8 @@
             this.lblTitle = new System.Windows.Forms.Label();
             this.cbIsActive = new System.Windows.Forms.ComboBox();
             this.cbReviewStatus = new System.Windows.Forms.ComboBox();
+            this.btnGenerate = new System.Windows.Forms.Button();
             this.btnAddPerson = new System.Windows.Forms.Button();
-            this.addNewQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.approveQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rejectQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.activateQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deactivateQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteQuestionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pbPersonImage = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuestions)).BeginInit();
@@ -109,20 +110,92 @@
             this.cmsQuestions.Name = "cmsQuestions";
             this.cmsQuestions.Size = new System.Drawing.Size(202, 220);
             // 
+            // addNewQuestionToolStripMenuItem
+            // 
+            this.addNewQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.add_question_32;
+            this.addNewQuestionToolStripMenuItem.Name = "addNewQuestionToolStripMenuItem";
+            this.addNewQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.addNewQuestionToolStripMenuItem.Text = "Add New Question";
+            this.addNewQuestionToolStripMenuItem.Click += new System.EventHandler(this.addNewQuestionToolStripMenuItem_Click);
+            // 
+            // showDetailsToolStripMenuItem
+            // 
+            this.showDetailsToolStripMenuItem.Image = global::DVLD.Properties.Resources.show_details_32;
+            this.showDetailsToolStripMenuItem.Name = "showDetailsToolStripMenuItem";
+            this.showDetailsToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.showDetailsToolStripMenuItem.Text = "Show Details";
+            this.showDetailsToolStripMenuItem.Click += new System.EventHandler(this.showDetailsToolStripMenuItem_Click);
+            // 
+            // editQuestionToolStripMenuItem
+            // 
+            this.editQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.edit_question_32;
+            this.editQuestionToolStripMenuItem.Name = "editQuestionToolStripMenuItem";
+            this.editQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.editQuestionToolStripMenuItem.Text = "Edit Question";
+            this.editQuestionToolStripMenuItem.Click += new System.EventHandler(this.editQuestionToolStripMenuItem_Click);
+            // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(198, 6);
+            // 
+            // approveQuestionToolStripMenuItem
+            // 
+            this.approveQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.approve_question_32;
+            this.approveQuestionToolStripMenuItem.Name = "approveQuestionToolStripMenuItem";
+            this.approveQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.approveQuestionToolStripMenuItem.Text = "Approve Question";
+            this.approveQuestionToolStripMenuItem.Click += new System.EventHandler(this.approveQuestionToolStripMenuItem_Click);
+            // 
+            // rejectQuestionToolStripMenuItem
+            // 
+            this.rejectQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.reject_question_32;
+            this.rejectQuestionToolStripMenuItem.Name = "rejectQuestionToolStripMenuItem";
+            this.rejectQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.rejectQuestionToolStripMenuItem.Text = "Reject Question";
+            this.rejectQuestionToolStripMenuItem.Click += new System.EventHandler(this.rejectQuestionToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(198, 6);
             // 
+            // activateQuestionToolStripMenuItem
+            // 
+            this.activateQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.activate_question_32;
+            this.activateQuestionToolStripMenuItem.Name = "activateQuestionToolStripMenuItem";
+            this.activateQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.activateQuestionToolStripMenuItem.Text = "Activate Question";
+            this.activateQuestionToolStripMenuItem.Click += new System.EventHandler(this.activateQuestionToolStripMenuItem_Click);
+            // 
+            // deactivateQuestionToolStripMenuItem
+            // 
+            this.deactivateQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.deactivate_question_321;
+            this.deactivateQuestionToolStripMenuItem.Name = "deactivateQuestionToolStripMenuItem";
+            this.deactivateQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.deactivateQuestionToolStripMenuItem.Text = "Deactivate Question";
+            this.deactivateQuestionToolStripMenuItem.Click += new System.EventHandler(this.deactivateQuestionToolStripMenuItem_Click);
+            // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.Size = new System.Drawing.Size(198, 6);
+            // 
+            // deleteQuestionToolStripMenuItem
+            // 
+            this.deleteQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.delete_question_32;
+            this.deleteQuestionToolStripMenuItem.Name = "deleteQuestionToolStripMenuItem";
+            this.deleteQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.deleteQuestionToolStripMenuItem.Text = "Delete Question";
+            this.deleteQuestionToolStripMenuItem.Click += new System.EventHandler(this.deleteQuestionToolStripMenuItem_Click);
+            // 
+            // refreshToolStripMenuItem
+            // 
+            this.refreshToolStripMenuItem.Image = global::DVLD.Properties.Resources.refresh_32;
+            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
+            this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // label2
             // 
@@ -223,6 +296,17 @@
             this.cbReviewStatus.Visible = false;
             this.cbReviewStatus.SelectedIndexChanged += new System.EventHandler(this.cbReviewStatus_SelectedIndexChanged);
             // 
+            // btnGenerate
+            // 
+            this.btnGenerate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGenerate.Image = global::DVLD.Properties.Resources.Magic_Wand802;
+            this.btnGenerate.Location = new System.Drawing.Point(891, 166);
+            this.btnGenerate.Name = "btnGenerate";
+            this.btnGenerate.Size = new System.Drawing.Size(101, 101);
+            this.btnGenerate.TabIndex = 143;
+            this.btnGenerate.UseVisualStyleBackColor = true;
+            this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
+            // 
             // btnAddPerson
             // 
             this.btnAddPerson.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -233,78 +317,6 @@
             this.btnAddPerson.TabIndex = 133;
             this.btnAddPerson.UseVisualStyleBackColor = true;
             this.btnAddPerson.Click += new System.EventHandler(this.btnAddPerson_Click);
-            // 
-            // addNewQuestionToolStripMenuItem
-            // 
-            this.addNewQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.add_question_32;
-            this.addNewQuestionToolStripMenuItem.Name = "addNewQuestionToolStripMenuItem";
-            this.addNewQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.addNewQuestionToolStripMenuItem.Text = "Add New Question";
-            this.addNewQuestionToolStripMenuItem.Click += new System.EventHandler(this.addNewQuestionToolStripMenuItem_Click);
-            // 
-            // showDetailsToolStripMenuItem
-            // 
-            this.showDetailsToolStripMenuItem.Image = global::DVLD.Properties.Resources.show_details_32;
-            this.showDetailsToolStripMenuItem.Name = "showDetailsToolStripMenuItem";
-            this.showDetailsToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.showDetailsToolStripMenuItem.Text = "Show Details";
-            this.showDetailsToolStripMenuItem.Click += new System.EventHandler(this.showDetailsToolStripMenuItem_Click);
-            // 
-            // editQuestionToolStripMenuItem
-            // 
-            this.editQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.edit_question_32;
-            this.editQuestionToolStripMenuItem.Name = "editQuestionToolStripMenuItem";
-            this.editQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.editQuestionToolStripMenuItem.Text = "Edit Question";
-            this.editQuestionToolStripMenuItem.Click += new System.EventHandler(this.editQuestionToolStripMenuItem_Click);
-            // 
-            // approveQuestionToolStripMenuItem
-            // 
-            this.approveQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.approve_question_32;
-            this.approveQuestionToolStripMenuItem.Name = "approveQuestionToolStripMenuItem";
-            this.approveQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.approveQuestionToolStripMenuItem.Text = "Approve Question";
-            this.approveQuestionToolStripMenuItem.Click += new System.EventHandler(this.approveQuestionToolStripMenuItem_Click);
-            // 
-            // rejectQuestionToolStripMenuItem
-            // 
-            this.rejectQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.reject_question_32;
-            this.rejectQuestionToolStripMenuItem.Name = "rejectQuestionToolStripMenuItem";
-            this.rejectQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.rejectQuestionToolStripMenuItem.Text = "Reject Question";
-            this.rejectQuestionToolStripMenuItem.Click += new System.EventHandler(this.rejectQuestionToolStripMenuItem_Click);
-            // 
-            // activateQuestionToolStripMenuItem
-            // 
-            this.activateQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.activate_question_32;
-            this.activateQuestionToolStripMenuItem.Name = "activateQuestionToolStripMenuItem";
-            this.activateQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.activateQuestionToolStripMenuItem.Text = "Activate Question";
-            this.activateQuestionToolStripMenuItem.Click += new System.EventHandler(this.activateQuestionToolStripMenuItem_Click);
-            // 
-            // deactivateQuestionToolStripMenuItem
-            // 
-            this.deactivateQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.deactivate_question_321;
-            this.deactivateQuestionToolStripMenuItem.Name = "deactivateQuestionToolStripMenuItem";
-            this.deactivateQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.deactivateQuestionToolStripMenuItem.Text = "Deactivate Question";
-            this.deactivateQuestionToolStripMenuItem.Click += new System.EventHandler(this.deactivateQuestionToolStripMenuItem_Click);
-            // 
-            // deleteQuestionToolStripMenuItem
-            // 
-            this.deleteQuestionToolStripMenuItem.Image = global::DVLD.Properties.Resources.delete_question_32;
-            this.deleteQuestionToolStripMenuItem.Name = "deleteQuestionToolStripMenuItem";
-            this.deleteQuestionToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.deleteQuestionToolStripMenuItem.Text = "Delete Question";
-            this.deleteQuestionToolStripMenuItem.Click += new System.EventHandler(this.deleteQuestionToolStripMenuItem_Click);
-            // 
-            // refreshToolStripMenuItem
-            // 
-            this.refreshToolStripMenuItem.Image = global::DVLD.Properties.Resources.refresh_32;
-            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(201, 22);
-            this.refreshToolStripMenuItem.Text = "Refresh";
-            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // pictureBox1
             // 
@@ -338,6 +350,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(1134, 661);
+            this.Controls.Add(this.btnGenerate);
             this.Controls.Add(this.cbReviewStatus);
             this.Controls.Add(this.cbIsActive);
             this.Controls.Add(this.lblTitle);
@@ -391,5 +404,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem deleteQuestionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
+        private System.Windows.Forms.Button btnGenerate;
     }
 }

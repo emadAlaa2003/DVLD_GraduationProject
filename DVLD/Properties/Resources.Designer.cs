@@ -903,9 +903,39 @@ namespace DVLD.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Magic_Wand40 {
+            get {
+                object obj = ResourceManager.GetObject("Magic Wand40", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Magic_Wand80 {
             get {
                 object obj = ResourceManager.GetObject("Magic Wand80", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Magic_Wand801 {
+            get {
+                object obj = ResourceManager.GetObject("Magic Wand801", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Magic_Wand802 {
+            get {
+                object obj = ResourceManager.GetObject("Magic Wand802", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

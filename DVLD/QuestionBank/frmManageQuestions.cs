@@ -13,9 +13,30 @@ namespace DVLD.QuestionBank
 {
     public partial class frmManageQuestions : Form
     {
+        private DVLD.frmMain _frmMain;
+        private int _GeneratedDocumentID = -1;
+        private int _GeneratedQuestionsCount = 0;
         public frmManageQuestions()
         {
             InitializeComponent();
+        }
+
+        public frmManageQuestions(DVLD.frmMain frmMain)
+        {
+            InitializeComponent();
+
+            _frmMain = frmMain;
+        }
+        public frmManageQuestions(
+    DVLD.frmMain frmMain,
+    int generatedDocumentID,
+    int generatedQuestionsCount)
+        {
+            InitializeComponent();
+
+            _frmMain = frmMain;
+            _GeneratedDocumentID = generatedDocumentID;
+            _GeneratedQuestionsCount = generatedQuestionsCount;
         }
         private DataTable _dtAllQuestions = new DataTable();
         private DataTable _dtQuestions = new DataTable();
@@ -24,9 +45,38 @@ namespace DVLD.QuestionBank
         {
             try
             {
-                _dtAllQuestions = clsQuestionBank.GetAllQuestions();
+                _dtAllQuestions =
+    clsQuestionBank.GetAllQuestions();
 
-                _dtQuestions = _dtAllQuestions.DefaultView.ToTable(
+                DataTable sourceTable =
+                    _dtAllQuestions;
+
+                if (_GeneratedDocumentID > 0 &&
+                    _GeneratedQuestionsCount > 0)
+                {
+                    DataRow[] generatedRows =
+                        _dtAllQuestions.Select(
+                            "SourceDocumentID = " +
+                            _GeneratedDocumentID +
+                            " AND ReviewStatus = 'Draft'",
+                            "QuestionID DESC");
+
+                    sourceTable =
+                        _dtAllQuestions.Clone();
+
+                    int rowsToTake =
+                        Math.Min(
+                            _GeneratedQuestionsCount,
+                            generatedRows.Length);
+
+                    for (int i = 0; i < rowsToTake; i++)
+                    {
+                        sourceTable.ImportRow(
+                            generatedRows[i]);
+                    }
+                }
+
+                _dtQuestions = sourceTable.DefaultView.ToTable(
                     false,
                     "QuestionID",
                     "QuestionText",
@@ -115,7 +165,7 @@ namespace DVLD.QuestionBank
                 cbIsActive.Focus();
                 cbIsActive.SelectedIndex = 0;
             }
-            else if(cbFilterBy.Text == "Review Status")
+            else if (cbFilterBy.Text == "Review Status")
             {
                 txtFilterValue.Visible = false;
                 cbIsActive.Visible = false;
@@ -238,12 +288,12 @@ namespace DVLD.QuestionBank
 
             lblRecordsCount.Text =
                 _dtQuestions.DefaultView.Count.ToString();
-        
-    }
+
+        }
 
         private void btnAddPerson_Click(object sender, EventArgs e)
         {
-            frmAddUpdateQuestion frm=new frmAddUpdateQuestion();
+            frmAddUpdateQuestion frm = new frmAddUpdateQuestion();
             frm.ShowDialog();
             _RefreshQuestionsList();
         }
@@ -269,7 +319,7 @@ namespace DVLD.QuestionBank
 
         private void showDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmShowQuestionInfo frm=new frmShowQuestionInfo((int)dgvQuestions.CurrentRow.Cells[0].Value);
+            frmShowQuestionInfo frm = new frmShowQuestionInfo((int)dgvQuestions.CurrentRow.Cells[0].Value);
             frm.ShowDialog();
             _RefreshQuestionsList();
         }
@@ -360,7 +410,7 @@ namespace DVLD.QuestionBank
             }
         }
 
-        
+
 
         private void rejectQuestionToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -446,7 +496,7 @@ namespace DVLD.QuestionBank
             }
         }
 
-        
+
 
         private void activateQuestionToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -521,7 +571,7 @@ namespace DVLD.QuestionBank
             }
         }
 
-        
+
 
         private void deactivateQuestionToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -596,7 +646,7 @@ namespace DVLD.QuestionBank
             }
         }
 
-        
+
 
         private void deleteQuestionToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -667,7 +717,7 @@ namespace DVLD.QuestionBank
             }
         }
 
-        
+
 
         private void dgvQuestions_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -679,6 +729,18 @@ namespace DVLD.QuestionBank
                 dgvQuestions.CurrentCell =
                     dgvQuestions.Rows[e.RowIndex].Cells[0];
             }
+        }
+
+        private void btnGenerate_Click(object sender, EventArgs e)
+        {
+
+            frmGenerateQuestions frm =
+                new frmGenerateQuestions(_frmMain);
+
+            frm.ShowDialog();
+
+            _RefreshQuestionsList();
+
         }
     }
 }
