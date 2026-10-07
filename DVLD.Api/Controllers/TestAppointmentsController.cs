@@ -1,4 +1,6 @@
-﻿using DVLD_Buisness;
+﻿using DVLD.Api.Authentication;
+using DVLD_Buisness;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
@@ -6,11 +8,24 @@ namespace DVLD.Api.Controllers
 {
     [ApiController]
     [Route("api/people/{personId}/test-appointments")]
+    [Authorize(AuthenticationSchemes = MobileAuthDefaults.Scheme)]
     public class TestAppointmentsController : ControllerBase
     {
         [HttpGet]
         public IActionResult GetPersonTestAppointments(int personId)
         {
+            if (!MobileAuthClaims.TryGetPersonId(
+                    User,
+                    out int authenticatedPersonId))
+            {
+                return Unauthorized();
+            }
+
+            if (personId != authenticatedPersonId)
+            {
+                return NotFound();
+            }
+
             clsPerson person = clsPerson.Find(personId);
 
             if (person == null)
@@ -81,14 +96,32 @@ namespace DVLD.Api.Controllers
 
             return Ok(result);
         }
+
         [HttpGet("/api/test-appointments/{testAppointmentId}")]
         public IActionResult GetTestAppointmentById(int testAppointmentId)
         {
+            if (!MobileAuthClaims.TryGetPersonId(
+                    User,
+                    out int authenticatedPersonId))
+            {
+                return Unauthorized();
+            }
+
             clsTestAppointment appointment =
                 clsTestAppointment.Find(testAppointmentId);
 
             if (appointment == null)
                 return NotFound();
+
+            clsLocalDrivingLicenseApplication localApplication =
+                clsLocalDrivingLicenseApplication.FindByLocalDrivingAppLicenseID(
+                    appointment.LocalDrivingLicenseApplicationID);
+
+            if (localApplication == null ||
+                localApplication.ApplicantPersonID != authenticatedPersonId)
+            {
+                return NotFound();
+            }
 
             int testID = appointment.TestID;
 
