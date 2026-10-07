@@ -323,6 +323,16 @@ namespace DVLD.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ChatGPT_Image_Oct_7__2026__09_50_09_PM_2 {
+            get {
+                object obj = ResourceManager.GetObject("ChatGPT Image Oct 7, 2026, 09_50_09 PM-2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Checkbox {
             get {
                 object obj = ResourceManager.GetObject("Checkbox", resourceCulture);
@@ -476,6 +486,16 @@ namespace DVLD.Properties {
         internal static System.Drawing.Bitmap deactivate_question_322 {
             get {
                 object obj = ResourceManager.GetObject("deactivate-question_322", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap deactivate_question_323 {
+            get {
+                object obj = ResourceManager.GetObject("deactivate-question_323", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -683,6 +703,26 @@ namespace DVLD.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Glossy_Mobile_Account_Settings_Icon {
+            get {
+                object obj = ResourceManager.GetObject("Glossy Mobile Account Settings Icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Glossy_Mobile_Account_Settings_Icon1 {
+            get {
+                object obj = ResourceManager.GetObject("Glossy Mobile Account Settings Icon1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IconLogo {
             get {
                 object obj = ResourceManager.GetObject("IconLogo", resourceCulture);
@@ -733,6 +773,36 @@ namespace DVLD.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_key_94 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-key-94", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_key_941 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-key-941", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_mobile_account_53 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-mobile-account-53", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_one_page_48 {
             get {
                 object obj = ResourceManager.GetObject("icons8-one-page-48", resourceCulture);
@@ -766,6 +836,16 @@ namespace DVLD.Properties {
         internal static System.Drawing.Bitmap icons8_pdf_1001 {
             get {
                 object obj = ResourceManager.GetObject("icons8-pdf-1001", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_signal_60 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-signal-60", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -986,6 +1066,36 @@ namespace DVLD.Properties {
         internal static System.Drawing.Bitmap Manage_People {
             get {
                 object obj = ResourceManager.GetObject("Manage People", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap MobileAccount_Active {
+            get {
+                object obj = ResourceManager.GetObject("MobileAccount_Active", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap MobileAccount_Inactive {
+            get {
+                object obj = ResourceManager.GetObject("MobileAccount_Inactive", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap MobileAccount_NoAccount {
+            get {
+                object obj = ResourceManager.GetObject("MobileAccount_NoAccount", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1226,6 +1336,16 @@ namespace DVLD.Properties {
         internal static System.Drawing.Bitmap questionType {
             get {
                 object obj = ResourceManager.GetObject("questionType", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap refresh_16 {
+            get {
+                object obj = ResourceManager.GetObject("refresh_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -1,18 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using DVLD.Api.Authentication;
 using DVLD_Buisness;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD.Api.Controllers
 {
     [ApiController]
     [Route("api/people/{personId}/applications")]
+    [Authorize(AuthenticationSchemes = MobileAuthDefaults.Scheme)]
     public class ApplicationsController : ControllerBase
     {
         [HttpGet]
         public IActionResult GetPersonApplications(int personId)
         {
+            if (!MobileAuthClaims.TryGetPersonId(
+                    User,
+                    out int authenticatedPersonId))
+            {
+                return Unauthorized();
+            }
+
+            if (personId != authenticatedPersonId)
+            {
+                return NotFound();
+            }
+
             clsPerson person = clsPerson.Find(personId);
 
             if (person == null)
@@ -88,11 +103,21 @@ namespace DVLD.Api.Controllers
         [HttpGet("/api/applications/{applicationId}")]
         public IActionResult GetApplicationById(int applicationId)
         {
+            if (!MobileAuthClaims.TryGetPersonId(
+                    User,
+                    out int authenticatedPersonId))
+            {
+                return Unauthorized();
+            }
+
             clsApplication application =
                 clsApplication.FindBaseApplication(applicationId);
 
-            if (application == null)
+            if (application == null ||
+                application.ApplicantPersonID != authenticatedPersonId)
+            {
                 return NotFound();
+            }
 
             string applicationTypeName =
                 Enum.IsDefined(

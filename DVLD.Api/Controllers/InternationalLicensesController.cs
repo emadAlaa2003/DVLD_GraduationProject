@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using DVLD.Api.Authentication;
 using DVLD_Buisness;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD.Api.Controllers
 {
     [ApiController]
     [Route("api/people/{personId}/international-licenses")]
+    [Authorize(AuthenticationSchemes = MobileAuthDefaults.Scheme)]
     public class InternationalLicensesController : ControllerBase
     {
         // GET: /api/people/{personId}/international-licenses
@@ -15,6 +18,18 @@ namespace DVLD.Api.Controllers
         [HttpGet]
         public IActionResult GetPersonInternationalLicenses(int personId)
         {
+            if (!MobileAuthClaims.TryGetPersonId(
+                    User,
+                    out int authenticatedPersonId))
+            {
+                return Unauthorized();
+            }
+
+            if (personId != authenticatedPersonId)
+            {
+                return NotFound();
+            }
+
             clsPerson person = clsPerson.Find(personId);
 
             if (person == null)
@@ -77,10 +92,18 @@ namespace DVLD.Api.Controllers
         [HttpGet("/api/international-licenses/{internationalLicenseId}")]
         public IActionResult GetInternationalLicenseById(int internationalLicenseId)
         {
+            if (!MobileAuthClaims.TryGetPersonId(
+                    User,
+                    out int authenticatedPersonId))
+            {
+                return Unauthorized();
+            }
+
             clsInternationalLicense license =
                 clsInternationalLicense.Find(internationalLicenseId);
 
-            if (license == null)
+            if (license == null ||
+                license.DriverInfo?.PersonID != authenticatedPersonId)
             {
                 return NotFound();
             }

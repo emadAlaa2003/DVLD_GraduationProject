@@ -27,6 +27,7 @@
 		<Compile Include="clsInternationalLicense.cs" />
 		<Compile Include="clsKnowledgeDocumentData.cs" />
 		<Compile Include="clsLicense.cs" />
+		<Compile Include="clsMobileUserData.cs" />
 		<Compile Include="clsOfficialExamData.cs" />
 		<Compile Include="clsOfficialExamSessionData.cs" />
 		<Compile Include="clsOfficialExamStartData.cs" />

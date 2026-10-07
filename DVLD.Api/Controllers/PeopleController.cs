@@ -1,11 +1,14 @@
 ﻿using System.Data;
+using DVLD.Api.Authentication;
 using DVLD_Buisness;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD.Api.Controllers
 {
     [ApiController]
     [Route("api/people")]
+    [Authorize(Policy = MobileAuthDefaults.EmployeeApiPolicy)]
     public class PeopleController : ControllerBase
     {
         [HttpGet]
@@ -69,6 +72,7 @@ namespace DVLD.Api.Controllers
                 ImagePath = person.ImagePath
             });
         }
+
         [HttpGet("national/{nationalNo}")]
         public IActionResult GetPersonByNationalNo(string nationalNo)
         {

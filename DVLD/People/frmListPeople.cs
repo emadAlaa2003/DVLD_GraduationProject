@@ -283,5 +283,25 @@ namespace DVLD.People
             if (cbFilterBy.Text=="Person ID")
               e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
+
+        private void cmsPeople_Opening(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            if (dgvPeople.CurrentRow == null)
+                return;
+
+            int PersonID =
+                Convert.ToInt32(
+                    dgvPeople.CurrentRow.Cells[0].Value);
+
+            Form frm =
+                new frmMobileAccount(PersonID);
+
+            frm.ShowDialog();
+        }
     }
 }

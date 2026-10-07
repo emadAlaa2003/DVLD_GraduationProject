@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using DVLD.Api.Authentication;
 using DVLD_Buisness;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DVLD.Api.Controllers
 {
     [ApiController]
     [Route("api/people/{personId}/licenses")]
+    [Authorize(AuthenticationSchemes = MobileAuthDefaults.Scheme)]
     public class LicensesController : ControllerBase
     {
         // GET: /api/people/{personId}/licenses
@@ -15,6 +18,18 @@ namespace DVLD.Api.Controllers
         [HttpGet]
         public IActionResult GetPersonLicenses(int personId)
         {
+            if (!MobileAuthClaims.TryGetPersonId(
+                    User,
+                    out int authenticatedPersonId))
+            {
+                return Unauthorized();
+            }
+
+            if (personId != authenticatedPersonId)
+            {
+                return NotFound();
+            }
+
             clsPerson person = clsPerson.Find(personId);
 
             if (person == null)
@@ -85,9 +100,17 @@ namespace DVLD.Api.Controllers
         [HttpGet("/api/licenses/{licenseId}")]
         public IActionResult GetLicenseById(int licenseId)
         {
+            if (!MobileAuthClaims.TryGetPersonId(
+                    User,
+                    out int authenticatedPersonId))
+            {
+                return Unauthorized();
+            }
+
             clsLicense license = clsLicense.Find(licenseId);
 
-            if (license == null)
+            if (license == null ||
+                license.DriverInfo?.PersonID != authenticatedPersonId)
             {
                 return NotFound();
             }
