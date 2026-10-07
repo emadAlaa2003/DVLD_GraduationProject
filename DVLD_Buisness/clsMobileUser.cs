@@ -134,7 +134,7 @@ namespace DVLD_Buisness
             if (clsPerson.Find(PersonID) == null)
                 return null;
 
-            Username = Username.Trim().ToLowerInvariant();
+            Username = Username.Trim();
 
             // One mobile account per person.
             if (FindByPersonID(PersonID) != null)
