@@ -332,6 +332,12 @@
     <Compile Include="People\Controls\ctrlPersonCardWithFilter.Designer.cs">
       <DependentUpon>ctrlPersonCardWithFilter.cs</DependentUpon>
     </Compile>
+    <Compile Include="People\frmMobileAccount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="People\frmMobileAccount.Designer.cs">
+      <DependentUpon>frmMobileAccount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -575,6 +581,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="People\Controls\ctrlPersonCardWithFilter.resx">
       <DependentUpon>ctrlPersonCardWithFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="People\frmMobileAccount.resx">
+      <DependentUpon>frmMobileAccount.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="QuestionBank\Controls\ctrlQuestionInfo.resx">
       <DependentUpon>ctrlQuestionInfo.cs</DependentUpon>
@@ -1144,6 +1153,38 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Magic Wand802.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Glossy Mobile Account Settings Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-mobile-account-53.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Glossy Mobile Account Settings Icon1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-signal-60.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-key-94.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ChatGPT Image Oct 7, 2026, 09_50_09 PM-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-key-941.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\refresh_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\deactivate-question_323.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\MobileAccount_Active.png" />
+    <Content Include="Resources\MobileAccount_Inactive.png" />
+    <Content Include="Resources\MobileAccount_NoAccount.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\Microsoft.Data.SqlClient.SNI.6.0.2\build\net462\Microsoft.Data.SqlClient.SNI.targets" Condition="Exists('packages\Microsoft.Data.SqlClient.SNI.6.0.2\build\net462\Microsoft.Data.SqlClient.SNI.targets')" />
