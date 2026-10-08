@@ -1,9 +1,32 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.DVLDMobile" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+<resources>
+    <!-- Keep the reference's light surfaces, including when the device uses dark mode. -->
+    <style name="Base.Theme.DVLDMobile" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/login_navy</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/login_teal</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/login_navy</item>
+        <item name="colorOnSurfaceVariant">@color/login_text_secondary</item>
+        <item name="colorOutline">@color/login_outline</item>
+        <item name="colorError">@color/login_error</item>
+        <item name="android:colorBackground">@color/login_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:fontFamily">sans</item>
     </style>
 
     <style name="Theme.DVLDMobile" parent="Base.Theme.DVLDMobile" />
+    <style name="Widget.DVLDMobile.LoginInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/login_input_background</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/login_input_stroke</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="android:textColorHint">@color/login_text_secondary</item>
+        <item name="hintTextColor">@color/login_teal</item>
+    </style>
 </resources>
