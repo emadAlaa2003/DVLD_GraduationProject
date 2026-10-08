@@ -9,6 +9,8 @@
     <string name="login_supporting_text">تابع رخصك وطلباتك ومواعيدك في مكان واحد، بخطوات بسيطة وآمنة.</string>
     <string name="login_username_hint">الرقم الوطني أو اسم المستخدم</string>
     <string name="login_password_hint">كلمة المرور</string>
+    <string name="login_username_required">أدخل الرقم الوطني أو اسم المستخدم</string>
+    <string name="login_password_required">أدخل كلمة المرور</string>
     <string name="login_password_toggle">إظهار أو إخفاء كلمة المرور</string>
     <string name="login_button">تسجيل الدخول</string>
     <string name="login_progress_description">جارٍ تسجيل الدخول</string>
