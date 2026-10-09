@@ -3,7 +3,11 @@ package com.dvld.mobile;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +17,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.button.MaterialButton;
+import com.dvld.mobile.model.MobileLoginResponse;
+import com.dvld.mobile.repository.ApiAuthRepository;
+import com.dvld.mobile.repository.AuthRepository;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +28,12 @@ public class MainActivity extends AppCompatActivity {
     private TextInputLayout passwordLayout;
     private TextInputEditText usernameInput;
     private TextInputEditText passwordInput;
+    private MaterialButton loginButton;
+    private TextView loginError;
+    private ProgressBar loginProgress;
+    private AuthRepository authRepository;
+    private AuthRepository.RequestHandle loginRequest;
+    private boolean loginInProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +53,16 @@ public class MainActivity extends AppCompatActivity {
         passwordLayout = findViewById(R.id.password_layout);
         usernameInput = findViewById(R.id.username_input);
         passwordInput = findViewById(R.id.password_input);
+        // Do not include the password in the Activity's saved view state.
+        passwordInput.setSaveEnabled(false);
+        loginButton = findViewById(R.id.login_button);
+        loginError = findViewById(R.id.login_error);
+        loginProgress = findViewById(R.id.login_progress);
+        authRepository = new ApiAuthRepository();
 
         clearErrorOnEdit(usernameInput, usernameLayout);
         clearErrorOnEdit(passwordInput, passwordLayout);
-        findViewById(R.id.login_button).setOnClickListener(v -> validateLoginInputs());
+        loginButton.setOnClickListener(v -> validateLoginInputs());
         passwordInput.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 validateLoginInputs();
@@ -70,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void validateLoginInputs() {
+        if (loginInProgress) {
+            return;
+        }
         Editable username = usernameInput.getText();
         Editable password = passwordInput.getText();
         boolean usernameMissing = username == null || username.toString().trim().isEmpty();
@@ -92,7 +115,75 @@ public class MainActivity extends AppCompatActivity {
         } else if (passwordMissing) {
             passwordInput.requestFocus();
         }
-        // Valid input leaves the form ready for future API integration.
+        if (!usernameMissing && !passwordMissing) {
+            startLogin(username.toString().trim(), password.toString());
+        }
+    }
+
+    private void startLogin(String username, String password) {
+        loginError.setText(null);
+        loginError.setVisibility(View.GONE);
+        setLoginInProgress(true);
+        loginRequest = authRepository.login(username, password, new AuthRepository.LoginCallback() {
+            @Override
+            public void onSuccess(MobileLoginResponse response) {
+                runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+                    loginRequest = null;
+                    setLoginInProgress(false);
+                    Toast.makeText(MainActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                });
+            }
+
+            @Override
+            public void onError(AuthRepository.LoginError error) {
+                runOnUiThread(() -> {
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+                    loginRequest = null;
+                    setLoginInProgress(false);
+                    showLoginError(error);
+                });
+            }
+        });
+    }
+
+    private void setLoginInProgress(boolean inProgress) {
+        loginInProgress = inProgress;
+        loginProgress.setVisibility(inProgress ? View.VISIBLE : View.GONE);
+        loginButton.setEnabled(!inProgress);
+    }
+
+    private void showLoginError(AuthRepository.LoginError error) {
+        int message;
+        switch (error) {
+            case INVALID_CREDENTIALS:
+                message = R.string.login_invalid_credentials;
+                break;
+            case INACTIVE_ACCOUNT:
+                message = R.string.login_inactive_account;
+                break;
+            case NETWORK:
+                message = R.string.login_network_error;
+                break;
+            default:
+                message = R.string.login_server_error;
+                break;
+        }
+        loginError.setText(message);
+        loginError.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (loginRequest != null) {
+            loginRequest.cancel();
+            loginRequest = null;
+        }
+        super.onDestroy();
     }
 
     private void clearValidationError(TextInputLayout layout) {

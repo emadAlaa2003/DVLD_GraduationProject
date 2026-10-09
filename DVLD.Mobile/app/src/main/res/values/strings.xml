@@ -15,4 +15,9 @@
     <string name="login_button">تسجيل الدخول</string>
     <string name="login_progress_description">جارٍ تسجيل الدخول</string>
     <string name="login_privacy_footer">بياناتك محمية وفق معايير DVLD</string>
+    <string name="login_success">تم تسجيل الدخول بنجاح</string>
+    <string name="login_invalid_credentials">اسم المستخدم أو كلمة المرور غير صحيحة</string>
+    <string name="login_inactive_account">الحساب غير فعال</string>
+    <string name="login_network_error">تعذر الاتصال بالخادم، تحقق من الاتصال وحاول مرة أخرى</string>
+    <string name="login_server_error">حدث خطأ أثناء تسجيل الدخول، حاول مرة أخرى</string>
 </resources>
