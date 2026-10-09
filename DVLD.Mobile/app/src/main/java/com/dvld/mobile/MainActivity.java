@@ -1,5 +1,6 @@
 package com.dvld.mobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -7,7 +8,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +21,7 @@ import com.google.android.material.button.MaterialButton;
 import com.dvld.mobile.model.MobileLoginResponse;
 import com.dvld.mobile.repository.ApiAuthRepository;
 import com.dvld.mobile.repository.AuthRepository;
+import com.dvld.mobile.ui.DashboardActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -133,7 +134,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                     loginRequest = null;
                     setLoginInProgress(false);
-                    Toast.makeText(MainActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                    Intent dashboard = new Intent(MainActivity.this, DashboardActivity.class);
+                    dashboard.putExtra(DashboardActivity.EXTRA_PERSON_ID, response.getPersonId().intValue());
+                    dashboard.putExtra(DashboardActivity.EXTRA_FULL_NAME, response.getFullName());
+                    dashboard.putExtra(DashboardActivity.EXTRA_USERNAME, response.getUsername());
+                    startActivity(dashboard);
+                    finish();
                 });
             }
 

@@ -1,0 +1,28 @@
+<resources>
+    <style name="Widget.DVLDMobile.DashboardCard" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">@color/login_outline</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+    </style>
+
+    <style name="TextAppearance.DVLDMobile.DashboardSection" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/login_navy</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.DVLDMobile.DashboardAction" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textColor">@color/login_navy</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.DVLDMobile.DashboardNavigation" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

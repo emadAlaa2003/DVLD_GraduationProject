@@ -12,4 +12,7 @@
     <color name="login_outline">#D7E4E7</color>
     <color name="login_gold">#CB9B42</color>
     <color name="login_error">#B3261E</color>
+    <color name="dashboard_navy_soft">#29485E</color>
+    <color name="dashboard_on_navy_secondary">#CEE1E6</color>
+    <color name="dashboard_gold_soft">#FFF3D9</color>
 </resources>
