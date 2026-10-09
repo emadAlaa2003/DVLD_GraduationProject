@@ -15,6 +15,10 @@
         android:usesCleartextTraffic="false"
         android:theme="@style/Theme.DVLDMobile">
         <activity
+            android:name=".ui.LocalLicenseDetailsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.MyLicensesActivity" />
+        <activity
             android:name=".ui.MyLicensesActivity"
             android:exported="false"
             android:parentActivityName=".ui.DashboardActivity" />

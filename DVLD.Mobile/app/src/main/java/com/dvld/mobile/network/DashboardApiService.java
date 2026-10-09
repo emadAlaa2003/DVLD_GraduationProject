@@ -3,6 +3,7 @@ package com.dvld.mobile.network;
 import com.dvld.mobile.model.CitizenApplication;
 import com.dvld.mobile.model.InternationalLicense;
 import com.dvld.mobile.model.LocalLicense;
+import com.dvld.mobile.model.LocalLicenseDetails;
 import com.dvld.mobile.model.TestAppointment;
 
 import java.util.List;
@@ -12,6 +13,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface DashboardApiService {
+    @GET("api/licenses/{licenseId}")
+    Call<LocalLicenseDetails> getLocalLicenseDetails(@Path("licenseId") int licenseId);
+
     @GET("api/people/{personId}/licenses")
     Call<List<LocalLicense>> getLocalLicenses(@Path("personId") int personId);
 

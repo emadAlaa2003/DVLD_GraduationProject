@@ -99,4 +99,25 @@
     <string name="licenses_inactive">غير سارية</string>
     <string name="licenses_detained">محجوزة</string>
     <string name="licenses_not_detained">غير محجوزة</string>
+    <string name="license_details_title">تفاصيل الرخصة</string>
+    <string name="license_details_loading">جارٍ تحميل بيانات الرخصة…</string>
+    <string name="license_details_not_found">الرخصة غير موجودة</string>
+    <string name="license_details_server_error">حدث خطأ أثناء تحميل بيانات الرخصة، حاول مرة أخرى</string>
+    <string name="license_details_citizen_section">معلومات المواطن</string>
+    <string name="license_details_license_section">معلومات الرخصة</string>
+    <string name="license_details_notes_section">الملاحظات</string>
+    <string name="license_details_full_name">الاسم الكامل: %1$s</string>
+    <string name="license_details_national_no">الرقم الوطني: %1$s</string>
+    <string name="license_details_application_id">رقم الطلب: %1$s</string>
+    <string name="license_details_class">فئة الرخصة: %1$s</string>
+    <string name="license_details_class_description">وصف الفئة: %1$s</string>
+    <string name="license_details_paid_fees">الرسوم المدفوعة: %1$s</string>
+    <string name="license_details_issue_reason">سبب الإصدار: %1$s</string>
+    <string name="license_details_status">حالة الرخصة: %1$s</string>
+    <string name="license_details_expired">منتهية</string>
+    <string name="license_details_no_notes">لا توجد ملاحظات</string>
+    <string name="license_issue_reason_first">إصدار لأول مرة</string>
+    <string name="license_issue_reason_renew">تجديد</string>
+    <string name="license_issue_reason_damaged">بدل تالف</string>
+    <string name="license_issue_reason_lost">بدل فاقد</string>
 </resources>

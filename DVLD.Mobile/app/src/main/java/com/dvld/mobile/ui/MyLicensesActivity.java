@@ -1,5 +1,6 @@
 package com.dvld.mobile.ui;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +35,7 @@ public class MyLicensesActivity extends AppCompatActivity {
     private boolean resumed;
     private boolean loading;
     private long generation;
+    private boolean openingDetails;
     private LinearLayout localCards;
     private LinearLayout internationalCards;
     private TextView localMessage;
@@ -83,6 +85,7 @@ public class MyLicensesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        openingDetails = false;
         resumed = true;
         refreshLicenses();
     }
@@ -181,7 +184,12 @@ public class MyLicensesActivity extends AppCompatActivity {
         localMessage.setVisibility(data.getLocalLicenses().isEmpty() ? View.VISIBLE : View.GONE);
         internationalMessage.setVisibility(data.getInternationalLicenses().isEmpty() ? View.VISIBLE : View.GONE);
         for (LocalLicense license : data.getLocalLicenses()) {
-            addCard(localCards, textMapper.localTitle(license), textMapper.localDetails(license));
+            View card = addCard(localCards, textMapper.localTitle(license), textMapper.localDetails(license));
+            Integer id = license.getLicenseID();
+            if (id != null && id > 0) {
+                card.setFocusable(true);
+                card.setOnClickListener(view -> openLocalLicense(id));
+            }
         }
         for (InternationalLicense license : data.getInternationalLicenses()) {
             addCard(internationalCards, getString(R.string.licenses_international_card_title),
@@ -189,10 +197,19 @@ public class MyLicensesActivity extends AppCompatActivity {
         }
     }
 
-    private void addCard(LinearLayout container, String title, String details) {
+    private void openLocalLicense(int licenseId) {
+        if (openingDetails) return;
+        openingDetails = true;
+        Intent intent = new Intent(this, LocalLicenseDetailsActivity.class);
+        intent.putExtra(LocalLicenseDetailsActivity.EXTRA_LICENSE_ID, licenseId);
+        startActivity(intent);
+    }
+
+    private View addCard(LinearLayout container, String title, String details) {
         View card = getLayoutInflater().inflate(R.layout.item_license_card, container, false);
         ((TextView) card.findViewById(R.id.license_card_title)).setText(title);
         ((TextView) card.findViewById(R.id.license_card_details)).setText(details);
         container.addView(card);
+        return card;
     }
 }
