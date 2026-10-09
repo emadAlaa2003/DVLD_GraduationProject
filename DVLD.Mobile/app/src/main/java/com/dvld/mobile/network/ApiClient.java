@@ -30,10 +30,21 @@ public final class ApiClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(MobileAuthApiService.class);
+
+        private static final DashboardApiService DASHBOARD_SERVICE = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(getHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(DashboardApiService.class);
     }
 
     public static MobileAuthApiService getAuthService() {
         return Holder.AUTH_SERVICE;
+    }
+
+    public static DashboardApiService getDashboardService() {
+        return Holder.DASHBOARD_SERVICE;
     }
 
     /** Future API services must reuse this client to send the same session cookies. */

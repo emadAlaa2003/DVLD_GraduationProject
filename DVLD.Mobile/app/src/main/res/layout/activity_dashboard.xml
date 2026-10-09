@@ -71,9 +71,44 @@
                     app:tint="@color/white" />
             </LinearLayout>
 
-            <!-- Independent state message and local/international summaries allow future
-                 loading, empty, error, single-license and multiple-license presentations.
-                 The placeholder below does not assert that any licenses exist. -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <ProgressBar
+                    android:id="@+id/dashboard_progress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:indeterminateTint="@color/login_teal"
+                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/dashboard_status_message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:layout_weight="1"
+                    android:accessibilityLiveRegion="polite"
+                    android:gravity="start"
+                    android:textColor="@color/login_text_secondary"
+                    android:textSize="13sp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/dashboard_refresh"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/dashboard_refresh"
+                    android:textAllCaps="false"
+                    android:textColor="@color/login_teal"
+                    app:cornerRadius="14dp"
+                    app:strokeColor="@color/login_outline" />
+            </LinearLayout>
+
+            <!-- Independent messages keep empty data separate from request failures. -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/license_summary_card"
                 android:layout_width="match_parent"
@@ -335,8 +370,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp">
-                <!-- This message can later represent loading, empty, 404 or request failures
-                     without creating fictitious application details or changing this card. -->
+                <!-- Render the real latest application here; nullable fields are omitted. -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -573,4 +607,3 @@
         app:labelVisibilityMode="labeled"
         app:menu="@menu/dashboard_bottom_navigation" />
 </LinearLayout>
-
