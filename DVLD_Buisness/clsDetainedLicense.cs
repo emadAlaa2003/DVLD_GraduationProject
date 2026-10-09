@@ -171,5 +171,10 @@ namespace DVLD_Buisness
             return clsDetainedLicenseData.ReleaseDetainedLicense(this.DetainID,
                    ReleasedByUserID, ReleaseApplicationID);
         }
+        public static int GetDetainIDByReleaseApplicationID(int ReleaseApplicationID)
+        {
+            return clsDetainedLicenseData.GetDetainIDByReleaseApplicationID(
+                ReleaseApplicationID);
+        }
     }
 }

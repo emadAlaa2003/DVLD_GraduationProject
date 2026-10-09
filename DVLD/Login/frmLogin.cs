@@ -55,9 +55,19 @@ namespace DVLD.Login
                 }
 
                  clsGlobal.CurrentUser = user;
-                 this.Hide();
-                 frmMain frm = new frmMain(this);
-                 frm.ShowDialog();
+                this.Hide();
+
+                using (frmMain frm = new frmMain(this))
+                {
+                    frm.ShowDialog();
+                }
+
+                // إذا أُغلقت الشاشة الرئيسية وظلت شاشة الدخول مخفية،
+                // أغلق شاشة الدخول لإنهاء البرنامج.
+                if (!this.IsDisposed && !this.Visible)
+                {
+                    this.Close();
+                }
 
 
             } else

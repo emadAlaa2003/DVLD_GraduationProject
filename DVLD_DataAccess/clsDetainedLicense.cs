@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -78,12 +78,11 @@ namespace DVLD_DataAccess
 
 
                 }
-                catch (Exception ex)
-                {
-                    //Console.WriteLine("Error: " + ex.Message);
-                    isFound = false;
-                }
-                finally
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
                 {
                     connection.Close();
                 }
@@ -156,10 +155,9 @@ namespace DVLD_DataAccess
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-                isFound = false;
+                throw;
             }
             finally
             {
@@ -196,11 +194,11 @@ namespace DVLD_DataAccess
 
                 }
 
-                catch (Exception ex)
-                {
-                    // Console.WriteLine("Error: " + ex.Message);
-                }
-                finally
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
                 {
                     connection.Close();
                 }
@@ -381,10 +379,9 @@ namespace DVLD_DataAccess
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
-                //Console.WriteLine("Error: " + ex.Message);
-
+                throw;
             }
 
             finally
@@ -394,9 +391,50 @@ namespace DVLD_DataAccess
 
 
             return IsDetained;
-            ;
+           
 
         }
+        public static int GetDetainIDByReleaseApplicationID(int ReleaseApplicationID)
+        {
+            int DetainID = -1;
 
+            SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString);
+
+            string query = @"
+        SELECT TOP 1 DetainID
+        FROM DetainedLicenses
+        WHERE ReleaseApplicationID = @ReleaseApplicationID
+        ORDER BY DetainID DESC";
+
+            SqlCommand command =
+                new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue(
+                "@ReleaseApplicationID", ReleaseApplicationID);
+
+            try
+            {
+                connection.Open();
+
+                object result = command.ExecuteScalar();
+
+                if (result != null &&
+                    int.TryParse(result.ToString(), out int returnedDetainID))
+                {
+                    DetainID = returnedDetainID;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return DetainID;
+        }
     }
 }

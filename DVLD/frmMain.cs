@@ -1,20 +1,23 @@
-﻿using DVLD.Applications;
+﻿ using DVLD.Applications;
 using DVLD.Applications.Detain_License;
 using DVLD.Applications.International_License;
 using DVLD.Applications.ReplaceLostOrDamagedLicense;
 using DVLD.Applications.Rlease_Detained_License;
 using DVLD.Classes;
+using DVLD.Documents;
 using DVLD.Drivers;
 using DVLD.Licenses;
 using DVLD.Licenses.International_License;
 using DVLD.Login;
 using DVLD.People;
+using DVLD.QuestionBank;
 using DVLD.Tests;
 using DVLD.User;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-
+using System.Net.Http;
+using System.Text.Json;
 
 namespace DVLD
 {
@@ -22,12 +25,130 @@ namespace DVLD
     public partial class frmMain : Form
     {
         frmLogin _frmLogin;
+        private int _QuestionGenerationJobID = -1;
+        private Timer _QuestionGenerationTimer;
+        private int _CompletedQuestionGenerationDocumentID = -1;
+        private int _CompletedGeneratedQuestionsCount = 0;
+        private class QuestionGenerationJobResponse
+        {
+            public int QuestionGenerationJobID { get; set; }
 
-        public frmMain( frmLogin frm )
+            public int DocumentID { get; set; }
+
+            public int MultipleChoiceCount { get; set; }
+
+            public int TrueFalseCount { get; set; }
+
+            public int TotalQuestions { get; set; }
+
+            public string Status { get; set; }
+
+            public int? GeneratedQuestionsCount { get; set; }
+
+            public string ErrorMessage { get; set; }
+        }
+        public void TrackQuestionGenerationJob(
+           int questionGenerationJobID)
+        {
+            _QuestionGenerationJobID =
+                questionGenerationJobID;
+
+            _QuestionGenerationTimer.Start();
+        }
+        private async void _QuestionGenerationTimer_Tick(
+            object sender,
+            EventArgs e)
+        {
+            if (_QuestionGenerationJobID <= 0)
+                return;
+
+            _QuestionGenerationTimer.Stop();
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.Timeout =
+                        TimeSpan.FromSeconds(30);
+
+                    HttpResponseMessage response =
+                        await client.GetAsync(
+                            "https://localhost:7077/api/question-bank/generation-jobs/" +
+                            _QuestionGenerationJobID);
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        _QuestionGenerationTimer.Start();
+                        return;
+                    }
+
+                    string responseText =
+                        await response.Content.ReadAsStringAsync();
+
+                    JsonSerializerOptions options =
+                        new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        };
+
+                    QuestionGenerationJobResponse job =
+                        JsonSerializer.Deserialize<QuestionGenerationJobResponse>(
+                            responseText,
+                            options);
+
+                    if (job == null)
+                    {
+                        _QuestionGenerationTimer.Start();
+                        return;
+                    }
+
+                    if (job.Status == "Pending" ||
+                        job.Status == "Processing")
+                    {
+                        _QuestionGenerationTimer.Start();
+                        return;
+                    }
+                    _CompletedQuestionGenerationDocumentID =
+    job.DocumentID;
+                    _CompletedGeneratedQuestionsCount =
+    job.GeneratedQuestionsCount ?? 0;
+
+                    if (job.Status == "Completed")
+                    {
+                        MessageBox.Show(
+                            "Questions generated successfully.\n\n" +
+                            "Generated Questions: " +
+                            (job.GeneratedQuestionsCount ?? 0) +
+                            "\n\nClick OK to view the generated questions.",
+                            "Question Generation Completed",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+
+                        frmManageQuestions frm =
+                            new frmManageQuestions(
+                                this,
+                                _CompletedQuestionGenerationDocumentID,
+                                _CompletedGeneratedQuestionsCount);
+
+                        frm.ShowDialog();
+                    }
+                    _QuestionGenerationJobID = -1;
+                }
+            }
+            catch
+            {
+                _QuestionGenerationTimer.Start();
+            }
+        }
+        public frmMain(frmLogin frm)
         {
             InitializeComponent();
-            _frmLogin= frm;
 
+            _frmLogin = frm;
+
+            _QuestionGenerationTimer = new Timer();
+            _QuestionGenerationTimer.Interval = 5000;
+            _QuestionGenerationTimer.Tick += _QuestionGenerationTimer_Tick;
         }
 
         private void localLicenseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -174,6 +295,18 @@ namespace DVLD
             frmReleaseDetainedLicenseApplication frm= new frmReleaseDetainedLicenseApplication();   
             frm.ShowDialog();
 
+        }
+
+        private void manageQuestionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmManageQuestions frm = new frmManageQuestions(this);
+            frm.ShowDialog();
+        }
+
+        private void mangeDecumentsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmManageDocuments frm=new frmManageDocuments();
+            frm.ShowDialog();
         }
     }
 }

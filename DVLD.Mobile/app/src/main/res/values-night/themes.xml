@@ -1,0 +1,4 @@
+<resources>
+    <!-- Inherit the same light login palette from values/themes.xml. -->
+    <style name="Theme.DVLDMobile" parent="Base.Theme.DVLDMobile" />
+</resources>

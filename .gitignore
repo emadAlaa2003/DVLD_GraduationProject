@@ -1,0 +1,17 @@
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+packages/
+
+DVLD.Api/KnowledgeDocuments/
+New folder/
+*.log
+*.suo
+.env
+.env.*
+!.env.example
+*.bak
+*.mdf
+*.ldf
+data.txt

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/dashboard_nav_home" android:checked="true"
+            android:icon="@drawable/ic_dashboard_home" android:title="@string/dashboard_home" />
+        <item android:id="@+id/dashboard_nav_licenses"
+            android:icon="@drawable/ic_dashboard_license" android:title="@string/dashboard_my_licenses" />
+        <item android:id="@+id/dashboard_nav_applications"
+            android:icon="@drawable/ic_dashboard_applications" android:title="@string/dashboard_my_applications" />
+        <item android:id="@+id/dashboard_nav_appointments"
+            android:icon="@drawable/ic_dashboard_calendar" android:title="@string/dashboard_my_appointments" />
+    </group>
+</menu>

@@ -174,5 +174,9 @@ namespace DVLD_Buisness
         {
             return clsInternationalLicenseData.GetDriverInternationalLicenses(DriverID);
         }
+        public static int GetInternationalLicenseIDByApplicationID(int ApplicationID)
+        {
+            return clsInternationalLicenseData.GetInternationalLicenseIDByApplicationID(ApplicationID);
+        }
     }
 }
