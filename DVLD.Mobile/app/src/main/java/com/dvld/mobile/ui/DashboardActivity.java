@@ -1,5 +1,6 @@
 package com.dvld.mobile.ui;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -43,6 +44,7 @@ public class DashboardActivity extends AppCompatActivity {
     private boolean loading;
     private boolean resumed;
     private long requestGeneration;
+    private boolean openingLicenses;
     private TextView licenseMessage;
     private TextView localSummary;
     private TextView internationalSummary;
@@ -84,8 +86,14 @@ public class DashboardActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.dashboard_bottom_navigation);
         navigation.setItemActiveIndicatorColor(ColorStateList.valueOf(getColor(R.color.login_teal_soft)));
         navigation.setSelectedItemId(R.id.dashboard_nav_home);
-        // Other destinations remain visual placeholders until their screens are implemented.
-        navigation.setOnItemSelectedListener(item -> item.getItemId() == R.id.dashboard_nav_home);
+        navigation.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.dashboard_nav_licenses) {
+                openMyLicenses();
+                return false;
+            }
+            return item.getItemId() == R.id.dashboard_nav_home;
+        });
+        findViewById(R.id.dashboard_action_licenses).setOnClickListener(view -> openMyLicenses());
 
         licenseMessage = findViewById(R.id.license_summary_message);
         localSummary = findViewById(R.id.local_license_summary);
@@ -105,9 +113,18 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        openingLicenses = false;
         resumed = true;
         // One entry point handles initial loading, returning from Desktop changes and retry.
         refreshDashboard();
+    }
+
+    private void openMyLicenses() {
+        if (openingLicenses || personId == null || personId <= 0) return;
+        openingLicenses = true;
+        Intent intent = new Intent(this, MyLicensesActivity.class);
+        intent.putExtra(MyLicensesActivity.EXTRA_PERSON_ID, personId.intValue());
+        startActivity(intent);
     }
 
     @Override

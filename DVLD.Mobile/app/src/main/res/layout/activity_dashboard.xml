@@ -419,6 +419,9 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/dashboard_action_licenses"
                     style="@style/Widget.DVLDMobile.DashboardCard"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="@string/dashboard_my_licenses"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     

@@ -79,4 +79,24 @@
     <string name="dashboard_not_found">لم يتم العثور على بيانات الحساب</string>
     <string name="dashboard_session_expired">انتهت جلسة الدخول، يرجى تسجيل الدخول من جديد</string>
     <string name="dashboard_forbidden">لا يمكن الوصول إلى هذه البيانات</string>
+    <string name="licenses_intro">رخصك المحلية والدولية، كلٌ في قسم مستقل</string>
+    <string name="licenses_back">رجوع</string>
+    <string name="licenses_loading">جارٍ تحميل الرخص…</string>
+    <string name="licenses_server_error">حدث خطأ أثناء تحميل الرخص، حاول مرة أخرى</string>
+    <string name="licenses_not_found">لم يتم العثور على بيانات الرخص لهذا الحساب</string>
+    <string name="licenses_forbidden">لا يمكن الوصول إلى بيانات الرخص</string>
+    <string name="licenses_unavailable">بيانات الرخص غير متاحة حاليًا</string>
+    <string name="licenses_local_card_title">رخصة محلية</string>
+    <string name="licenses_international_card_title">رخصة دولية</string>
+    <string name="licenses_local_id">رقم الرخصة: %1$s</string>
+    <string name="licenses_international_id">رقم الرخصة الدولية: %1$s</string>
+    <string name="licenses_issued_using_local_id">رقم الرخصة المحلية المستخدمة للإصدار: %1$s</string>
+    <string name="licenses_issue_date">تاريخ الإصدار: %1$s</string>
+    <string name="licenses_expiration_date">تاريخ الانتهاء: %1$s</string>
+    <string name="licenses_active_status">حالة السريان: %1$s</string>
+    <string name="licenses_detained_status">حالة الحجز: %1$s</string>
+    <string name="licenses_active">سارية</string>
+    <string name="licenses_inactive">غير سارية</string>
+    <string name="licenses_detained">محجوزة</string>
+    <string name="licenses_not_detained">غير محجوزة</string>
 </resources>
