@@ -1,107 +1,177 @@
-# DVLD Graduation Project
+# DVLD — Driver & Vehicle Licensing Department
 
-مشروع تخرج لإدارة معاملات ورخص القيادة، يجمع تطبيق موظفين Windows Forms، وتطبيق مواطن Android، وASP.NET Core API، وبنك أسئلة وشات يعتمدان على وثائق PDF وذكاء اصطناعي محلي.
+A graduation project for managing driving licence applications, examinations, and citizen services. DVLD combines a Windows desktop application for staff, an Android application for citizens, and a shared API backed by SQL Server.
 
-هذا التعريف محدّث بتاريخ **2026-10-09** وفق الكود المدمج في `main` عند [2dc6cab](https://github.com/emadAlaa2003/DVLD_GraduationProject/commit/2dc6cab). يصف التنفيذ الموجود، ولا يعني أن كل وظائف الموبايل أو صلاحيات الموظفين اكتملت.
+The project also includes a document-based knowledge assistant and a question bank powered by local language models.
 
-## مكونات المشروع
+## Features
 
-| المجلد | دوره | التقنية |
-|---|---|---|
-| [DVLD](DVLD/) | إدارة الموظفين والأشخاص والطلبات والرخص والوثائق والأسئلة وحسابات المواطنين | WinForms، .NET Framework 4.8 |
-| [DVLD.Mobile](DVLD.Mobile/) | تطبيق المواطن: تسجيل الدخول، Dashboard، وقائمة رخصي | Android، Java، Retrofit، OkHttp، Gson |
-| [DVLD.Api](DVLD.Api/) | APIs للمواطن والامتحان والـAI وخدمات المعالجة الخلفية | ASP.NET Core، .NET 10 |
-| [DVLD_Buisness](DVLD_Buisness/) | كائنات وقواعد Business | net48;net10.0 |
-| [DVLD_DataAccess](DVLD_DataAccess/) | قراءة وكتابة SQL Server باستخدام ADO.NET | net48;net10.0 |
-| [DVLD.AI](DVLD.AI/) | PDF، embeddings، الاسترجاع والشات وتوليد الأسئلة | .NET 10 |
+### Staff desktop application
 
-الأسماء مكتوبة كما تظهر في المستودع. الموبايل يصل إلى البيانات عبر API → Business → DataAccess → SQL Server؛ تطبيق الموظفين يستخدم Business مباشرة لمعظم الإدارة، وAPI للعمليات المتصلة بالـAI.
+- Manage people, employee accounts, driving licence applications, and test appointments.
+- Issue and manage local and international driving licences, renewals, replacements, and detained licences.
+- Create citizen mobile accounts, reset passwords, and activate or deactivate access.
+- Upload knowledge documents and track their processing status.
+- Create, edit, review, approve, and manage examination questions.
+- Generate questions from documents in the background and track generation progress.
 
-## الوظائف الموجودة
+### Citizen Android application
 
-- إدارة الأشخاص وحسابات الموظفين والطلبات والمواعيد والرخص المحلية والدولية.
-- إدارة حساب المواطن من `frmMobileAccount`: إنشاء الحساب، إعادة كلمة المرور، التفعيل والتعطيل. حسابات `MobileUsers` منفصلة عن `Users` الموظفين، ويُحفظ PasswordHash لحساب المواطن.
-- تسجيل دخول المواطن عبر `POST /api/mobile-auth/login` وجلسة Cookie، والتحقق من ملكية قوائم وتفاصيل الرخص والطلبات والمواعيد.
-- Android Login ثم Dashboard ببيانات فعلية عن الرخص والطلبات والمواعيد، وشاشة «رخصي» للقوائم المحلية والدولية.
-- رفع PDF ومعالجته بالخلفية، وشات RAG يسترجع مقاطع المعرفة قبل بناء الإجابة.
-- توليد Multiple Choice وTrue/False من وثيقة جاهزة، مع معلومات المصدر والصفحة والدليل وحفظ Draft للمراجعة البشرية.
-- اعتماد الأسئلة أو رفضها، ومتابعة Job التوليد من تطبيق الموظف.
-- backend للامتحان الرسمي، مخصص للكمبيوتر في مركز الامتحان وفق نطاق المشروع، وليس امتحانًا رسميًا على الموبايل.
+- Sign in with a citizen account created by staff.
+- View a dashboard with licence, application, and appointment information.
+- Browse local and international driving licences.
+- Access personal records through authenticated API requests.
 
-شاشات الموبايل الأخرى لا تُعتبر مكتملة لمجرد وجود عناصر تنقل لها. تفاصيل الرخص المحلية الجاري تطويرها محليًا ليست ضمن نسخة `main` الموثقة هنا.
+### API and examination services
 
-## دليل شرح الكود
+- Cookie-based citizen authentication with account validation on subsequent requests.
+- Ownership checks for licence, application, and appointment records.
+- Examination endpoints for starting attempts, saving answers, and submitting results.
+- Server-side question selection and grading for the supervised examination workflow.
 
-| الفصل | المحتوى |
+The official examination runs in the examination-centre computer workflow. It is separate from the citizen mobile application.
+
+### Document AI
+
+- Extract and process Arabic text from PDF documents.
+- Create embeddings and store document chunks in Qdrant.
+- Retrieve and rerank relevant passages for the knowledge assistant.
+- Generate multiple-choice and true/false questions with source references and supporting evidence.
+- Save generated questions as drafts for staff review before use.
+
+## Technology stack
+
+| Area | Technologies |
 |---|---|
-| [فهرس الدليل](docs/project-guide/README.md) | ترتيب القراءة، البنية وحدود التوثيق |
-| [01 — النظام وواجهات الموظفين](docs/project-guide/01-system-and-desktop.md) | الطبقات والأشخاص والطلبات والرخص والوثائق وبنك الأسئلة |
-| [02 — معالجة الوثائق والـAI والشات](docs/project-guide/02-ai-documents-and-chat.md) | PDF العربي، التقسيم، embeddings، Qdrant، الاسترجاع وإعادة الترتيب |
-| [03 — توليد الأسئلة](docs/project-guide/03-ai-question-generation.md) | اختيار المصادر، التوليد والتحقق والدليل، الحفظ والطابور والـWorker |
-| [04 — API والامتحان الرسمي](docs/project-guide/04-api-and-official-exam.md) | تتبع endpoints إلى SQL، بدء الامتحان وحفظ الإجابات والتصحيح |
-| [05 — التشغيل والبيانات والمناقشة](docs/project-guide/05-operation-data-and-defense.md) | الخدمات وقاعدة البيانات وسيناريو العرض والقيود |
-| [06 — الموبايل وحسابات المواطنين](docs/project-guide/06-mobile-and-citizen-auth.md) | Android، Cookie، إدارة الحساب وحماية الملكية والتشغيل المحلي |
+| Desktop | C#, Windows Forms, .NET Framework 4.8 |
+| Mobile | Java, Android SDK, AndroidX, Material Components |
+| API | ASP.NET Core, .NET 10 |
+| Database | SQL Server, ADO.NET, Microsoft.Data.SqlClient |
+| Android networking | Retrofit, OkHttp, Gson |
+| Local AI | Ollama, Qwen models, retrieval-augmented generation (RAG) |
+| Vector storage | Qdrant |
+| PDF processing | PdfPig |
 
-بدأت الفصول 01–05 من مراجعة 6 أكتوبر، وصُححت أوصاف المصادقة والموبايل في هذا التحديث. بعضها يحتوي مراجع `J:/...` تخص جهاز إعداد الدليل؛ استخدم مسارات المستودع النسبية للتصفح على GitHub.
+The business and data access projects target both `net48` and `net10.0`, allowing the desktop application and API to share the same domain code.
 
-## كيف يعمل الـAI؟
+## Architecture
 
-1. يحفظ API وثيقة PDF وبياناتها ويضع مهمة المعالجة في طابور الذاكرة.
-2. يستخرج PdfPig النص، وتعالج الأدوات المحلية النص العربي وتقسمه إلى مقاطع مع معلومات المصدر والصفحة.
-3. يحسب Ollama embeddings، ويخزن Qdrant المقاطع والمتجهات.
-4. للشات: يسترجع المقاطع المرتبطة بالسؤال ويعيد ترتيبها عبر reranker، ثم يرسل السياق إلى نموذج الإجابة.
-5. للتوليد: يختار مصادر من الوثيقة، ويطلب أسئلة منظمة، ويتحقق منها ومن دليلها، ثم يحفظها Draft للمراجعة.
+```mermaid
+flowchart LR
+    Desktop[Staff Desktop · WinForms] --> Business[Business Layer]
+    Mobile[Citizen App · Android] --> API[ASP.NET Core API]
+    Desktop --> API
+    API --> Business
+    Business --> Data[Data Access Layer]
+    Data --> SQL[(SQL Server)]
+    API --> AI[Document AI Services]
+    AI --> Ollama[Ollama]
+    AI --> Qdrant[(Qdrant)]
+    AI --> Reranker[Local Reranker]
+```
 
-هذا مسار RAG، وليس تدريب أوزان أو fine-tuning. وجود المصدر والدليل لا يضمن وحده صحة كل إجابة أو سؤال.
+Staff workflows use the shared business layer directly. Android communicates through the API. Document processing and question generation run in background workers, while SQL Server stores administrative records, questions, and processing state.
 
-## تشغيل الكمبيوتر والـAPI
+The AI pipeline uses document retrieval rather than model fine-tuning. Generated questions require human review.
 
-1. على Windows افتح [DVLD/DVLD.sln](DVLD/DVLD.sln)، ووفّر .NET 10 SDK وأدوات بناء .NET Framework 4.8، ثم Restore وBuild.
-2. استعد قاعدة SQL Server مطابقة للمشروع أو جهّزها من نسخة الفريق. [Database/Migrations](Database/Migrations/) تحديثات جزئية وليست script لإنشاء القاعدة كاملة. تأكد من جدول `MobileUsers` قبل استخدام حسابات المواطنين.
-3. اضبط متغير البيئة `DVLD_CONNECTION_STRING` وأعد فتح بيئة التشغيل. لا تضع كلمات مرور الاتصال في Git.
-4. شغّل API ثم WinForms بحساب موظف فعّال. التشغيل عبر HTTPS هو المسار المناسب عند تجهيز اتصال آمن.
+## Repository structure
+
+```text
+DVLD/                   Windows Forms application and .NET solution
+DVLD.Mobile/            Android application
+DVLD.Api/               API controllers, authentication, and background services
+DVLD_Buisness/          Shared business layer
+DVLD_DataAccess/        SQL Server data access
+DVLD.AI/                PDF processing, retrieval, chat, and question generation
+Database/Migrations/    Incremental database updates
+docs/project-guide/    Detailed implementation guide
+```
+
+## Getting started
+
+### Prerequisites
+
+- Windows and Visual Studio with .NET desktop development support.
+- .NET Framework 4.8 targeting pack and .NET 10 SDK.
+- SQL Server and a database matching the project schema.
+- Android Studio and Android SDK 36 for the mobile application. Minimum supported Android API level: 26.
+- Ollama, Qdrant, and the local reranker service for document AI features.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/emadAlaa2003/DVLD_GraduationProject.git
+cd DVLD_GraduationProject
+```
+
+### 2. Configure the database
+
+Restore the project database supplied by the team, then apply any required updates from [Database/Migrations](Database/Migrations/). These migrations are incremental; they do not create the entire database from scratch.
+
+Set the `DVLD_CONNECTION_STRING` environment variable for the Windows account running the application. For a local instance using Windows authentication:
+
+```text
+Server=.;Database=DVLD_Grad;Integrated Security=True;TrustServerCertificate=True;
+```
+
+Adjust the server and database names to your environment, then restart Visual Studio or the terminal. The database must include `MobileUsers` to use citizen authentication.
+
+Database backups, credentials, uploaded PDFs, and Qdrant data are not included in the repository. A SQL backup does not include the document files or vector store.
+
+### 3. Run the desktop application and API
+
+Open [DVLD/DVLD.sln](DVLD/DVLD.sln), restore NuGet packages, and build the solution. Start the `DVLD` desktop project with an active employee account.
+
+Run the API from the repository root:
 
 ```powershell
 dotnet run --project .\DVLD.Api\DVLD.Api.csproj --launch-profile https
 ```
 
-عناوين التطوير: `https://localhost:7077` و`http://localhost:5277` وفق [launchSettings.json](DVLD.Api/Properties/launchSettings.json).
+The development profiles expose HTTPS on `7077` and HTTP on `5277`. See [launchSettings.json](DVLD.Api/Properties/launchSettings.json).
 
-## تشغيل Android محليًا
+### 4. Run Android locally
 
-افتح [DVLD.Mobile](DVLD.Mobile/) في Android Studio، ثم Gradle Sync. المشروع يستخدم `compileSdk/targetSdk 36` و`minSdk 26` وJava source compatibility 11؛ استخدم JDK المتوافق مع إصدار Android Gradle Plugin في المشروع.
-
-العميل الحالي في [ApiClient.java](DVLD.Mobile/app/src/main/java/com/dvld/mobile/network/ApiClient.java) يتصل بـ`http://127.0.0.1:5277/`، للتجربة المحلية عبر ADB:
+Open `DVLD.Mobile` in Android Studio and sync Gradle. The current Debug client uses `http://127.0.0.1:5277/` through ADB reverse:
 
 ```powershell
 dotnet run --project .\DVLD.Api\DVLD.Api.csproj --launch-profile http
 adb reverse tcp:5277 tcp:5277
 ```
 
-شغّل نسخة **Debug** على جهاز/محاكي متصل بـADB. إعداد Debug يسمح باتصال HTTP المحلي؛ Release لا يسمح بهذا الاتصال، فلا يُعتبر هذا الإعداد جاهزًا للنشر. يجب أن يعمل API في `Development` لهذا السيناريو. ملف تشغيل `http` يتجنب التحويل إلى منفذ HTTPS عند التجربة المحلية.
+Run the Debug application on an ADB-connected device or emulator. Create a citizen account through **People → Manage Mobile Account** in the desktop application, then use the displayed credentials to sign in.
 
-أنشئ حساب المواطن أو أعد كلمة مروره من `People → Manage Mobile Account` في WinForms، ثم استخدم البيانات المعروضة في Android. الجلسة محفوظة بذاكرة عملية التطبيق فقط؛ إغلاق العملية يفقد Cookie. `PersonID` الممرر للشاشات لا يُغني عن Cookie ولا يسمح بقراءة بيانات شخص آخر.
+This HTTP setup is for local development. Release builds require an appropriate HTTPS endpoint. Session cookies are held in Android process memory and are lost when that process ends.
 
-## خدمات الـAI
+### 5. Enable document AI features
 
-لا يلزم تشغيل خدمات الـAI لاختبار Login أو قراءة الرخص؛ تحتاجها لمعالجة الوثائق والشات والتوليد:
+Download the configured Ollama models:
 
 ```powershell
 ollama pull qwen3-embedding:0.6b
 ollama pull qwen3:1.7b
 ```
 
-- Ollama للنموذجين المذكورين.
-- Qdrant عبر `localhost:6334`، وcollection باسم `dvld_knowledge` بحجم متجه 1024 وCosine.
-- reranker محلي على `http://localhost:8081/rerank`؛ تنفيذ خادمه ليس ضمن ملفات المستودع الموثقة.
+Provide these services:
 
-## حدود التنفيذ والبيانات
+| Service | Local configuration |
+|---|---|
+| Qdrant | gRPC port `6334`; collection `dvld_knowledge`; 1024 dimensions; Cosine distance |
+| Reranker | `http://localhost:8081/rerank` |
 
-- Cookie المواطن مدتها الافتراضية ثماني ساعات دون SlidingExpiration، ويُعاد فحص الحساب وملكية البيانات. في Development تستخدم `SameAsRequest` لدعم التجربة المحلية؛ خارج Development تكون `SecurePolicy.Always`.
-- `PeopleController` مغلق أمام الزائر والمواطن بسياسة `EmployeeApiOnly`؛ إعداد مصادقة موظفي API ليس ضمن التنفيذ الحالي، ولا توجد صلاحيات موظفين تفصيلية موثقة كميزة مكتملة.
-- الامتحان الرسمي خارج جلسة المواطن، ومخصص لبيئة مركز امتحان مشرف عليها ومعزولة وفق تعليق الكود.
-- ملفات `.bak` وبيانات الاتصال ومجلد PDF المرفوع مستثناة من Git. Backup SQL لا يشمل PDF أو Qdrant.
-- طوابير الوثائق والتوليد داخل الذاكرة؛ لا يظهر استئناف تلقائي بعد إعادة تشغيل API.
-- متابعة التوليد وعرض نتائج الدفعة وحد الثقة للشات وحماية مصادر الأسئلة عند إعادة المعالجة لها قيود موثقة في الدليل.
+The reranker server implementation is provided separately. AI services are needed for document processing, chat, and question generation; they are not required for citizen login or licence retrieval.
 
-هذا التحديث توثيق للكود، ولم يتضمن تشغيل Android أو اختبارات تكامل أو Build جديدًا. نجاح Rebuild سابق للمشاريع .NET لا يثبت تشغيل الموبايل أو كل الخدمات الخارجية.
+## Project status
+
+DVLD is an academic prototype under active development. The Android application currently covers login, the dashboard, and licence lists. Additional citizen screens and detailed employee permissions are being developed separately.
+
+Background queues currently run in memory. The local Android configuration and supervised examination endpoints are intended for development and demonstration, not a public deployment configuration.
+
+## Documentation
+
+The [implementation guide](docs/project-guide/README.md) covers the desktop workflows, API, database access, AI pipeline, and examination services in detail, with file and method references.
+
+- [Document processing and knowledge assistant](docs/project-guide/02-ai-documents-and-chat.md)
+- [Background question generation](docs/project-guide/03-ai-question-generation.md)
+- [API and official examinations](docs/project-guide/04-api-and-official-exam.md)
+- [Android and citizen authentication](docs/project-guide/06-mobile-and-citizen-auth.md)
