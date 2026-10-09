@@ -50,7 +50,9 @@ builder.Services
             options.Cookie.HttpOnly = true;
 
             options.Cookie.SecurePolicy =
-                CookieSecurePolicy.Always;
+                builder.Environment.IsDevelopment()
+                    ? CookieSecurePolicy.SameAsRequest
+                    : CookieSecurePolicy.Always;
 
             options.Cookie.SameSite =
                 SameSiteMode.Strict;
