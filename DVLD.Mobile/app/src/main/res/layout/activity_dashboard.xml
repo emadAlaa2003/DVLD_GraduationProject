@@ -454,6 +454,9 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/dashboard_action_applications"
                     style="@style/Widget.DVLDMobile.DashboardCard"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="@string/dashboard_my_applications"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"

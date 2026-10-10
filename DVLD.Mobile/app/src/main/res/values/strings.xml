@@ -127,4 +127,11 @@
     <string name="international_license_details_license_section">معلومات الرخصة الدولية</string>
     <string name="international_license_details_application_section">معلومات الطلب</string>
     <string name="international_license_details_driver_id">رقم السائق: %1$s</string>
+    <string name="applications_intro">تابع جميع طلباتك وحالتها في مكان واحد</string>
+    <string name="applications_loading">جارٍ تحميل الطلبات…</string>
+    <string name="applications_empty">لا توجد طلبات مسجلة</string>
+    <string name="applications_not_found">لم يتم العثور على بيانات الطلبات لهذا الحساب</string>
+    <string name="applications_server_error">حدث خطأ أثناء تحميل الطلبات، حاول مرة أخرى</string>
+    <string name="applications_application_id">رقم الطلب: %1$s</string>
+    <string name="applications_last_status_date">آخر تحديث للحالة: %1$s</string>
 </resources>

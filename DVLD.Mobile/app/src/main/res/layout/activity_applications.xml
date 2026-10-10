@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/applications_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    tools:context=".ui.ApplicationsActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/login_brand_strip"
+        android:importantForAccessibility="no" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:layout_weight="1"
+                    android:accessibilityHeading="true"
+                    android:gravity="start"
+                    android:text="@string/dashboard_my_applications"
+                    android:textColor="@color/login_navy"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/applications_back"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/licenses_back"
+                    android:textAllCaps="false"
+                    android:textColor="@color/login_teal" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="start"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/applications_intro"
+                android:textColor="@color/login_text_secondary"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <ProgressBar
+                    android:id="@+id/applications_progress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/applications_loading"
+                    android:indeterminateTint="@color/login_teal"
+                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/applications_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:accessibilityLiveRegion="polite"
+                    android:gravity="start"
+                    android:textColor="@color/login_text_secondary"
+                    android:textSize="13sp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/applications_refresh"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/dashboard_refresh"
+                    android:textAllCaps="false"
+                    android:textColor="@color/login_teal"
+                    app:cornerRadius="14dp"
+                    app:strokeColor="@color/login_outline" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/applications_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:accessibilityLiveRegion="polite"
+                android:background="@drawable/login_icon_background"
+                android:gravity="start"
+                android:padding="18dp"
+                android:text="@string/applications_empty"
+                android:textColor="@color/login_text_secondary"
+                android:textSize="14sp"
+                android:visibility="gone" />
+            <LinearLayout
+                android:id="@+id/applications_cards"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/login_outline"
+        android:importantForAccessibility="no" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/applications_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="72dp"
+        android:background="@color/white"
+        android:elevation="0dp"
+        app:itemHorizontalTranslationEnabled="false"
+        app:itemIconSize="22dp"
+        app:itemIconTint="@color/dashboard_navigation_tint"
+        app:itemTextAppearanceActive="@style/TextAppearance.DVLDMobile.DashboardNavigation"
+        app:itemTextAppearanceInactive="@style/TextAppearance.DVLDMobile.DashboardNavigation"
+        app:itemTextColor="@color/dashboard_navigation_tint"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/dashboard_bottom_navigation" />
+</LinearLayout>

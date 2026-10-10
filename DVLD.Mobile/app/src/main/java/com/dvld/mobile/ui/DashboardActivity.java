@@ -44,7 +44,7 @@ public class DashboardActivity extends AppCompatActivity {
     private boolean loading;
     private boolean resumed;
     private long requestGeneration;
-    private boolean openingLicenses;
+    private boolean openingDestination;
     private TextView licenseMessage;
     private TextView localSummary;
     private TextView internationalSummary;
@@ -91,9 +91,14 @@ public class DashboardActivity extends AppCompatActivity {
                 openMyLicenses();
                 return false;
             }
+            if (item.getItemId() == R.id.dashboard_nav_applications) {
+                openApplications();
+                return false;
+            }
             return item.getItemId() == R.id.dashboard_nav_home;
         });
         findViewById(R.id.dashboard_action_licenses).setOnClickListener(view -> openMyLicenses());
+        findViewById(R.id.dashboard_action_applications).setOnClickListener(view -> openApplications());
 
         licenseMessage = findViewById(R.id.license_summary_message);
         localSummary = findViewById(R.id.local_license_summary);
@@ -113,17 +118,25 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        openingLicenses = false;
+        openingDestination = false;
         resumed = true;
         // One entry point handles initial loading, returning from Desktop changes and retry.
         refreshDashboard();
     }
 
     private void openMyLicenses() {
-        if (openingLicenses || personId == null || personId <= 0) return;
-        openingLicenses = true;
+        if (openingDestination || personId == null || personId <= 0) return;
+        openingDestination = true;
         Intent intent = new Intent(this, MyLicensesActivity.class);
         intent.putExtra(MyLicensesActivity.EXTRA_PERSON_ID, personId.intValue());
+        startActivity(intent);
+    }
+
+    private void openApplications() {
+        if (openingDestination || personId == null || personId <= 0) return;
+        openingDestination = true;
+        Intent intent = new Intent(this, ApplicationsActivity.class);
+        intent.putExtra(ApplicationsActivity.EXTRA_PERSON_ID, personId.intValue());
         startActivity(intent);
     }
 
