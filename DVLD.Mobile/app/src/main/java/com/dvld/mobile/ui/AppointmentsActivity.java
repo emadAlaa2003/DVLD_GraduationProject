@@ -30,7 +30,11 @@ import java.util.Collections;
 
 public class AppointmentsActivity extends AppCompatActivity {
     public static final String EXTRA_PERSON_ID = "personId";
+    public static final String EXTRA_VIEW_MODE = "viewMode";
+    public static final String MODE_APPOINTMENTS = "APPOINTMENTS";
+    public static final String MODE_TESTS_RESULTS = "TESTS_AND_RESULTS";
     private static final String STATE_FILTER_ID = "appointmentsFilterId";
+    private static final String STATE_VIEW_MODE = "appointmentsViewMode";
 
     private Integer personId;
     private AppointmentsRepository repository;
@@ -48,6 +52,7 @@ public class AppointmentsActivity extends AppCompatActivity {
     private ChipGroup filters;
     private List<TestAppointment> loadedAppointments;
     private AppointmentsTextMapper.Filter selectedFilter = AppointmentsTextMapper.Filter.ALL;
+    private AppointmentsTextMapper.ViewMode viewMode = AppointmentsTextMapper.ViewMode.APPOINTMENTS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +75,18 @@ public class AppointmentsActivity extends AppCompatActivity {
         repository = new ApiAppointmentsRepository();
         textMapper = new AppointmentsTextMapper(this::getString, ZoneId.systemDefault());
         filters = findViewById(R.id.appointments_filters);
-        filters.check(savedInstanceState == null ? R.id.appointments_filter_all
+        AppointmentsTextMapper.ViewMode initialMode = AppointmentsTextMapper.ViewMode.fromValue(
+                savedInstanceState == null ? getIntent().getStringExtra(EXTRA_VIEW_MODE)
+                        : savedInstanceState.getString(STATE_VIEW_MODE, getIntent().getStringExtra(EXTRA_VIEW_MODE)));
+        applyViewMode(initialMode, savedInstanceState == null ? R.id.appointments_filter_all
                 : savedInstanceState.getInt(STATE_FILTER_ID, R.id.appointments_filter_all));
-        selectedFilter = filterForId(filters.getCheckedChipId());
         filters.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            selectedFilter = filterForId(group.getCheckedChipId());
+            selectedFilter = AppointmentsTextMapper.filterForMode(filterForId(group.getCheckedChipId()), viewMode);
+            int selectedId = idForFilter(selectedFilter);
+            if (group.getCheckedChipId() != selectedId) {
+                group.check(selectedId);
+                return;
+            }
             if (resumed && loadedAppointments != null) render(loadedAppointments);
         });
         refreshButton.setOnClickListener(view -> refreshAppointments());
@@ -98,12 +110,43 @@ public class AppointmentsActivity extends AppCompatActivity {
             }
             return item.getItemId() == R.id.dashboard_nav_appointments;
         });
+        navigation.setOnItemReselectedListener(item -> {
+            if (item.getItemId() == R.id.dashboard_nav_appointments
+                    && viewMode == AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS) {
+                applyViewMode(AppointmentsTextMapper.ViewMode.APPOINTMENTS, R.id.appointments_filter_all);
+                if (resumed && loadedAppointments != null) render(loadedAppointments);
+            }
+        });
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(STATE_FILTER_ID, filters.getCheckedChipId());
+        outState.putString(STATE_VIEW_MODE, viewMode.name());
         super.onSaveInstanceState(outState);
+    }
+
+    private void applyViewMode(AppointmentsTextMapper.ViewMode mode, int filterId) {
+        viewMode = mode;
+        getIntent().putExtra(EXTRA_VIEW_MODE, mode.name());
+        boolean testsResults = mode == AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS;
+        ((TextView) findViewById(R.id.appointments_title)).setText(testsResults
+                ? R.string.dashboard_tests_results : R.string.dashboard_my_appointments);
+        ((TextView) findViewById(R.id.appointments_intro)).setText(testsResults
+                ? R.string.tests_results_intro : R.string.appointments_intro);
+        findViewById(R.id.appointments_filter_upcoming).setVisibility(testsResults ? View.GONE : View.VISIBLE);
+        selectedFilter = AppointmentsTextMapper.filterForMode(filterForId(filterId), mode);
+        filters.check(idForFilter(selectedFilter));
+    }
+
+    private int idForFilter(AppointmentsTextMapper.Filter filter) {
+        switch (filter) {
+            case UPCOMING: return R.id.appointments_filter_upcoming;
+            case AWAITING_RESULT: return R.id.appointments_filter_awaiting_result;
+            case PASSED: return R.id.appointments_filter_passed;
+            case FAILED: return R.id.appointments_filter_failed;
+            default: return R.id.appointments_filter_all;
+        }
     }
 
     private AppointmentsTextMapper.Filter filterForId(int id) {
@@ -221,15 +264,15 @@ public class AppointmentsActivity extends AppCompatActivity {
         statusMessage.setText(R.string.dashboard_updated);
         refreshButton.setText(R.string.dashboard_refresh);
         Instant now = Instant.now();
-        List<TestAppointment> sorted = textMapper.visibleAppointments(appointments, selectedFilter, now);
-        emptyMessage.setText(textMapper.emptyMessage(selectedFilter));
+        List<TestAppointment> sorted = textMapper.visibleAppointments(appointments, selectedFilter, viewMode, now);
+        emptyMessage.setText(textMapper.emptyMessage(selectedFilter, viewMode));
         emptyMessage.setVisibility(sorted.isEmpty() ? View.VISIBLE : View.GONE);
         for (TestAppointment appointment : sorted) {
             View card = getLayoutInflater().inflate(R.layout.item_appointment_card, cards, false);
             ((TextView) card.findViewById(R.id.appointment_card_id)).setText(textMapper.appointmentId(appointment.getTestAppointmentID()));
             ((TextView) card.findViewById(R.id.appointment_card_type)).setText(
                     getString(R.string.application_details_test_type, textMapper.testType(appointment.getTestTypeID(), appointment.getTestTypeTitle())));
-            ((TextView) card.findViewById(R.id.appointment_card_details)).setText(textMapper.details(appointment));
+            ((TextView) card.findViewById(R.id.appointment_card_details)).setText(textMapper.details(appointment, viewMode));
             TextView badge = card.findViewById(R.id.appointment_card_status);
             AppointmentsTextMapper.Status status = textMapper.status(appointment, now);
             badge.setText(textMapper.statusText(status));

@@ -205,5 +205,127 @@ public class AppointmentsTextMapperTest extends ArabicResourcesTestSupport {
         assertEquals(input, mapper.visibleAppointments(input, AppointmentsTextMapper.Filter.AWAITING_RESULT, date));
     }
 
+    @Test
+    public void testsResultsModeIncludesOnlyAwaitingPassedAndFailedEvenForAllFilter() {
+        TestAppointment upcoming = appointment("{\"appointmentDate\":\"2026-10-11\",\"testID\":9}");
+        TestAppointment awaiting = appointment("{\"appointmentDate\":\"2026-10-09\"}");
+        TestAppointment passed = appointment("{\"appointmentDate\":\"2026-10-11\",\"testResult\":true}");
+        TestAppointment failed = appointment("{\"testResult\":false}");
+        TestAppointment unknown = appointment("{\"appointmentDate\":\"bad\"}");
+        List<TestAppointment> input = Arrays.asList(upcoming, unknown, failed, passed, null, awaiting);
+        assertEquals(Arrays.asList(awaiting, passed, failed), mapper.visibleAppointments(input,
+                AppointmentsTextMapper.Filter.ALL, AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS, NOW));
+        assertTrue(mapper.visibleAppointments(input, AppointmentsTextMapper.Filter.UPCOMING,
+                AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS, NOW).isEmpty());
+    }
+
+    @Test
+    public void testsResultsSortAwaitingThenPassedThenFailedAndNewestFirstInEachGroup() {
+        TestAppointment awaitingOld = appointment("{\"appointmentDate\":\"2026-10-07\"}");
+        TestAppointment awaitingNew = appointment("{\"appointmentDate\":\"2026-10-09\"}");
+        TestAppointment passedOld = appointment("{\"appointmentDate\":\"2026-10-07\",\"testResult\":true}");
+        TestAppointment passedNew = appointment("{\"appointmentDate\":\"2026-10-09\",\"testResult\":true}");
+        TestAppointment passedInvalid = appointment("{\"appointmentDate\":\"bad\",\"testResult\":true}");
+        TestAppointment failedOld = appointment("{\"appointmentDate\":\"2026-10-07\",\"testResult\":false}");
+        TestAppointment failedNew = appointment("{\"appointmentDate\":\"2026-10-09\",\"testResult\":false}");
+        TestAppointment failedMissing = appointment("{\"testResult\":false}");
+        List<TestAppointment> input = Arrays.asList(failedMissing, passedOld, awaitingOld, failedNew,
+                passedInvalid, failedOld, awaitingNew, passedNew);
+        assertEquals(Arrays.asList(awaitingNew, awaitingOld, passedNew, passedOld, passedInvalid,
+                failedNew, failedOld, failedMissing), mapper.visibleAppointments(input,
+                AppointmentsTextMapper.Filter.ALL, AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS, NOW));
+    }
+
+    @Test
+    public void testsResultsSupportsAllFourFiltersOnSameDataWithoutChangingInput() {
+        TestAppointment awaiting = appointment("{\"appointmentDate\":\"2026-10-09\"}");
+        TestAppointment passed = appointment("{\"testResult\":true}");
+        TestAppointment failed = appointment("{\"testResult\":false}");
+        TestAppointment upcoming = appointment("{\"appointmentDate\":\"2026-10-11\"}");
+        List<TestAppointment> input = Arrays.asList(failed, upcoming, passed, awaiting);
+        AppointmentsTextMapper.ViewMode mode = AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS;
+        assertEquals(Arrays.asList(awaiting, passed, failed), mapper.visibleAppointments(input, AppointmentsTextMapper.Filter.ALL, mode, NOW));
+        assertEquals(Arrays.asList(awaiting), mapper.visibleAppointments(input, AppointmentsTextMapper.Filter.AWAITING_RESULT, mode, NOW));
+        assertEquals(Arrays.asList(passed), mapper.visibleAppointments(input, AppointmentsTextMapper.Filter.PASSED, mode, NOW));
+        assertEquals(Arrays.asList(failed), mapper.visibleAppointments(input, AppointmentsTextMapper.Filter.FAILED, mode, NOW));
+        assertEquals(Arrays.asList(failed, upcoming, passed, awaiting), input);
+    }
+
+    @Test
+    public void testsResultsEmptyMessagesMatchEachFilterEvenIfAppointmentsExist() {
+        AppointmentsTextMapper.Filter[] filters = {AppointmentsTextMapper.Filter.ALL,
+                AppointmentsTextMapper.Filter.AWAITING_RESULT, AppointmentsTextMapper.Filter.PASSED,
+                AppointmentsTextMapper.Filter.FAILED};
+        String[] messages = {"لا توجد اختبارات أو نتائج مسجلة", "لا توجد اختبارات بانتظار تسجيل النتيجة",
+                "لا توجد اختبارات ناجحة", "لا توجد اختبارات راسبة"};
+        List<TestAppointment> upcomingOnly = Arrays.asList(appointment("{\"appointmentDate\":\"2026-10-11\"}"));
+        for (int index = 0; index < filters.length; index++) {
+            assertTrue(mapper.visibleAppointments(upcomingOnly, filters[index], AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS, NOW).isEmpty());
+            assertTrue(mapper.visibleAppointments(null, filters[index], AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS, NOW).isEmpty());
+            assertEquals(messages[index], mapper.emptyMessage(filters[index], AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS));
+        }
+    }
+
+    @Test
+    public void explicitAppointmentsModePreservesExistingFiltersSortingDetailsAndEmptyMessages() {
+        List<TestAppointment> input = Arrays.asList(appointment("{\"appointmentDate\":\"2026-10-11\"}"),
+                appointment("{\"appointmentDate\":\"2026-10-09\"}"), appointment("{\"testResult\":true}"),
+                appointment("{\"testResult\":false}"), appointment("{}"));
+        for (AppointmentsTextMapper.Filter filter : AppointmentsTextMapper.Filter.values()) {
+            assertEquals(mapper.visibleAppointments(input, filter, NOW), mapper.visibleAppointments(input,
+                    filter, AppointmentsTextMapper.ViewMode.APPOINTMENTS, NOW));
+            assertEquals(mapper.emptyMessage(filter), mapper.emptyMessage(filter, AppointmentsTextMapper.ViewMode.APPOINTMENTS));
+        }
+        for (TestAppointment appointment : input) {
+            assertEquals(mapper.details(appointment), mapper.details(appointment, AppointmentsTextMapper.ViewMode.APPOINTMENTS));
+        }
+        assertEquals(5, mapper.visibleAppointments(input, AppointmentsTextMapper.Filter.ALL,
+                AppointmentsTextMapper.ViewMode.APPOINTMENTS, NOW).size());
+    }
+
+    @Test
+    public void testsResultsCardsShowRealTestIdAndDateWithoutInventingNullOrInvalidIds() {
+        TestAppointment real = appointment("{\"testID\":18,\"appointmentDate\":\"2026-10-09T15:30:00\","
+                + "\"className\":\"Class 3 - Ordinary driving license\",\"paidFees\":25.5}");
+        String card = mapper.details(real, AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS);
+        assertTrue(card.startsWith("فئة الرخصة: الفئة الثالثة - رخصة قيادة عادية\nتاريخ ووقت الاختبار: "));
+        assertTrue(card.matches("(?s).*\\p{Nd}{1,2}:\\p{Nd}{2}.*"));
+        assertTrue(card.contains("رقم الاختبار: 18"));
+        assertTrue(card.endsWith("رسوم الموعد: 25.50"));
+        for (String json : new String[] {"{}", "{\"testID\":null}", "{\"testID\":0}", "{\"testID\":-1}"}) {
+            String noId = mapper.details(appointment(json), AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS);
+            assertEquals("فئة الرخصة: —\nتاريخ ووقت الاختبار: —", noId);
+            assertFalse(noId.contains("رقم الاختبار:"));
+        }
+    }
+
+    @Test
+    public void modeValuesRoundTripAndRestoredFiltersStayValidForTheirMode() {
+        for (AppointmentsTextMapper.ViewMode mode : AppointmentsTextMapper.ViewMode.values()) {
+            assertEquals(mode, AppointmentsTextMapper.ViewMode.fromValue(mode.name()));
+        }
+        assertEquals(AppointmentsTextMapper.ViewMode.APPOINTMENTS, AppointmentsTextMapper.ViewMode.fromValue(null));
+        assertEquals(AppointmentsTextMapper.ViewMode.APPOINTMENTS, AppointmentsTextMapper.ViewMode.fromValue("unknown"));
+        for (AppointmentsTextMapper.Filter filter : AppointmentsTextMapper.Filter.values()) {
+            assertEquals(filter, AppointmentsTextMapper.filterForMode(filter, AppointmentsTextMapper.ViewMode.APPOINTMENTS));
+            assertEquals(filter == AppointmentsTextMapper.Filter.UPCOMING ? AppointmentsTextMapper.Filter.ALL : filter,
+                    AppointmentsTextMapper.filterForMode(filter, AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS));
+        }
+        assertEquals(AppointmentsTextMapper.Filter.ALL,
+                AppointmentsTextMapper.filterForMode(null, AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS));
+    }
+
+    @Test
+    public void testsResultsStartsIncludingAnAppointmentAtItsTimeWithoutChangingClassification() {
+        TestAppointment appointment = appointment("{\"appointmentDate\":\"2026-10-10T18:17:00\"}");
+        Instant time = ApiDateTime.parse(appointment.getAppointmentDate(), ZONE);
+        List<TestAppointment> input = Arrays.asList(appointment);
+        assertTrue(mapper.visibleAppointments(input, AppointmentsTextMapper.Filter.ALL,
+                AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS, time.minusSeconds(1)).isEmpty());
+        assertEquals(input, mapper.visibleAppointments(input, AppointmentsTextMapper.Filter.ALL,
+                AppointmentsTextMapper.ViewMode.TESTS_AND_RESULTS, time));
+        assertEquals(AppointmentsTextMapper.Status.AWAITING_RESULT, mapper.status(appointment, time));
+    }
+
     private TestAppointment appointment(String json) { return gson.fromJson(json, TestAppointment.class); }
 }

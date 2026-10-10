@@ -105,6 +105,8 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.dashboard_action_licenses).setOnClickListener(view -> openMyLicenses());
         findViewById(R.id.dashboard_action_applications).setOnClickListener(view -> openApplications());
         findViewById(R.id.dashboard_action_appointments).setOnClickListener(view -> openAppointments());
+        findViewById(R.id.dashboard_action_tests_results).setOnClickListener(view ->
+                openAppointments(AppointmentsActivity.MODE_TESTS_RESULTS));
         findViewById(R.id.dashboard_active_applications_card).setOnClickListener(view -> openApplications(true));
         findViewById(R.id.latest_application_card).setOnClickListener(view -> openLatestApplication());
         findViewById(R.id.dashboard_upcoming_appointment_card).setOnClickListener(view -> openUpcomingAppointment());
@@ -156,10 +158,15 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void openAppointments() {
+        openAppointments(AppointmentsActivity.MODE_APPOINTMENTS);
+    }
+
+    private void openAppointments(String viewMode) {
         if (openingDestination || personId == null || personId <= 0) return;
         openingDestination = true;
         Intent intent = new Intent(this, AppointmentsActivity.class);
         intent.putExtra(AppointmentsActivity.EXTRA_PERSON_ID, personId.intValue());
+        intent.putExtra(AppointmentsActivity.EXTRA_VIEW_MODE, viewMode);
         startActivity(intent);
     }
 

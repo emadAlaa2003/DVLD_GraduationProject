@@ -411,7 +411,7 @@
                 android:text="@string/dashboard_quick_actions"
                 android:textAppearance="@style/TextAppearance.DVLDMobile.DashboardSection" />
 
-            <!-- Quick actions are visual only; there are no click listeners or destinations. -->
+            <!-- Citizen services use the existing Dashboard card style. -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -563,6 +563,40 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/dashboard_action_tests_results"
+                    style="@style/Widget.DVLDMobile.DashboardCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="@string/dashboard_tests_results">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="84dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="14dp">
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/login_icon_background"
+                            android:importantForAccessibility="no"
+                            android:padding="8dp"
+                            app:srcCompat="@drawable/ic_dashboard_applications" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:text="@string/dashboard_tests_results"
+                            android:textAppearance="@style/TextAppearance.DVLDMobile.DashboardAction" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/dashboard_action_assistant"

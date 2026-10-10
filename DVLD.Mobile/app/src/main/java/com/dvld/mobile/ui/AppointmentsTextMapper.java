@@ -16,6 +16,13 @@ import java.util.Locale;
 public final class AppointmentsTextMapper {
     public enum Status { AWAITING_RESULT, UPCOMING, PASSED, FAILED, UNKNOWN }
     public enum Filter { ALL, UPCOMING, AWAITING_RESULT, PASSED, FAILED }
+    public enum ViewMode {
+        APPOINTMENTS, TESTS_AND_RESULTS;
+
+        public static ViewMode fromValue(String value) {
+            return TESTS_AND_RESULTS.name().equals(value) ? TESTS_AND_RESULTS : APPOINTMENTS;
+        }
+    }
 
     private final DashboardTextMapper.Strings strings;
     private final DashboardTextMapper dashboardMapper;
@@ -83,15 +90,39 @@ public final class AppointmentsTextMapper {
         return result;
     }
 
+    public String details(TestAppointment appointment, ViewMode mode) {
+        if (mode == ViewMode.APPOINTMENTS) return details(appointment);
+        String result = strings.get(R.string.license_details_class, text(dashboardMapper.licenseClass(appointment.getClassName())))
+                + "\n" + strings.get(R.string.tests_results_test_date, dateTime(appointment.getAppointmentDate()));
+        if (appointment.getTestID() != null && appointment.getTestID() > 0) {
+            result += "\n" + strings.get(R.string.application_details_test_id, id(appointment.getTestID()));
+        }
+        if (appointment.getPaidFees() != null) {
+            result += "\n" + strings.get(R.string.application_details_appointment_fees, fees(appointment.getPaidFees()));
+        }
+        return result;
+    }
+
+    public static Filter filterForMode(Filter filter, ViewMode mode) {
+        return filter == null || (mode == ViewMode.TESTS_AND_RESULTS && filter == Filter.UPCOMING)
+                ? Filter.ALL : filter;
+    }
+
     public List<TestAppointment> sortedAppointments(List<TestAppointment> appointments, Instant now) {
         return visibleAppointments(appointments, Filter.ALL, now);
     }
 
     public List<TestAppointment> visibleAppointments(List<TestAppointment> appointments, Filter filter, Instant now) {
+        return visibleAppointments(appointments, filter, ViewMode.APPOINTMENTS, now);
+    }
+
+    public List<TestAppointment> visibleAppointments(List<TestAppointment> appointments, Filter filter, ViewMode mode, Instant now) {
         List<TestAppointment> sorted = new ArrayList<>();
         if (appointments != null) {
             for (TestAppointment appointment : appointments) {
-                if (appointment != null && matches(status(appointment, now), filter)) sorted.add(appointment);
+                if (appointment == null) continue;
+                Status status = status(appointment, now);
+                if (matchesMode(status, mode) && matches(status, filter)) sorted.add(appointment);
             }
         }
         sorted.sort((left, right) -> {
@@ -108,6 +139,11 @@ public final class AppointmentsTextMapper {
         return Collections.unmodifiableList(sorted);
     }
 
+    private boolean matchesMode(Status status, ViewMode mode) {
+        return mode == ViewMode.APPOINTMENTS || status == Status.AWAITING_RESULT
+                || status == Status.PASSED || status == Status.FAILED;
+    }
+
     private boolean matches(Status status, Filter filter) {
         switch (filter) {
             case UPCOMING: return status == Status.UPCOMING;
@@ -119,12 +155,17 @@ public final class AppointmentsTextMapper {
     }
 
     public String emptyMessage(Filter filter) {
+        return emptyMessage(filter, ViewMode.APPOINTMENTS);
+    }
+
+    public String emptyMessage(Filter filter, ViewMode mode) {
         switch (filter) {
             case UPCOMING: return strings.get(R.string.appointments_empty_upcoming);
             case AWAITING_RESULT: return strings.get(R.string.appointments_empty_awaiting_result);
             case PASSED: return strings.get(R.string.appointments_empty_passed);
             case FAILED: return strings.get(R.string.appointments_empty_failed);
-            default: return strings.get(R.string.appointments_empty);
+            default: return strings.get(mode == ViewMode.TESTS_AND_RESULTS
+                    ? R.string.tests_results_empty : R.string.appointments_empty);
         }
     }
 

@@ -35,6 +35,10 @@
     <string name="dashboard_my_licenses">رخصي</string>
     <string name="dashboard_my_applications">طلباتي</string>
     <string name="dashboard_my_appointments">مواعيدي</string>
+    <string name="dashboard_tests_results">اختباراتي ونتائجي</string>
+    <string name="tests_results_intro">تابع اختباراتك ونتائجها المسجلة والمنتظرة</string>
+    <string name="tests_results_empty">لا توجد اختبارات أو نتائج مسجلة</string>
+    <string name="tests_results_test_date">تاريخ ووقت الاختبار: %1$s</string>
     <string name="dashboard_practice_exam">اختبار تجريبي</string>
     <string name="dashboard_traffic_assistant">المساعد المروري</string>
     <string name="dashboard_home">الرئيسية</string>
