@@ -26,8 +26,10 @@ import java.util.List;
 
 public class ApplicationsActivity extends AppCompatActivity {
     public static final String EXTRA_PERSON_ID = "personId";
+    public static final String EXTRA_ACTIVE_ONLY = "activeOnly";
 
     private Integer personId;
+    private boolean activeOnly;
     private ApplicationsRepository repository;
     private ApplicationsRepository.RequestHandle request;
     private ApplicationsTextMapper textMapper;
@@ -54,8 +56,14 @@ public class ApplicationsActivity extends AppCompatActivity {
 
         personId = getIntent().hasExtra(EXTRA_PERSON_ID)
                 ? getIntent().getIntExtra(EXTRA_PERSON_ID, -1) : null;
+        activeOnly = getIntent().getBooleanExtra(EXTRA_ACTIVE_ONLY, false);
+        ((TextView) findViewById(R.id.applications_title)).setText(activeOnly
+                ? R.string.applications_active_title : R.string.dashboard_my_applications);
+        ((TextView) findViewById(R.id.applications_intro)).setText(activeOnly
+                ? R.string.applications_active_intro : R.string.applications_intro);
         cards = findViewById(R.id.applications_cards);
         emptyMessage = findViewById(R.id.applications_empty);
+        emptyMessage.setText(activeOnly ? R.string.applications_active_empty : R.string.applications_empty);
         statusMessage = findViewById(R.id.applications_status);
         progress = findViewById(R.id.applications_progress);
         refreshButton = findViewById(R.id.applications_refresh);
@@ -74,6 +82,10 @@ public class ApplicationsActivity extends AppCompatActivity {
             }
             if (item.getItemId() == R.id.dashboard_nav_licenses) {
                 openMyLicenses();
+                return false;
+            }
+            if (item.getItemId() == R.id.dashboard_nav_appointments) {
+                openAppointments();
                 return false;
             }
             return item.getItemId() == R.id.dashboard_nav_applications;
@@ -183,7 +195,7 @@ public class ApplicationsActivity extends AppCompatActivity {
         statusMessage.setTextColor(getColor(R.color.login_text_secondary));
         statusMessage.setText(R.string.dashboard_updated);
         refreshButton.setText(R.string.dashboard_refresh);
-        List<CitizenApplication> sorted = textMapper.sortedApplications(applications);
+        List<CitizenApplication> sorted = textMapper.visibleApplications(applications, activeOnly);
         emptyMessage.setVisibility(sorted.isEmpty() ? View.VISIBLE : View.GONE);
         for (CitizenApplication application : sorted) {
             View card = getLayoutInflater().inflate(R.layout.item_application_card, cards, false);
@@ -219,5 +231,15 @@ public class ApplicationsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ApplicationDetailsActivity.class);
         intent.putExtra(ApplicationDetailsActivity.EXTRA_APPLICATION_ID, applicationId);
         startActivity(intent);
+    }
+
+    private void openAppointments() {
+        if (openingDestination || personId == null || personId <= 0) return;
+        openingDestination = true;
+        Intent intent = new Intent(this, AppointmentsActivity.class);
+        intent.putExtra(AppointmentsActivity.EXTRA_PERSON_ID, personId.intValue());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
     }
 }

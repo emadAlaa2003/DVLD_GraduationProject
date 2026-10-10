@@ -7,6 +7,7 @@ import com.dvld.mobile.model.InternationalLicenseDetails;
 import com.dvld.mobile.model.LocalLicense;
 import com.dvld.mobile.model.LocalLicenseDetails;
 import com.dvld.mobile.model.TestAppointment;
+import com.dvld.mobile.model.TestAppointmentDetails;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface DashboardApiService {
+    @GET("api/test-appointments/{testAppointmentId}")
+    Call<TestAppointmentDetails> getTestAppointmentDetails(@Path("testAppointmentId") int testAppointmentId);
+
     @GET("api/applications/{applicationId}")
     Call<ApplicationDetails> getApplicationDetails(@Path("applicationId") int applicationId);
 

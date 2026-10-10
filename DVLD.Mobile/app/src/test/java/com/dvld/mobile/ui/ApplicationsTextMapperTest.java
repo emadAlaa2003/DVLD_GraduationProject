@@ -2,6 +2,7 @@ package com.dvld.mobile.ui;
 
 import com.dvld.mobile.R;
 import com.dvld.mobile.model.CitizenApplication;
+import com.dvld.mobile.model.DashboardData;
 import com.google.gson.Gson;
 
 import org.junit.BeforeClass;
@@ -15,6 +16,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -183,5 +185,27 @@ public class ApplicationsTextMapperTest {
 
     private CitizenApplication application(String json) {
         return gson.fromJson(json, CitizenApplication.class);
+    }
+
+    @Test
+    public void activeFilterExactlyMatchesDashboardNumericCountWithoutStatusTextFallback() {
+        CitizenApplication active = application("{\"applicationStatus\":1,\"applicationDate\":\"2026-10-09\"}");
+        CitizenApplication completed = application("{\"applicationStatus\":3}");
+        CitizenApplication cancelled = application("{\"applicationStatus\":2}");
+        CitizenApplication namedNewOnly = application("{\"statusText\":\"New\"}");
+        CitizenApplication unknown = application("{\"applicationStatus\":99,\"statusText\":\"New\"}");
+        List<CitizenApplication> applications = Arrays.asList(active, completed, cancelled, namedNewOnly, unknown, null);
+        DashboardData data = new DashboardData(Collections.emptyList(), Collections.emptyList(), applications, Collections.emptyList());
+        assertEquals(Collections.singletonList(active), mapper.visibleApplications(applications, true));
+        assertEquals(data.getActiveApplicationCount(), mapper.visibleApplications(applications, true).size());
+    }
+
+    @Test
+    public void allModeRetainsAllApplicationsAndEmptyActiveFilterIsSafe() {
+        List<CitizenApplication> applications = Arrays.asList(application("{\"applicationStatus\":1}"),
+                application("{\"applicationStatus\":2}"), application("{\"applicationStatus\":3}"), application("{}"));
+        assertEquals(mapper.sortedApplications(applications), mapper.visibleApplications(applications, false));
+        assertTrue(mapper.visibleApplications(Collections.singletonList(application("{\"applicationStatus\":3}")), true).isEmpty());
+        assertTrue(mapper.visibleApplications(null, true).isEmpty());
     }
 }

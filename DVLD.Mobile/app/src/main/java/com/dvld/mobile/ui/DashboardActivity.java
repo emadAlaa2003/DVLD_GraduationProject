@@ -45,6 +45,7 @@ public class DashboardActivity extends AppCompatActivity {
     private boolean resumed;
     private long requestGeneration;
     private boolean openingDestination;
+    private final DashboardNavigationState destinations = new DashboardNavigationState();
     private TextView licenseMessage;
     private TextView localSummary;
     private TextView internationalSummary;
@@ -95,10 +96,19 @@ public class DashboardActivity extends AppCompatActivity {
                 openApplications();
                 return false;
             }
+            if (item.getItemId() == R.id.dashboard_nav_appointments) {
+                openAppointments();
+                return false;
+            }
             return item.getItemId() == R.id.dashboard_nav_home;
         });
         findViewById(R.id.dashboard_action_licenses).setOnClickListener(view -> openMyLicenses());
         findViewById(R.id.dashboard_action_applications).setOnClickListener(view -> openApplications());
+        findViewById(R.id.dashboard_action_appointments).setOnClickListener(view -> openAppointments());
+        findViewById(R.id.dashboard_active_applications_card).setOnClickListener(view -> openApplications(true));
+        findViewById(R.id.latest_application_card).setOnClickListener(view -> openLatestApplication());
+        findViewById(R.id.dashboard_upcoming_appointment_card).setOnClickListener(view -> openUpcomingAppointment());
+        updateDestinationCards();
 
         licenseMessage = findViewById(R.id.license_summary_message);
         localSummary = findViewById(R.id.local_license_summary);
@@ -133,16 +143,58 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void openApplications() {
+        openApplications(false);
+    }
+
+    private void openApplications(boolean activeOnly) {
         if (openingDestination || personId == null || personId <= 0) return;
         openingDestination = true;
         Intent intent = new Intent(this, ApplicationsActivity.class);
         intent.putExtra(ApplicationsActivity.EXTRA_PERSON_ID, personId.intValue());
+        intent.putExtra(ApplicationsActivity.EXTRA_ACTIVE_ONLY, activeOnly);
         startActivity(intent);
+    }
+
+    private void openAppointments() {
+        if (openingDestination || personId == null || personId <= 0) return;
+        openingDestination = true;
+        Intent intent = new Intent(this, AppointmentsActivity.class);
+        intent.putExtra(AppointmentsActivity.EXTRA_PERSON_ID, personId.intValue());
+        startActivity(intent);
+    }
+
+    private void openLatestApplication() {
+        Integer id = destinations.getLatestApplicationId();
+        if (openingDestination || id == null) return;
+        openingDestination = true;
+        Intent intent = new Intent(this, ApplicationDetailsActivity.class);
+        intent.putExtra(ApplicationDetailsActivity.EXTRA_APPLICATION_ID, id.intValue());
+        startActivity(intent);
+    }
+
+    private void openUpcomingAppointment() {
+        Integer id = destinations.getUpcomingAppointmentId();
+        if (openingDestination || id == null) return;
+        openingDestination = true;
+        Intent intent = new Intent(this, TestAppointmentDetailsActivity.class);
+        intent.putExtra(TestAppointmentDetailsActivity.EXTRA_TEST_APPOINTMENT_ID, id.intValue());
+        startActivity(intent);
+    }
+
+    private void updateDestinationCards() {
+        View latest = findViewById(R.id.latest_application_card);
+        latest.setClickable(destinations.getLatestApplicationId() != null);
+        latest.setFocusable(destinations.getLatestApplicationId() != null);
+        View upcoming = findViewById(R.id.dashboard_upcoming_appointment_card);
+        upcoming.setClickable(destinations.getUpcomingAppointmentId() != null);
+        upcoming.setFocusable(destinations.getUpcomingAppointmentId() != null);
     }
 
     @Override
     protected void onStop() {
         resumed = false;
+        destinations.clear();
+        updateDestinationCards();
         requestGeneration++;
         if (refreshRequest != null) {
             refreshRequest.cancel();
@@ -215,6 +267,8 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void clearValues() {
+        destinations.clear();
+        updateDestinationCards();
         localSummary.setText(R.string.dashboard_unknown_value);
         internationalSummary.setText(R.string.dashboard_unknown_value);
         registeredValue.setText(R.string.dashboard_unknown_value);
@@ -253,6 +307,7 @@ public class DashboardActivity extends AppCompatActivity {
         activeValue.setText(String.valueOf(data.getActiveApplicationCount()));
 
         TestAppointment upcoming = data.getUpcomingAppointment(Instant.now(), zone);
+        destinations.setUpcomingAppointment(upcoming);
         if (upcoming == null) {
             upcomingValue.setText(R.string.dashboard_no_upcoming_appointment);
         } else {
@@ -265,14 +320,17 @@ public class DashboardActivity extends AppCompatActivity {
                     ? upcoming.getTestTypeTitle() + "\n" + spokenDate : spokenDate);
         }
         renderLatestApplication(data, zone);
+        updateDestinationCards();
     }
 
     private void renderLatestApplication(DashboardData data, ZoneId zone) {
+        destinations.setLatestApplication(null);
         if (data.getApplications().isEmpty()) {
             applicationMessage.setText(R.string.dashboard_no_applications);
             return;
         }
         CitizenApplication latest = data.getLatestApplication(zone);
+        destinations.setLatestApplication(latest);
         if (latest == null) {
             applicationMessage.setText(R.string.dashboard_application_date_unavailable);
             return;

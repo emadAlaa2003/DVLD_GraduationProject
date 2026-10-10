@@ -230,6 +230,8 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/dashboard_active_applications_card"
+                    android:focusable="true"
                     style="@style/Widget.DVLDMobile.DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -272,6 +274,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/dashboard_upcoming_appointment_card"
                     style="@style/Widget.DVLDMobile.DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -495,6 +498,9 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/dashboard_action_appointments"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="@string/dashboard_my_appointments"
                     style="@style/Widget.DVLDMobile.DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

@@ -43,6 +43,20 @@ public final class ApplicationsTextMapper {
         return Collections.unmodifiableList(sorted);
     }
 
+    public List<CitizenApplication> visibleApplications(List<CitizenApplication> applications, boolean activeOnly) {
+        if (!activeOnly) return sortedApplications(applications);
+        List<CitizenApplication> active = new ArrayList<>();
+        if (applications != null) {
+            for (CitizenApplication application : applications) {
+                // Exactly the numeric rule used by DashboardData.getActiveApplicationCount().
+                if (application != null && Integer.valueOf(1).equals(application.getApplicationStatus())) {
+                    active.add(application);
+                }
+            }
+        }
+        return sortedApplications(active);
+    }
+
     public String applicationId(CitizenApplication application) {
         Integer id = application.getApplicationID();
         return strings.get(R.string.applications_application_id,
