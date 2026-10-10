@@ -192,8 +192,13 @@ public class MyLicensesActivity extends AppCompatActivity {
             }
         }
         for (InternationalLicense license : data.getInternationalLicenses()) {
-            addCard(internationalCards, getString(R.string.licenses_international_card_title),
+            View card = addCard(internationalCards, getString(R.string.licenses_international_card_title),
                     textMapper.internationalDetails(license));
+            Integer id = license.getInternationalLicenseID();
+            if (id != null && id > 0) {
+                card.setFocusable(true);
+                card.setOnClickListener(view -> openInternationalLicense(id));
+            }
         }
     }
 
@@ -211,5 +216,13 @@ public class MyLicensesActivity extends AppCompatActivity {
         ((TextView) card.findViewById(R.id.license_card_details)).setText(details);
         container.addView(card);
         return card;
+    }
+
+    private void openInternationalLicense(int internationalLicenseId) {
+        if (openingDetails) return;
+        openingDetails = true;
+        Intent intent = new Intent(this, InternationalLicenseDetailsActivity.class);
+        intent.putExtra(InternationalLicenseDetailsActivity.EXTRA_INTERNATIONAL_LICENSE_ID, internationalLicenseId);
+        startActivity(intent);
     }
 }
