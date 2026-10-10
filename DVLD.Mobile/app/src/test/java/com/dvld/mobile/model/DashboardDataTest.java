@@ -83,6 +83,17 @@ public class DashboardDataTest {
     }
 
     @Test
+    public void appointment143IsNotUpcomingAtOrAfter1817EvenWithoutResult() {
+        TestAppointment appointment = gson.fromJson("{\"testAppointmentID\":143,\"appointmentDate\":\"2026-10-10T18:17:00\",\"testResult\":null}", TestAppointment.class);
+        DashboardData data = new DashboardData(Collections.emptyList(), Collections.emptyList(),
+                Collections.emptyList(), Collections.singletonList(appointment));
+        Instant atAppointment = ApiDateTime.parse(appointment.getAppointmentDate(), zone);
+        assertEquals(appointment, data.getUpcomingAppointment(atAppointment.minusSeconds(1), zone));
+        assertNull(data.getUpcomingAppointment(atAppointment, zone));
+        assertNull(data.getUpcomingAppointment(ApiDateTime.parse("2026-10-10T18:32:00", zone), zone));
+    }
+
+    @Test
     public void parsesAspNetDatesWithOffsetsFractionalSecondsAndLocalTimes() {
         assertEquals(Instant.parse("2026-10-09T10:00:00Z"),
                 ApiDateTime.parse("2026-10-09T13:00:00+03:00", zone));
