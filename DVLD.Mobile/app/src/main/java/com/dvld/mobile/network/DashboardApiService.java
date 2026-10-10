@@ -1,6 +1,7 @@
 package com.dvld.mobile.network;
 
 import com.dvld.mobile.model.CitizenApplication;
+import com.dvld.mobile.model.ApplicationDetails;
 import com.dvld.mobile.model.InternationalLicense;
 import com.dvld.mobile.model.InternationalLicenseDetails;
 import com.dvld.mobile.model.LocalLicense;
@@ -14,6 +15,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface DashboardApiService {
+    @GET("api/applications/{applicationId}")
+    Call<ApplicationDetails> getApplicationDetails(@Path("applicationId") int applicationId);
+
     @GET("api/international-licenses/{internationalLicenseId}")
     Call<InternationalLicenseDetails> getInternationalLicenseDetails(@Path("internationalLicenseId") int internationalLicenseId);
 

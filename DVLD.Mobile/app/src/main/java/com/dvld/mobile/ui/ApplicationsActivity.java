@@ -33,7 +33,7 @@ public class ApplicationsActivity extends AppCompatActivity {
     private ApplicationsTextMapper textMapper;
     private boolean resumed;
     private boolean loading;
-    private boolean openingLicenses;
+    private boolean openingDestination;
     private long generation;
     private LinearLayout cards;
     private TextView emptyMessage;
@@ -83,7 +83,7 @@ public class ApplicationsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        openingLicenses = false;
+        openingDestination = false;
         resumed = true;
         refreshApplications();
     }
@@ -101,8 +101,8 @@ public class ApplicationsActivity extends AppCompatActivity {
     }
 
     private void openMyLicenses() {
-        if (openingLicenses || personId == null || personId <= 0) return;
-        openingLicenses = true;
+        if (openingDestination || personId == null || personId <= 0) return;
+        openingDestination = true;
         Intent intent = new Intent(this, MyLicensesActivity.class);
         intent.putExtra(MyLicensesActivity.EXTRA_PERSON_ID, personId.intValue());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -204,7 +204,20 @@ public class ApplicationsActivity extends AppCompatActivity {
             }
             badge.setBackgroundTintList(ColorStateList.valueOf(getColor(background)));
             badge.setTextColor(getColor(foreground));
+            Integer id = application.getApplicationID();
+            if (id != null && id > 0) {
+                card.setFocusable(true);
+                card.setOnClickListener(view -> openApplicationDetails(id));
+            }
             cards.addView(card);
         }
+    }
+
+    private void openApplicationDetails(int applicationId) {
+        if (openingDestination) return;
+        openingDestination = true;
+        Intent intent = new Intent(this, ApplicationDetailsActivity.class);
+        intent.putExtra(ApplicationDetailsActivity.EXTRA_APPLICATION_ID, applicationId);
+        startActivity(intent);
     }
 }

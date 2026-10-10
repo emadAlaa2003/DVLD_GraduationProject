@@ -56,11 +56,13 @@ public final class ApplicationsTextMapper {
     }
 
     public Status status(CitizenApplication application) {
-        Integer id = application.getApplicationStatus();
+        return status(application.getApplicationStatus(), application.getStatusText());
+    }
+
+    public Status status(Integer id, String text) {
         if (Integer.valueOf(1).equals(id)) return Status.NEW;
         if (Integer.valueOf(2).equals(id)) return Status.CANCELLED;
         if (Integer.valueOf(3).equals(id)) return Status.COMPLETED;
-        String text = application.getStatusText();
         if (text != null) {
             text = text.trim();
             if ("New".equalsIgnoreCase(text)) return Status.NEW;
@@ -71,7 +73,11 @@ public final class ApplicationsTextMapper {
     }
 
     public String statusText(CitizenApplication application) {
-        switch (status(application)) {
+        return statusText(application.getApplicationStatus(), application.getStatusText());
+    }
+
+    public String statusText(Integer id, String text) {
+        switch (status(id, text)) {
             case NEW: return strings.get(R.string.dashboard_status_new);
             case CANCELLED: return strings.get(R.string.dashboard_status_cancelled);
             case COMPLETED: return strings.get(R.string.dashboard_status_completed);
