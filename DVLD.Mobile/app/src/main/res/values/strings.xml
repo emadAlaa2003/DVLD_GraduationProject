@@ -232,4 +232,22 @@
     <string name="practice_new_exam">اختبار جديد</string>
     <string name="practice_return_home">العودة للرئيسية</string>
     <string name="practice_result_unavailable">تعذر عرض نتيجة الاختبار. يمكنك العودة للرئيسية أو بدء اختبار جديد.</string>
+    <string name="chat_intro">اسأل عن قوانين وتعليمات السلامة والمرور</string>
+    <string name="chat_empty">مرحبًا بك في المساعد المروري. اكتب سؤالك لبدء المحادثة.</string>
+    <string name="chat_input_hint">اكتب سؤالك</string>
+    <string name="chat_send">إرسال</string>
+    <string name="chat_you">أنت</string>
+    <string name="chat_question_required">اكتب سؤالًا قبل الإرسال</string>
+    <string name="chat_preparing">جاري تجهيز الإجابة…</string>
+    <string name="chat_waiting_hint">قد يستغرق ذلك بعض الوقت. يمكنك مغادرة هذه الشاشة والعودة لقراءة الإجابة. سنخبرك عند جاهزيتها إذا كانت الإشعارات مفعّلة.</string>
+    <string name="chat_sources_title">المصادر المرجعية</string>
+    <string name="chat_source_reference">المستند %1$s — الصفحة %2$s</string>
+    <string name="chat_error_bad_request">تعذر إرسال السؤال. تحقق من السؤال وحاول مرة أخرى.</string>
+    <string name="chat_error_unauthorized">انتهت جلسة الدخول. يرجى تسجيل الدخول من جديد.</string>
+    <string name="chat_error_forbidden">لا يسمح لهذا الحساب باستخدام المساعد المروري.</string>
+    <string name="chat_error_network">تعذر الاتصال بالخادم. حاول مرة أخرى.</string>
+    <string name="chat_error_server">تعذر الحصول على إجابة حاليًا. حاول مرة أخرى.</string>
+    <string name="chat_answer_ready">إجابة المساعد المروري جاهزة</string>
+    <string name="chat_notification_channel">إجابات المساعد المروري</string>
+    <string name="chat_notification_channel_description">إشعار عند جاهزية إجابة المساعد المروري أثناء مغادرة شاشة المحادثة</string>
 </resources>

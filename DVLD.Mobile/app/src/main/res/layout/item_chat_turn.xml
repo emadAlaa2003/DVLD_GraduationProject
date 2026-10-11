@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layoutDirection="rtl" android:orientation="vertical" android:paddingTop="12dp" android:paddingBottom="8dp">
+    <com.google.android.material.card.MaterialCardView style="@style/Widget.DVLDMobile.DashboardCard"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginEnd="24dp"
+        app:cardBackgroundColor="@color/login_teal_soft" app:cardCornerRadius="18dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="16dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="start"
+                android:text="@string/chat_you" android:textColor="@color/login_teal" android:textSize="12sp" android:textStyle="bold" />
+            <TextView android:id="@+id/chat_question_text" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="6dp" android:gravity="start"
+                android:lineSpacingExtra="5dp" android:textColor="@color/login_navy" android:textSize="16sp" android:textIsSelectable="true" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView style="@style/Widget.DVLDMobile.DashboardCard"
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp" app:cardCornerRadius="18dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="16dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="start"
+                android:text="@string/dashboard_traffic_assistant" android:textColor="@color/login_teal" android:textSize="12sp" android:textStyle="bold" />
+            <TextView android:id="@+id/chat_answer_text" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" android:accessibilityLiveRegion="polite" android:gravity="start"
+                android:lineSpacingExtra="6dp" android:textColor="@color/login_navy" android:textSize="16sp" android:textIsSelectable="true" />
+            <LinearLayout android:id="@+id/chat_waiting" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:gravity="center_vertical" android:orientation="horizontal" android:visibility="gone">
+                <ProgressBar style="?android:attr/progressBarStyleSmall" android:layout_width="24dp" android:layout_height="24dp"
+                    android:layout_marginEnd="10dp" android:contentDescription="@string/chat_preparing" android:indeterminateTint="@color/login_teal" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                    android:gravity="start" android:lineSpacingExtra="4dp" android:text="@string/chat_waiting_hint"
+                    android:textColor="@color/login_text_secondary" android:textSize="13sp" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/chat_sources" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" android:orientation="vertical" android:visibility="gone">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="start"
+                    android:text="@string/chat_sources_title" android:textColor="@color/login_text_secondary"
+                    android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+            <com.google.android.material.button.MaterialButton android:id="@+id/chat_retry"
+                style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginTop="12dp" android:minHeight="48dp"
+                android:text="@string/dashboard_retry" android:textAllCaps="false" android:textColor="@color/login_teal"
+                android:visibility="gone" app:cornerRadius="14dp" app:strokeColor="@color/login_outline" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

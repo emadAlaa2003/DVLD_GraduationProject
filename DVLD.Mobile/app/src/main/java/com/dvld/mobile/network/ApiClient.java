@@ -44,6 +44,20 @@ public final class ApiClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(PracticeExamApiService.class);
+
+        // Clone retains the exact session CookieJar; other API timeouts stay unchanged.
+        private static final OkHttpClient CHAT_HTTP_CLIENT = HTTP_CLIENT.newBuilder()
+                .readTimeout(5, TimeUnit.MINUTES)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .callTimeout(5, TimeUnit.MINUTES)
+                .build();
+
+        private static final ChatApiService CHAT_SERVICE = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(CHAT_HTTP_CLIENT)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(ChatApiService.class);
     }
 
     public static MobileAuthApiService getAuthService() {
@@ -57,6 +71,10 @@ public final class ApiClient {
     public static PracticeExamApiService getPracticeExamService() {
         return Holder.PRACTICE_SERVICE;
     }
+
+    public static ChatApiService getChatService() { return Holder.CHAT_SERVICE; }
+
+    public static OkHttpClient getChatHttpClient() { return Holder.CHAT_HTTP_CLIENT; }
 
     /** Future API services must reuse this client to send the same session cookies. */
     public static OkHttpClient getHttpClient() {
