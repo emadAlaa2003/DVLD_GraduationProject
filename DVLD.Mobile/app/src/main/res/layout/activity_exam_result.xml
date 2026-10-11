@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/exam_result_root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/login_background" android:layoutDirection="rtl" android:orientation="vertical">
+    <View android:layout_width="match_parent" android:layout_height="3dp"
+        android:background="@drawable/login_brand_strip" android:importantForAccessibility="no" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:fillViewport="true" android:scrollbars="none">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="20dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:accessibilityHeading="true" android:gravity="start" android:text="@string/practice_result_title"
+                android:textColor="@color/login_navy" android:textSize="26sp" android:textStyle="bold" />
+            <TextView android:id="@+id/exam_result_invalid" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="20dp" android:gravity="start"
+                android:text="@string/practice_result_unavailable" android:textColor="@color/login_error"
+                android:textSize="15sp" android:visibility="gone" />
+            <LinearLayout android:id="@+id/exam_result_content" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <com.google.android.material.card.MaterialCardView style="@style/Widget.DVLDMobile.DashboardCard"
+                    android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp"
+                    app:cardBackgroundColor="@color/login_teal_soft">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="vertical" android:padding="20dp">
+                        <TextView android:id="@+id/exam_result_score" android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:gravity="center" android:textDirection="ltr"
+                            android:textColor="@color/login_navy" android:textSize="36sp" android:textStyle="bold" />
+                        <TextView android:id="@+id/exam_result_percentage" android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center"
+                            android:textColor="@color/login_teal" android:textSize="28sp" android:textStyle="bold" />
+                        <TextView android:id="@+id/exam_result_counts" android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:layout_marginTop="16dp" android:gravity="start"
+                            android:lineSpacingExtra="8dp" android:textColor="@color/login_navy" android:textSize="15sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp" android:layout_marginBottom="12dp" android:accessibilityHeading="true"
+                    android:gravity="start" android:text="@string/practice_review_title"
+                    android:textAppearance="@style/TextAppearance.DVLDMobile.DashboardSection" />
+                <LinearLayout android:id="@+id/exam_result_reviews" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:orientation="vertical" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:paddingStart="20dp" android:paddingEnd="20dp"
+        android:paddingTop="8dp" android:paddingBottom="12dp">
+        <com.google.android.material.button.MaterialButton android:id="@+id/exam_result_new"
+            android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="56dp"
+            android:text="@string/practice_new_exam" android:textAllCaps="false" android:textColor="@color/white"
+            app:backgroundTint="@color/login_navy" app:cornerRadius="16dp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/exam_result_home"
+            style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:minHeight="48dp" android:layout_marginTop="4dp"
+            android:text="@string/practice_return_home" android:textAllCaps="false" android:textColor="@color/login_teal"
+            app:cornerRadius="16dp" app:strokeColor="@color/login_outline" />
+    </LinearLayout>
+</LinearLayout>

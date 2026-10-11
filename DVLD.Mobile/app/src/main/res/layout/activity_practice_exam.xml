@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/practice_root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/login_background" android:layoutDirection="rtl" android:orientation="vertical">
+    <View android:layout_width="match_parent" android:layout_height="3dp"
+        android:background="@drawable/login_brand_strip" android:importantForAccessibility="no" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+        android:fillViewport="true" android:scrollbars="none">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="20dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:gravity="center_vertical" android:orientation="horizontal">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                    android:layout_marginEnd="12dp" android:accessibilityHeading="true" android:gravity="start"
+                    android:text="@string/dashboard_practice_exam" android:textColor="@color/login_navy"
+                    android:textSize="28sp" android:textStyle="bold" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/practice_back"
+                    style="@style/Widget.Material3.Button.TextButton" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/licenses_back"
+                    android:textAllCaps="false" android:textColor="@color/login_teal" />
+            </LinearLayout>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="8dp" android:gravity="start" android:lineSpacingExtra="4dp"
+                android:text="@string/practice_intro" android:textColor="@color/login_text_secondary" android:textSize="14sp" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" android:layout_marginBottom="16dp"
+                android:gravity="center_vertical" android:orientation="horizontal">
+                <ProgressBar android:id="@+id/practice_loading" style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="24dp" android:layout_height="24dp" android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/practice_loading" android:indeterminateTint="@color/login_teal"
+                    android:visibility="gone" />
+                <TextView android:id="@+id/practice_message" android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:layout_marginEnd="8dp" android:accessibilityLiveRegion="polite"
+                    android:gravity="start" android:textColor="@color/login_text_secondary" android:textSize="14sp" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/practice_retry"
+                    style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:minHeight="48dp" android:text="@string/dashboard_retry"
+                    android:textAllCaps="false" android:textColor="@color/login_teal" android:visibility="gone"
+                    app:cornerRadius="14dp" app:strokeColor="@color/login_outline" />
+            </LinearLayout>
+            <LinearLayout android:id="@+id/practice_content" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone">
+                <TextView android:id="@+id/practice_question_progress" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:accessibilityLiveRegion="polite" android:gravity="start"
+                    android:textAppearance="@style/TextAppearance.DVLDMobile.DashboardSection" />
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/practice_question_indicator" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginTop="12dp" android:layout_marginBottom="20dp"
+                    android:importantForAccessibility="no" app:indicatorColor="@color/login_teal"
+                    app:trackColor="@color/login_outline" app:trackThickness="4dp" app:trackCornerRadius="2dp" />
+                <com.google.android.material.card.MaterialCardView style="@style/Widget.DVLDMobile.DashboardCard"
+                    android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="vertical" android:padding="18dp">
+                        <TextView android:id="@+id/practice_question" android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:accessibilityHeading="true" android:gravity="start"
+                            android:lineSpacingExtra="6dp" android:textColor="@color/login_navy"
+                            android:textSize="20sp" android:textStyle="bold" />
+                        <RadioGroup android:id="@+id/practice_options" android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:layout_marginTop="12dp"
+                            android:orientation="vertical" android:saveEnabled="false" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp" android:baselineAligned="false" android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton android:id="@+id/practice_previous"
+                        style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginEnd="12dp"
+                        android:minHeight="56dp" android:text="@string/practice_previous" android:textAllCaps="false"
+                        android:textColor="@color/login_teal" app:cornerRadius="16dp" app:strokeColor="@color/login_outline" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/practice_next"
+                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:minHeight="56dp" android:text="@string/practice_next" android:textAllCaps="false"
+                        android:textColor="@color/white" app:backgroundTint="@color/login_navy" app:cornerRadius="16dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

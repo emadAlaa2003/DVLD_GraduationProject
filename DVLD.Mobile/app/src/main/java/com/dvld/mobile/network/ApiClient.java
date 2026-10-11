@@ -37,6 +37,13 @@ public final class ApiClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(DashboardApiService.class);
+
+        private static final PracticeExamApiService PRACTICE_SERVICE = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(getHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(PracticeExamApiService.class);
     }
 
     public static MobileAuthApiService getAuthService() {
@@ -45,6 +52,10 @@ public final class ApiClient {
 
     public static DashboardApiService getDashboardService() {
         return Holder.DASHBOARD_SERVICE;
+    }
+
+    public static PracticeExamApiService getPracticeExamService() {
+        return Holder.PRACTICE_SERVICE;
     }
 
     /** Future API services must reuse this client to send the same session cookies. */

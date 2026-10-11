@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.DVLDMobile.DashboardCard" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:layout_marginBottom="12dp" android:layoutDirection="rtl">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="18dp">
+        <TextView android:id="@+id/exam_review_number" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:gravity="start"
+            android:textAppearance="@style/TextAppearance.DVLDMobile.DashboardSection" />
+        <TextView android:id="@+id/exam_review_question" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="8dp" android:accessibilityHeading="true"
+            android:gravity="start" android:lineSpacingExtra="5dp" android:textColor="@color/login_navy"
+            android:textSize="18sp" android:textStyle="bold" />
+        <TextView android:id="@+id/exam_review_status" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_marginTop="12dp" android:layout_gravity="start"
+            android:background="@drawable/login_icon_background" android:paddingStart="14dp" android:paddingEnd="14dp"
+            android:paddingTop="6dp" android:paddingBottom="6dp" android:textSize="13sp" android:textStyle="bold" />
+        <TextView android:id="@+id/exam_review_selected" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="14dp" android:gravity="start"
+            android:lineSpacingExtra="4dp" android:textColor="@color/login_text_secondary" android:textSize="15sp" />
+        <TextView android:id="@+id/exam_review_correct" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="start"
+            android:lineSpacingExtra="4dp" android:textColor="@color/login_teal" android:textSize="15sp" />
+        <TextView android:id="@+id/exam_review_explanation" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="14dp" android:gravity="start"
+            android:lineSpacingExtra="5dp" android:textColor="@color/login_text_secondary" android:textSize="14sp"
+            android:visibility="gone" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
