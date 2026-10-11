@@ -655,6 +655,66 @@ namespace DVLD_DataAccess
         // جلب جميع أسئلة بنك الأسئلة لشاشة الإدارة
         // =====================================================
 
+        public static DataTable GetRandomApprovedQuestions(int questionCount)
+        {
+            if (questionCount < 1 || questionCount > 20)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(questionCount),
+                    "Question count must be between 1 and 20.");
+            }
+
+            DataTable table = new DataTable();
+
+            using (SqlConnection connection = new SqlConnection(
+                       clsDataAccessSettings.ConnectionString))
+            {
+                string query = @"
+                    SELECT TOP (@QuestionCount)
+                        QuestionID,
+                        QuestionText,
+                        QuestionType,
+                        OptionA,
+                        OptionB,
+                        OptionC,
+                        OptionD,
+                        CorrectOption,
+                        Explanation
+                    FROM dbo.QuestionBank
+                    WHERE ReviewStatus = N'Approved'
+                      AND IsActive = 1
+                      AND NULLIF(LTRIM(RTRIM(QuestionText)), N'') IS NOT NULL
+                      AND NULLIF(LTRIM(RTRIM(OptionA)), N'') IS NOT NULL
+                      AND NULLIF(LTRIM(RTRIM(OptionB)), N'') IS NOT NULL
+                      AND
+                      (
+                          (QuestionType = N'MultipleChoice'
+                           AND NULLIF(LTRIM(RTRIM(OptionC)), N'') IS NOT NULL
+                           AND NULLIF(LTRIM(RTRIM(OptionD)), N'') IS NOT NULL
+                           AND CorrectOption IN ('A', 'B', 'C', 'D'))
+                          OR
+                          (QuestionType = N'TrueFalse'
+                           AND CorrectOption IN ('A', 'B'))
+                      )
+                    ORDER BY NEWID();";
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.Add(
+                        "@QuestionCount", SqlDbType.Int).Value = questionCount;
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        table.Load(reader);
+                    }
+                }
+            }
+
+            return table;
+        }
+
         public static DataTable GetAllQuestions()
         {
             DataTable table =
