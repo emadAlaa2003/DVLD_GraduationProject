@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.button.MaterialButton;
+import com.dvld.mobile.chat.ChatRuntime;
 import com.dvld.mobile.model.MobileLoginResponse;
 import com.dvld.mobile.repository.ApiAuthRepository;
 import com.dvld.mobile.repository.AuthRepository;
@@ -134,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     loginRequest = null;
                     setLoginInProgress(false);
+                    ChatRuntime.get(getApplicationContext()).onAuthenticatedCitizen(
+                            response.getPersonId(), response.getFullName(), response.getUsername());
                     Intent dashboard = new Intent(MainActivity.this, DashboardActivity.class);
                     dashboard.putExtra(DashboardActivity.EXTRA_PERSON_ID, response.getPersonId().intValue());
                     dashboard.putExtra(DashboardActivity.EXTRA_FULL_NAME, response.getFullName());

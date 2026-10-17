@@ -33,7 +33,11 @@ public final class ChatRuntime {
     private ChatRuntime(Context context) {
         applicationContext = context.getApplicationContext();
         Handler main = new Handler(Looper.getMainLooper());
-        manager = new ChatRequestManager(new ApiChatRepository(), main::post, this::notifyAnswerReady);
+        manager = new ChatRequestManager(new ApiChatRepository(), main::post,
+                new ChatRequestManager.CompletionNotifier() {
+                    @Override public void onAnswerReady() { notifyAnswerReady(); }
+                    @Override public void onCitizenChanged() { clearNotification(); }
+                });
         NotificationManager notifications = applicationContext.getSystemService(NotificationManager.class);
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                 applicationContext.getString(R.string.chat_notification_channel), NotificationManager.IMPORTANCE_DEFAULT);
@@ -47,11 +51,23 @@ public final class ChatRuntime {
     }
     public ChatRequestManager getManager() { return manager; }
 
+    /** Called immediately after real authentication, before opening the Dashboard. */
+    public void onAuthenticatedCitizen(int citizenId, String citizenFullName, String citizenUsername) {
+        if (citizenId <= 0) return;
+        personId = citizenId;
+        fullName = citizenFullName;
+        username = citizenUsername;
+        manager.bindCitizen(citizenId);
+    }
+
     public void rememberDashboard(Intent incoming) {
         if (!incoming.hasExtra(DashboardActivity.EXTRA_PERSON_ID)) return;
-        personId = incoming.getIntExtra(DashboardActivity.EXTRA_PERSON_ID, -1);
-        fullName = incoming.getStringExtra(DashboardActivity.EXTRA_FULL_NAME);
-        username = incoming.getStringExtra(DashboardActivity.EXTRA_USERNAME);
+        int incomingPersonId = incoming.getIntExtra(DashboardActivity.EXTRA_PERSON_ID, -1);
+        // A stale Activity/notification Intent must not restore a previous account.
+        if (personId != null && personId != incomingPersonId) return;
+        onAuthenticatedCitizen(incomingPersonId,
+                incoming.getStringExtra(DashboardActivity.EXTRA_FULL_NAME),
+                incoming.getStringExtra(DashboardActivity.EXTRA_USERNAME));
     }
 
     public boolean claimPermissionPrompt() {

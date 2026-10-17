@@ -14,10 +14,11 @@ public class ChatRequestManagerTest {
     private FakeRepository repository;
     private ChatRequestManager manager;
     private int notifications;
+    private int clearedNotifications;
     private ChatResponse answer;
     @Before public void setUp() {
         repository = new FakeRepository();
-        manager = new ChatRequestManager(repository, Runnable::run, () -> notifications++);
+        manager = new ChatRequestManager(repository, Runnable::run, notifier());
         answer = new Gson().fromJson("{\"question\":\"السؤال\",\"answer\":\"إجابة\",\"sources\":[]}", ChatResponse.class);
     }
     @Test public void initialIdleAndEmpty() {
@@ -195,6 +196,168 @@ public class ChatRequestManagerTest {
                     manager.getHistory().get(manager.getHistory().size() - 1).getError());
         }
         assertEquals(0, notifications);
+    }
+    @Test public void switchingCitizenClearsCompletedHistoryAndVisibleSnapshot() {
+        manager.bindCitizen(100);
+        Recorder activity = new Recorder();
+        manager.addListener(activity);
+        manager.ask("old citizen question");
+        repository.callback.onSuccess(answer);
+
+        manager.bindCitizen(200);
+
+        assertTrue(manager.getHistory().isEmpty());
+        assertTrue(activity.latest.isEmpty());
+        assertFalse(manager.isLoading());
+        assertEquals(0, repository.cancellations);
+    }
+    @Test public void switchingCitizenCancelsRequestAndClearsItsNotification() {
+        manager.bindCitizen(100);
+        manager.ask("old citizen question");
+
+        manager.bindCitizen(200);
+
+        assertEquals(1, repository.cancellations);
+        assertEquals(2, clearedNotifications);
+        assertFalse(manager.isLoading());
+        assertTrue(manager.getHistory().isEmpty());
+    }
+    @Test public void sameCitizenKeepsHistoryAndActiveRequest() {
+        manager.bindCitizen(100);
+        manager.ask("completed question");
+        repository.callback.onSuccess(answer);
+        manager.ask("background question");
+
+        manager.bindCitizen(100);
+
+        assertEquals(2, manager.getHistory().size());
+        assertTrue(manager.isLoading());
+        assertEquals(0, repository.cancellations);
+        assertEquals(1, clearedNotifications);
+        repository.callback.onSuccess(answer);
+        assertEquals(ChatRequestManager.State.SUCCESS, manager.getHistory().get(1).getState());
+        assertEquals(2, notifications);
+    }
+    @Test public void oldSuccessAndErrorCannotCompleteNewCitizensFirstTurn() {
+        manager.bindCitizen(100);
+        manager.ask("old question");
+        ChatRepository.ChatCallback oldCallback = repository.callback;
+        manager.bindCitizen(200);
+        manager.ask("new citizen question");
+
+        oldCallback.onSuccess(answer);
+        oldCallback.onError(ChatRepository.ChatError.NETWORK);
+
+        assertEquals(1, manager.getHistory().size());
+        assertEquals("new citizen question", manager.getHistory().get(0).getQuestion());
+        assertEquals(ChatRequestManager.State.LOADING, manager.getHistory().get(0).getState());
+        assertTrue(manager.isLoading());
+        assertEquals(0, notifications);
+        repository.callback.onSuccess(answer);
+        assertFalse(manager.isLoading());
+        assertEquals(ChatRequestManager.State.SUCCESS, manager.getHistory().get(0).getState());
+        assertEquals(1, notifications);
+    }
+    @Test public void queuedOldAnswerIsIgnoredAfterAccountSwitch() {
+        List<Runnable> pending = new ArrayList<>();
+        manager = new ChatRequestManager(repository, pending::add, notifier());
+        manager.bindCitizen(100);
+        manager.ask("old question");
+        repository.callback.onSuccess(answer);
+
+        manager.bindCitizen(200);
+        pending.remove(0).run();
+
+        assertTrue(manager.getHistory().isEmpty());
+        assertFalse(manager.isLoading());
+        assertEquals(0, notifications);
+        assertEquals(1, repository.cancellations);
+    }
+    @Test public void returningToPreviousCitizenDoesNotRestoreHistoryOrOldCallback() {
+        manager.bindCitizen(100);
+        manager.ask("old question");
+        ChatRepository.ChatCallback oldCallback = repository.callback;
+        manager.bindCitizen(200);
+        manager.bindCitizen(100);
+        manager.ask("fresh question");
+
+        oldCallback.onSuccess(answer);
+
+        assertEquals(1, manager.getHistory().size());
+        assertEquals("fresh question", manager.getHistory().get(0).getQuestion());
+        assertTrue(manager.isLoading());
+        assertEquals(0, notifications);
+    }
+    @Test public void cancellationCallbackCannotRepublishOldAnswer() {
+        manager = new ChatRequestManager((question, callback) -> () -> callback.onSuccess(answer),
+                Runnable::run, notifier());
+        manager.bindCitizen(100);
+        manager.ask("old question");
+
+        manager.bindCitizen(200);
+
+        assertTrue(manager.getHistory().isEmpty());
+        assertFalse(manager.isLoading());
+        assertEquals(0, notifications);
+        assertEquals(2, clearedNotifications);
+    }
+    @Test public void sameCitizenRetainsQueuedAnswerAndBackgroundNotification() {
+        List<Runnable> pending = new ArrayList<>();
+        manager = new ChatRequestManager(repository, pending::add, notifier());
+        manager.bindCitizen(100);
+        manager.ask("question");
+        repository.callback.onSuccess(answer);
+
+        manager.bindCitizen(100);
+        pending.remove(0).run();
+
+        assertEquals(ChatRequestManager.State.SUCCESS, manager.getHistory().get(0).getState());
+        assertEquals(1, notifications);
+        assertEquals(1, clearedNotifications);
+        assertEquals(0, repository.cancellations);
+    }
+    @Test public void invalidCitizenIdCannotClearCurrentConversation() {
+        manager.bindCitizen(100);
+        manager.ask("question");
+
+        manager.bindCitizen(-1);
+        manager.bindCitizen(0);
+
+        assertEquals(1, manager.getHistory().size());
+        assertTrue(manager.isLoading());
+        assertEquals(0, repository.cancellations);
+        assertEquals(1, clearedNotifications);
+    }
+    @Test public void accountSwitchBeforeRequestHandleReturnsStillCancelsOldRequest() {
+        manager = new ChatRequestManager((question, callback) -> {
+            manager.bindCitizen(200);
+            return () -> repository.cancellations++;
+        }, Runnable::run, notifier());
+        manager.bindCitizen(100);
+
+        manager.ask("old question");
+
+        assertEquals(1, repository.cancellations);
+        assertTrue(manager.getHistory().isEmpty());
+        assertFalse(manager.isLoading());
+    }
+    @Test public void accountSwitchFromListenerPreventsOldRequestFromStarting() {
+        manager.bindCitizen(100);
+        manager.addListener(history -> {
+            if (!history.isEmpty()) manager.bindCitizen(200);
+        });
+
+        manager.ask("old question");
+
+        assertEquals(0, repository.calls);
+        assertTrue(manager.getHistory().isEmpty());
+        assertFalse(manager.isLoading());
+    }
+    private ChatRequestManager.CompletionNotifier notifier() {
+        return new ChatRequestManager.CompletionNotifier() {
+            @Override public void onAnswerReady() { notifications++; }
+            @Override public void onCitizenChanged() { clearedNotifications++; }
+        };
     }
     private static final class Recorder implements ChatRequestManager.Listener {
         private List<ChatRequestManager.Turn> latest;

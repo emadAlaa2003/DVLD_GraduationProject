@@ -12,7 +12,10 @@ import java.util.concurrent.Executor;
 /** Process-memory conversation. No Activity, View, or Android framework dependencies. */
 public final class ChatRequestManager {
     public interface Listener { void onChanged(List<Turn> history); }
-    public interface CompletionNotifier { void onAnswerReady(); }
+    public interface CompletionNotifier {
+        void onAnswerReady();
+        default void onCitizenChanged() { }
+    }
     public enum StartResult { STARTED, BLANK, BUSY }
     public enum State { LOADING, SUCCESS, ERROR }
 
@@ -35,6 +38,8 @@ public final class ChatRequestManager {
     private final CompletionNotifier notifier;
     private final List<Turn> history = new ArrayList<>();
     private final Set<Listener> listeners = new LinkedHashSet<>();
+    private Integer personId;
+    private long conversationGeneration;
     private int activeIndex = -1;
     // Owned here, never handed to an Activity or cancelled when a listener leaves.
     private ChatRepository.RequestHandle activeRequest;
@@ -53,33 +58,51 @@ public final class ChatRequestManager {
     }
     public synchronized void removeListener(Listener listener) { listeners.remove(listener); }
 
+    /** Rebinding the same citizen preserves both history and any background request. */
+    public synchronized void bindCitizen(int citizenId) {
+        if (citizenId <= 0 || (personId != null && personId == citizenId)) return;
+        personId = citizenId;
+        conversationGeneration++;
+        ChatRepository.RequestHandle previousRequest = activeRequest;
+        activeRequest = null;
+        activeIndex = -1;
+        history.clear();
+        // Invalidate callbacks before cancellation, which may itself invoke a callback.
+        if (previousRequest != null) previousRequest.cancel();
+        notifier.onCitizenChanged();
+        publish();
+    }
+
     public synchronized StartResult ask(String question) {
         if (question == null || question.trim().isEmpty()) return StartResult.BLANK;
         if (isLoading()) return StartResult.BUSY;
         String trimmed = question.trim();
         int index = history.size();
+        long generation = conversationGeneration;
         activeIndex = index;
         history.add(new Turn(trimmed, State.LOADING, null, null));
         publish();
+        if (conversationGeneration != generation) return StartResult.STARTED;
         try {
             ChatRepository.RequestHandle handle = repository.ask(trimmed, new ChatRepository.ChatCallback() {
                 @Override public void onSuccess(ChatResponse response) {
-                    callbackExecutor.execute(() -> complete(index, response, null));
+                    callbackExecutor.execute(() -> complete(generation, index, response, null));
                 }
                 @Override public void onError(ChatRepository.ChatError error) {
-                    callbackExecutor.execute(() -> complete(index, null, error));
+                    callbackExecutor.execute(() -> complete(generation, index, null, error));
                 }
             });
             // A test repository may complete synchronously before ask returns.
-            if (activeIndex == index) activeRequest = handle;
+            if (conversationGeneration != generation) handle.cancel();
+            else if (activeIndex == index) activeRequest = handle;
         } catch (RuntimeException exception) {
-            complete(index, null, ChatRepository.ChatError.SERVER);
+            complete(generation, index, null, ChatRepository.ChatError.SERVER);
         }
         return StartResult.STARTED;
     }
 
-    private synchronized void complete(int index, ChatResponse response, ChatRepository.ChatError error) {
-        if (activeIndex != index) return;
+    private synchronized void complete(long generation, int index, ChatResponse response, ChatRepository.ChatError error) {
+        if (conversationGeneration != generation || activeIndex != index) return;
         boolean success = error == null && response != null && response.isValid();
         Turn original = history.get(index);
         history.set(index, new Turn(original.question, success ? State.SUCCESS : State.ERROR,
@@ -88,7 +111,7 @@ public final class ChatRequestManager {
         activeRequest = null;
         boolean notify = success && listeners.isEmpty();
         publish();
-        if (notify) notifier.onAnswerReady();
+        if (notify && conversationGeneration == generation) notifier.onAnswerReady();
     }
 
     private void publish() {
