@@ -1,0 +1,8 @@
+<resources>
+    <!-- Use the platform starting screen, dismissed naturally when Login draws. -->
+    <style name="Theme.DVLDMobile.Starting" parent="Theme.DVLDMobile">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowSplashScreenBackground">@color/login_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_identity</item>
+    </style>
+</resources>

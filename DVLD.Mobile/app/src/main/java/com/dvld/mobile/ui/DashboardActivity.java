@@ -107,6 +107,8 @@ public class DashboardActivity extends AppCompatActivity {
         findViewById(R.id.dashboard_action_appointments).setOnClickListener(view -> openAppointments());
         findViewById(R.id.dashboard_action_tests_results).setOnClickListener(view ->
                 openAppointments(AppointmentsActivity.MODE_TESTS_RESULTS));
+        findViewById(R.id.dashboard_action_practice).setOnClickListener(view -> openPracticeExam());
+        findViewById(R.id.dashboard_action_assistant).setOnClickListener(view -> openChatbot());
         findViewById(R.id.dashboard_active_applications_card).setOnClickListener(view -> openApplications(true));
         findViewById(R.id.latest_application_card).setOnClickListener(view -> openLatestApplication());
         findViewById(R.id.dashboard_upcoming_appointment_card).setOnClickListener(view -> openUpcomingAppointment());
@@ -167,6 +169,22 @@ public class DashboardActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AppointmentsActivity.class);
         intent.putExtra(AppointmentsActivity.EXTRA_PERSON_ID, personId.intValue());
         intent.putExtra(AppointmentsActivity.EXTRA_VIEW_MODE, viewMode);
+        startActivity(intent);
+    }
+
+    private void openPracticeExam() {
+        if (openingDestination) return;
+        openingDestination = true;
+        startActivity(new Intent(this, PracticeExamActivity.class));
+    }
+
+    private void openChatbot() {
+        if (openingDestination) return;
+        openingDestination = true;
+        Intent intent = new Intent(this, ChatbotActivity.class);
+        if (personId != null) intent.putExtra(EXTRA_PERSON_ID, personId.intValue());
+        intent.putExtra(EXTRA_FULL_NAME, fullName);
+        intent.putExtra(EXTRA_USERNAME, username);
         startActivity(intent);
     }
 

@@ -11,6 +11,7 @@
     <color name="login_input_background">#F7FAFA</color>
     <color name="login_outline">#D7E4E7</color>
     <color name="login_gold">#CB9B42</color>
+    <color name="brand_icon_background">#061B2C</color>
     <color name="login_error">#B3261E</color>
     <color name="dashboard_navy_soft">#29485E</color>
     <color name="dashboard_on_navy_secondary">#CEE1E6</color>

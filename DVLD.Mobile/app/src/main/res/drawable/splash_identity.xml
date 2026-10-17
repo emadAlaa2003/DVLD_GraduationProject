@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Separate splash artwork; the launcher foreground contains only the emblem.
+     Fractional insets scale the whole composition inside Android 12's icon mask. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <inset
+            android:insetLeft="25%"
+            android:insetRight="25%"
+            android:insetTop="15.2778%"
+            android:insetBottom="34.7222%">
+            <bitmap
+                android:src="@drawable/dvld_logo"
+                android:gravity="fill"
+                android:antialias="true"
+                android:filter="true" />
+        </inset>
+    </item>
+    <item>
+        <inset
+            android:insetLeft="31.25%"
+            android:insetRight="31.25%"
+            android:insetTop="63.8889%"
+            android:insetBottom="19.4444%"
+            android:drawable="@drawable/splash_wordmark" />
+    </item>
+</layer-list>

@@ -402,6 +402,11 @@ namespace DVLD_Buisness
         {
             return clsQuestionBankData.GetAllQuestions();
         }
+
+        public static DataTable GetRandomApprovedQuestions(int questionCount)
+        {
+            return clsQuestionBankData.GetRandomApprovedQuestions(questionCount);
+        }
         public bool Delete()
         {
             // لا يمكن حذف سؤال غير محفوظ.
