@@ -65,19 +65,19 @@ public class DashboardTextMapperTest {
 
     @Test
     public void zeroLocalLicensesIsAnEmptyMessage() {
-        assertEquals("لا توجد رخص محلية", mapper.localLicenseSummary(Collections.emptyList(), zone));
+        assertEquals("لا توجد رخص محلية سارية حاليًا", mapper.localLicenseSummary(Collections.emptyList(), zone));
     }
 
     @Test
     public void oneLocalLicenseShowsSingularAndArabicClassEvenWithoutIssueDate() {
-        assertEquals("لديك رخصة محلية واحدة\nالفئة الثالثة - رخصة قيادة عادية",
+        assertEquals("لديك رخصة محلية سارية واحدة\nالفئة الثالثة - رخصة قيادة عادية",
                 mapper.localLicenseSummary(Collections.singletonList(
                         license("Class 3 - Ordinary driving license", null)), zone));
     }
 
     @Test
     public void oneLocalLicenseWithNullableClassShowsOnlySingular() {
-        assertEquals("لديك رخصة محلية واحدة", mapper.localLicenseSummary(
+        assertEquals("لديك رخصة محلية سارية واحدة", mapper.localLicenseSummary(
                 Collections.singletonList(license(null, null)), zone));
     }
 
@@ -85,14 +85,14 @@ public class DashboardTextMapperTest {
     public void multipleLocalLicensesSelectGreatestIssueInstantRegardlessOfOrdering() {
         LocalLicense ordinary = license("Class 3 - Ordinary driving license", "2026-10-09T10:30:00+03:00");
         LocalLicense motorcycle = license("Class 2 - Heavy Motorcycle License", "2026-10-09T08:00:00Z");
-        String expected = "لديك 2 رخص محلية\nأحدث رخصة: الفئة الثانية - رخصة دراجة نارية ثقيلة";
+        String expected = "لديك 2 رخص محلية سارية\nأحدث رخصة سارية: الفئة الثانية - رخصة دراجة نارية ثقيلة";
         assertEquals(expected, mapper.localLicenseSummary(Arrays.asList(ordinary, motorcycle), zone));
         assertEquals(expected, mapper.localLicenseSummary(Arrays.asList(motorcycle, ordinary), zone));
     }
 
     @Test
     public void multipleLocalLicensesIgnoreMissingAndInvalidIssueDates() {
-        assertEquals("لديك 3 رخص محلية\nأحدث رخصة: الفئة الثالثة - رخصة قيادة عادية",
+        assertEquals("لديك 3 رخص محلية سارية\nأحدث رخصة سارية: الفئة الثالثة - رخصة قيادة عادية",
                 mapper.localLicenseSummary(Arrays.asList(license("Unknown", null),
                         license("Class 3 - Ordinary driving license", "2026-10-09T10:00:00"),
                         license("Class 2 - Heavy Motorcycle License", "invalid")), zone));
@@ -100,22 +100,22 @@ public class DashboardTextMapperTest {
 
     @Test
     public void multipleLocalLicensesWithoutValidDatesDoNotInventLatest() {
-        assertEquals("لديك 2 رخص محلية", mapper.localLicenseSummary(Arrays.asList(
+        assertEquals("لديك 2 رخص محلية سارية", mapper.localLicenseSummary(Arrays.asList(
                 license("Class 3 - Ordinary driving license", null), license("Unknown", "invalid")), zone));
     }
 
     @Test
     public void nullableLatestClassDoesNotDisplayAnOlderClassAsLatest() {
-        assertEquals("لديك 2 رخص محلية", mapper.localLicenseSummary(Arrays.asList(
+        assertEquals("لديك 2 رخص محلية سارية", mapper.localLicenseSummary(Arrays.asList(
                 license("Class 3 - Ordinary driving license", "2026-10-08"),
                 license(null, "2026-10-09")), zone));
     }
 
     @Test
     public void internationalLicensesHaveSeparateZeroSingularAndPluralMessages() {
-        assertEquals("لا توجد رخص دولية", mapper.internationalLicenseSummary(0));
-        assertEquals("لديك رخصة دولية واحدة", mapper.internationalLicenseSummary(1));
-        assertEquals("لديك 3 رخص دولية", mapper.internationalLicenseSummary(3));
+        assertEquals("لا توجد رخص دولية سارية حاليًا", mapper.internationalLicenseSummary(0));
+        assertEquals("لديك رخصة دولية سارية واحدة", mapper.internationalLicenseSummary(1));
+        assertEquals("لديك 3 رخص دولية سارية", mapper.internationalLicenseSummary(3));
     }
 
     @Test

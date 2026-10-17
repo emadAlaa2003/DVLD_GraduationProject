@@ -5,6 +5,7 @@ import com.dvld.mobile.model.ApiDateTime;
 import com.dvld.mobile.model.ApplicationDetails;
 import com.dvld.mobile.model.ApplicationSpecificDetails;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -17,10 +18,16 @@ public final class ApplicationDetailsTextMapper {
     private final ApplicationsTextMapper applicationsMapper;
     private final LocalLicenseDetailsTextMapper localLicenseMapper;
     private final ZoneId zone;
+    private final Clock clock;
 
     public ApplicationDetailsTextMapper(DashboardTextMapper.Strings strings, ZoneId zone) {
+        this(strings, zone, Clock.system(zone));
+    }
+
+    ApplicationDetailsTextMapper(DashboardTextMapper.Strings strings, ZoneId zone, Clock clock) {
         this.strings = strings;
         this.zone = zone;
+        this.clock = clock;
         dashboardMapper = new DashboardTextMapper(strings);
         applicationsMapper = new ApplicationsTextMapper(strings, zone);
         localLicenseMapper = new LocalLicenseDetailsTextMapper(strings, zone);
@@ -68,9 +75,8 @@ public final class ApplicationDetailsTextMapper {
                 addClass(lines, details.getClassName());
                 addDate(lines, R.string.licenses_issue_date, details.getIssueDate());
                 addDate(lines, R.string.licenses_expiration_date, details.getExpirationDate());
-                if (details.getIsActive() != null) {
-                    add(lines, R.string.license_details_status, strings.get(details.getIsActive()
-                            ? R.string.licenses_active : R.string.licenses_inactive));
+                if (details.getIsActive() != null || hasText(details.getExpirationDate())) {
+                    add(lines, R.string.license_details_status, localValidity(details));
                 }
                 if (details.getIssueReason() != null || hasText(details.getIssueReasonText())) {
                     add(lines, R.string.license_details_issue_reason,
@@ -118,6 +124,20 @@ public final class ApplicationDetailsTextMapper {
             default: break;
         }
         return lines.length() == 0 ? strings.get(R.string.application_details_no_extra) : lines.toString();
+    }
+
+    private String localValidity(ApplicationSpecificDetails details) {
+        Instant expiration = ApiDateTime.parse(details.getExpirationDate(), zone);
+        if (expiration != null && expiration.isBefore(clock.instant())) {
+            return strings.get(R.string.license_details_expired);
+        }
+        if (Boolean.FALSE.equals(details.getIsActive())) return strings.get(R.string.licenses_inactive);
+        if (Boolean.TRUE.equals(details.getIsActive())) {
+            // Activation alone cannot prove validity when the expiration date is unavailable.
+            return strings.get(expiration == null
+                    ? R.string.application_details_license_enabled : R.string.licenses_active);
+        }
+        return unknown();
     }
 
     public String internationalValidity(ApplicationSpecificDetails details) {

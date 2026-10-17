@@ -11,6 +11,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Locale;
@@ -23,8 +25,10 @@ import static org.junit.Assert.*;
 public class ApplicationDetailsTextMapperTest {
     private static final Map<Integer, String> strings = new HashMap<>();
     private final Gson gson = new Gson();
+    private final ZoneId zone = ZoneId.of("Asia/Hebron");
     private final ApplicationDetailsTextMapper mapper = new ApplicationDetailsTextMapper(
-            (id, arguments) -> String.format(Locale.ROOT, strings.get(id), arguments), ZoneId.of("Asia/Hebron"));
+            (id, arguments) -> String.format(Locale.ROOT, strings.get(id), arguments), zone,
+            Clock.fixed(Instant.parse("2026-10-10T10:00:00Z"), zone));
 
     @BeforeClass
     public static void readActualArabicResources() throws Exception {
@@ -141,7 +145,60 @@ public class ApplicationDetailsTextMapperTest {
             assertEquals("رقم الرخصة: 7\nفئة الرخصة: الفئة الثانية - رخصة دراجة نارية ثقيلة\n"
                     + "تاريخ الإصدار: —\nتاريخ الانتهاء: —\nحالة الرخصة: غير سارية\nسبب الإصدار: تجديد", information);
         }
-        assertEquals("حالة الرخصة: سارية", mapper.additionalInformation(typed(2, "{\"isActive\":true}")));
+        assertEquals("حالة الرخصة: مفعلة", mapper.additionalInformation(typed(2, "{\"isActive\":true}")));
+    }
+
+    @Test
+    public void expiredLocalLicenseIsNeverShownAsValidForRenewLostOrDamagedApplications() {
+        for (int type : new int[] {2, 3, 4}) {
+            for (String active : new String[] {"true", "false", "null"}) {
+                String information = mapper.additionalInformation(typed(type,
+                        "{\"isActive\":" + active + ",\"expirationDate\":\"2026-10-10T09:59:59Z\"}"));
+                assertTrue(information.endsWith("حالة الرخصة: منتهية"));
+            }
+        }
+    }
+
+    @Test
+    public void localValidityRequiresActivationAndAnUnexpiredDate() {
+        for (int type : new int[] {2, 3, 4}) {
+            for (String expiration : new String[] {"2026-10-11", "2026-10-10T10:00:01Z",
+                    "2026-10-10T10:00:00Z"}) {
+                assertTrue(mapper.additionalInformation(typed(type,
+                        "{\"isActive\":true,\"expirationDate\":\"" + expiration + "\"}"))
+                        .endsWith("حالة الرخصة: سارية"));
+                assertTrue(mapper.additionalInformation(typed(type,
+                        "{\"isActive\":false,\"expirationDate\":\"" + expiration + "\"}"))
+                        .endsWith("حالة الرخصة: غير سارية"));
+                assertTrue(mapper.additionalInformation(typed(type,
+                        "{\"expirationDate\":\"" + expiration + "\"}"))
+                        .endsWith("حالة الرخصة: —"));
+            }
+        }
+    }
+
+    @Test
+    public void missingOrInvalidExpirationOnlyProvesActivationNotValidity() {
+        for (int type : new int[] {2, 3, 4}) {
+            for (String expiration : new String[] {"null", "\"\"", "\"invalid\"", "\"2026-02-30\""}) {
+                assertTrue(mapper.additionalInformation(typed(type,
+                        "{\"isActive\":true,\"expirationDate\":" + expiration + "}"))
+                        .endsWith("حالة الرخصة: مفعلة"));
+                assertTrue(mapper.additionalInformation(typed(type,
+                        "{\"isActive\":false,\"expirationDate\":" + expiration + "}"))
+                        .endsWith("حالة الرخصة: غير سارية"));
+            }
+        }
+    }
+
+    @Test
+    public void localExpirationUsesPhoneZoneAndRespectsExplicitOffsets() {
+        for (String expiration : new String[] {"2026-10-10T12:59:59", "2026-10-10T12:59:59+03:00",
+                "2026-10-10T09:59:59Z", "2026-10-10"}) {
+            assertTrue(mapper.additionalInformation(typed(2,
+                    "{\"isActive\":true,\"expirationDate\":\"" + expiration + "\"}"))
+                    .endsWith("حالة الرخصة: منتهية"));
+        }
     }
 
     @Test

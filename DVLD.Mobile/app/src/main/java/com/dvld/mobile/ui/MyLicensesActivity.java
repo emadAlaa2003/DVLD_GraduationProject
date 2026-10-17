@@ -78,6 +78,10 @@ public class MyLicensesActivity extends AppCompatActivity {
                 finish();
                 return false;
             }
+            if (item.getItemId() == R.id.dashboard_nav_applications) {
+                openApplications();
+                return false;
+            }
             if (item.getItemId() == R.id.dashboard_nav_appointments) {
                 openAppointments();
                 return false;
@@ -228,6 +232,17 @@ public class MyLicensesActivity extends AppCompatActivity {
         Intent intent = new Intent(this, InternationalLicenseDetailsActivity.class);
         intent.putExtra(InternationalLicenseDetailsActivity.EXTRA_INTERNATIONAL_LICENSE_ID, internationalLicenseId);
         startActivity(intent);
+    }
+
+    private void openApplications() {
+        if (openingDetails || personId == null || personId <= 0) return;
+        openingDetails = true;
+        Intent intent = new Intent(this, ApplicationsActivity.class);
+        intent.putExtra(ApplicationsActivity.EXTRA_PERSON_ID, personId.intValue());
+        intent.putExtra(ApplicationsActivity.EXTRA_ACTIVE_ONLY, false);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     private void openAppointments() {
