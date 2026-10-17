@@ -17,6 +17,10 @@
     </style>
 
     <style name="Theme.DVLDMobile" parent="Base.Theme.DVLDMobile" />
+    <!-- Android 8–11 starting window; Login restores its regular theme before onCreate. -->
+    <style name="Theme.DVLDMobile.Starting" parent="Theme.DVLDMobile">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
     <style name="Widget.DVLDMobile.LoginInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/login_input_background</item>
         <item name="boxCornerRadiusTopStart">12dp</item>
