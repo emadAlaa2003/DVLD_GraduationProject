@@ -41,6 +41,15 @@ namespace DVLD.QuestionBank
         private DataTable _dtAllQuestions = new DataTable();
         private DataTable _dtQuestions = new DataTable();
 
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         private void _RefreshQuestionsList()
         {
             try
@@ -102,8 +111,8 @@ namespace DVLD.QuestionBank
                 lblRecordsCount.Text = "0";
 
                 MessageBox.Show(
-                    "Could not load qustion data.\n\n" + ex.Message,
-                    "Database Error",
+                    _Translate("تعذّر تحميل بيانات الأسئلة.\n\n", "Could not load qustion data.\n\n") + ex.Message,
+                    _Translate("خطأ في قاعدة البيانات", "Database Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -346,8 +355,8 @@ namespace DVLD.QuestionBank
                 if (question == null)
                 {
                     MessageBox.Show(
-                        "Question not found.",
-                        "Error",
+                        _Translate("لم يتم العثور على السؤال.", "Question not found."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                     return;
@@ -356,8 +365,8 @@ namespace DVLD.QuestionBank
                 if (!question.IsActive)
                 {
                     MessageBox.Show(
-                        "Cannot approve an inactive question.",
-                        "Inactive Question",
+                        _Translate("لا يمكن اعتماد سؤال غير نشط.", "Cannot approve an inactive question."),
+                        _Translate("سؤال غير نشط", "Inactive Question"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
                     return;
@@ -367,17 +376,17 @@ namespace DVLD.QuestionBank
                     clsQuestionBank.enReviewStatus.Approved)
                 {
                     MessageBox.Show(
-                        "This question is already approved.",
-                        "Information",
+                        _Translate("هذا السؤال معتمد بالفعل.", "This question is already approved."),
+                        _Translate("معلومات", "Information"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                     return;
                 }
 
                 if (MessageBox.Show(
-                    "Are you sure you want to approve question " +
+                    _Translate("هل أنت متأكد من اعتماد السؤال رقم: ", "Are you sure you want to approve question ") +
                     questionID + "?",
-                    "Confirm Approval",
+                    _Translate("تأكيد الاعتماد", "Confirm Approval"),
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question) != DialogResult.Yes)
                 {
@@ -387,8 +396,8 @@ namespace DVLD.QuestionBank
                 if (question.Approve())
                 {
                     MessageBox.Show(
-                        "Question approved successfully.",
-                        "Success",
+                        _Translate("تم اعتماد السؤال بنجاح.", "Question approved successfully."),
+                        _Translate("تمت العملية بنجاح", "Success"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
 
@@ -397,8 +406,8 @@ namespace DVLD.QuestionBank
                 else
                 {
                     MessageBox.Show(
-                        "Failed to approve the question.",
-                        "Error",
+                        _Translate("فشل اعتماد السؤال.", "Failed to approve the question."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
@@ -407,7 +416,7 @@ namespace DVLD.QuestionBank
             {
                 MessageBox.Show(
                     ex.Message,
-                    "Error",
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -432,8 +441,8 @@ namespace DVLD.QuestionBank
                 if (question == null)
                 {
                     MessageBox.Show(
-                        "Question not found.",
-                        "Error",
+                        _Translate("لم يتم العثور على السؤال.", "Question not found."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                     return;
@@ -442,8 +451,8 @@ namespace DVLD.QuestionBank
                 if (!question.IsActive)
                 {
                     MessageBox.Show(
-                        "Cannot reject an inactive question.",
-                        "Inactive Question",
+                        _Translate("لا يمكن رفض سؤال غير نشط.", "Cannot reject an inactive question."),
+                        _Translate("سؤال غير نشط", "Inactive Question"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
                     return;
@@ -453,17 +462,17 @@ namespace DVLD.QuestionBank
                     clsQuestionBank.enReviewStatus.Rejected)
                 {
                     MessageBox.Show(
-                        "This question is already rejected.",
-                        "Information",
+                        _Translate("هذا السؤال مرفوض بالفعل.", "This question is already rejected."),
+                        _Translate("معلومات", "Information"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                     return;
                 }
 
                 if (MessageBox.Show(
-                    "Are you sure you want to reject question "
+                    _Translate("هل أنت متأكد من رفض السؤال رقم: ", "Are you sure you want to reject question ")
                     + questionID + "?",
-                    "Confirm Rejection",
+                    _Translate("تأكيد الرفض", "Confirm Rejection"),
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question) != DialogResult.Yes)
                 {
@@ -473,8 +482,8 @@ namespace DVLD.QuestionBank
                 if (question.Reject())
                 {
                     MessageBox.Show(
-                        "Question rejected successfully.",
-                        "Success",
+                        _Translate("تم رفض السؤال بنجاح.", "Question rejected successfully."),
+                        _Translate("تمت العملية بنجاح", "Success"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
 
@@ -483,8 +492,8 @@ namespace DVLD.QuestionBank
                 else
                 {
                     MessageBox.Show(
-                        "Failed to reject the question.",
-                        "Error",
+                        _Translate("فشل رفض السؤال.", "Failed to reject the question."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
@@ -493,7 +502,7 @@ namespace DVLD.QuestionBank
             {
                 MessageBox.Show(
                     ex.Message,
-                    "Error",
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -518,8 +527,8 @@ namespace DVLD.QuestionBank
                 if (question == null)
                 {
                     MessageBox.Show(
-                        "Question not found.",
-                        "Error",
+                        _Translate("لم يتم العثور على السؤال.", "Question not found."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                     return;
@@ -528,17 +537,17 @@ namespace DVLD.QuestionBank
                 if (question.IsActive)
                 {
                     MessageBox.Show(
-                        "This question is already active.",
-                        "Information",
+                        _Translate("هذا السؤال نشط بالفعل.", "This question is already active."),
+                        _Translate("معلومات", "Information"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                     return;
                 }
 
                 if (MessageBox.Show(
-                    "Are you sure you want to activate question "
+                    _Translate("هل أنت متأكد من تفعيل السؤال رقم: ", "Are you sure you want to activate question ")
                     + questionID + "?",
-                    "Confirm Activation",
+                    _Translate("تأكيد التفعيل", "Confirm Activation"),
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question) != DialogResult.Yes)
                 {
@@ -548,8 +557,8 @@ namespace DVLD.QuestionBank
                 if (question.Activate())
                 {
                     MessageBox.Show(
-                        "Question activated successfully.",
-                        "Success",
+                        _Translate("تم تفعيل السؤال بنجاح.", "Question activated successfully."),
+                        _Translate("تمت العملية بنجاح", "Success"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
 
@@ -558,8 +567,8 @@ namespace DVLD.QuestionBank
                 else
                 {
                     MessageBox.Show(
-                        "Failed to activate the question.",
-                        "Error",
+                        _Translate("فشل تفعيل السؤال.", "Failed to activate the question."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
@@ -568,7 +577,7 @@ namespace DVLD.QuestionBank
             {
                 MessageBox.Show(
                     ex.Message,
-                    "Error",
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -593,8 +602,8 @@ namespace DVLD.QuestionBank
                 if (question == null)
                 {
                     MessageBox.Show(
-                        "Question not found.",
-                        "Error",
+                        _Translate("لم يتم العثور على السؤال.", "Question not found."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                     return;
@@ -603,17 +612,17 @@ namespace DVLD.QuestionBank
                 if (!question.IsActive)
                 {
                     MessageBox.Show(
-                        "This question is already inactive.",
-                        "Information",
+                        _Translate("هذا السؤال معطّل بالفعل.", "This question is already inactive."),
+                        _Translate("معلومات", "Information"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                     return;
                 }
 
                 if (MessageBox.Show(
-                    "Are you sure you want to deactivate question "
+                    _Translate("هل أنت متأكد من تعطيل السؤال رقم: ", "Are you sure you want to deactivate question ")
                     + questionID + "?",
-                    "Confirm Deactivation",
+                    _Translate("تأكيد التعطيل", "Confirm Deactivation"),
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question) != DialogResult.Yes)
                 {
@@ -623,8 +632,8 @@ namespace DVLD.QuestionBank
                 if (question.Deactivate())
                 {
                     MessageBox.Show(
-                        "Question deactivated successfully.",
-                        "Success",
+                        _Translate("تم تعطيل السؤال بنجاح.", "Question deactivated successfully."),
+                        _Translate("تمت العملية بنجاح", "Success"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
 
@@ -633,8 +642,8 @@ namespace DVLD.QuestionBank
                 else
                 {
                     MessageBox.Show(
-                        "Failed to deactivate the question.",
-                        "Error",
+                        _Translate("فشل تعطيل السؤال.", "Failed to deactivate the question."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
@@ -643,7 +652,7 @@ namespace DVLD.QuestionBank
             {
                 MessageBox.Show(
                     ex.Message,
-                    "Error",
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -661,9 +670,9 @@ namespace DVLD.QuestionBank
                 dgvQuestions.CurrentRow.Cells["QuestionID"].Value);
 
             if (MessageBox.Show(
-                "Are you sure you want to permanently delete Question "
+                _Translate("هل أنت متأكد من حذف السؤال نهائيًا، رقم: ", "Are you sure you want to permanently delete Question ")
                 + questionID + "?",
-                "Confirm Delete",
+                _Translate("تأكيد الحذف", "Confirm Delete"),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning,
                 MessageBoxDefaultButton.Button2)
@@ -680,8 +689,8 @@ namespace DVLD.QuestionBank
                 if (question == null)
                 {
                     MessageBox.Show(
-                        "Question not found.",
-                        "Error",
+                        _Translate("لم يتم العثور على السؤال.", "Question not found."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
 
@@ -692,8 +701,8 @@ namespace DVLD.QuestionBank
                 if (question.Delete())
                 {
                     MessageBox.Show(
-                        "Question deleted successfully.",
-                        "Success",
+                        _Translate("تم حذف السؤال بنجاح.", "Question deleted successfully."),
+                        _Translate("تمت العملية بنجاح", "Success"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
 
@@ -702,10 +711,10 @@ namespace DVLD.QuestionBank
                 else
                 {
                     MessageBox.Show(
-                        "The question could not be deleted. " +
-                        "It may be used in an official exam. " +
-                        "You can deactivate it instead.",
-                        "Delete Failed",
+                        _Translate("تعذّر حذف السؤال. ", "The question could not be deleted. ") +
+                        _Translate("قد يكون مستخدمًا في امتحان رسمي. ", "It may be used in an official exam. ") +
+                        _Translate("يمكنك تعطيله بدلًا من حذفه.", "You can deactivate it instead."),
+                        _Translate("فشل الحذف", "Delete Failed"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
                 }
@@ -713,8 +722,8 @@ namespace DVLD.QuestionBank
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "Could not delete the question.\n\n" + ex.Message,
-                    "Delete Error",
+                    _Translate("تعذّر حذف السؤال.\n\n", "Could not delete the question.\n\n") + ex.Message,
+                    _Translate("خطأ أثناء الحذف", "Delete Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }

@@ -32,17 +32,28 @@ namespace DVLD.QuestionBank
             _QuestionID = QuestionID;
             _Mode = enMode.Update;
         }
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         private void _ResetDefualtValues()
         {
 
             if (_Mode == enMode.AddNew)
             {
-                lblTitle.Text = "Add New Question";
+                lblTitle.Text = _Translate("إضافة سؤال جديد", "Add New Question");
+                this.Text = lblTitle.Text;
                 _Question = new clsQuestionBank();
             }
             else
             {
-                lblTitle.Text = "Update Question";
+                lblTitle.Text = _Translate("تعديل السؤال", "Update Question");
+                this.Text = lblTitle.Text;
             }
 
             txtQuestionText.Text = "";
@@ -70,8 +81,8 @@ namespace DVLD.QuestionBank
             if (_Question == null)
             {
                 MessageBox.Show(
-                    "No Question with ID = " + _QuestionID,
-                    "Question Not Found",
+                    _Translate("لم يتم العثور على السؤال رقم: ", "No Question with ID = ") + _QuestionID,
+                    _Translate("السؤال غير موجود", "Question Not Found"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Exclamation);
 
@@ -134,14 +145,14 @@ namespace DVLD.QuestionBank
                 e.Cancel = true;
                 errorProvider1.SetError(
                     txtQuestionText,
-                    "Question text is required.");
+                    _Translate("يجب إدخال نص السؤال.", "Question text is required."));
             }
             else if (questionText.Length > 1000)
             {
                 e.Cancel = true;
                 errorProvider1.SetError(
                     txtQuestionText,
-                    "Question text cannot exceed 1000 characters.");
+                    _Translate("لا يجوز أن يتجاوز نص السؤال 1000 حرف.", "Question text cannot exceed 1000 characters."));
             }
             else
             {
@@ -173,7 +184,7 @@ namespace DVLD.QuestionBank
 
                 errorProvider1.SetError(
                     txt,
-                    "This option is required.");
+                    _Translate("يجب إدخال هذا الخيار.", "This option is required."));
 
                 return;
             }
@@ -184,7 +195,7 @@ namespace DVLD.QuestionBank
 
                 errorProvider1.SetError(
                     txt,
-                    "Option cannot exceed 500 characters.");
+                    _Translate("لا يجوز أن يتجاوز نص الخيار 500 حرف.", "Option cannot exceed 500 characters."));
             }
         }
 
@@ -266,7 +277,7 @@ namespace DVLD.QuestionBank
 
                 errorProvider1.SetError(
                     cmbCorrectOption,
-                    "Please select the correct answer.");
+                    _Translate("يرجى تحديد الإجابة الصحيحة.", "Please select the correct answer."));
 
                 return;
             }
@@ -278,7 +289,7 @@ namespace DVLD.QuestionBank
 
                 errorProvider1.SetError(
                     cmbCorrectOption,
-                    "True/False questions allow only A or B.");
+                    _Translate("أسئلة صح أو خطأ تسمح بالخيار A أو B فقط.", "True/False questions allow only A or B."));
 
                 return;
             }
@@ -290,7 +301,7 @@ namespace DVLD.QuestionBank
 
                 errorProvider1.SetError(
                     cmbCorrectOption,
-                    "Invalid correct answer.");
+                    _Translate("الإجابة الصحيحة المحددة غير صالحة.", "Invalid correct answer."));
             }
         }
 
@@ -303,7 +314,7 @@ namespace DVLD.QuestionBank
 
                 errorProvider1.SetError(
                     txtExplanation,
-                    "Explanation cannot exceed 2000 characters.");
+                    _Translate("لا يجوز أن يتجاوز شرح الإجابة 2000 حرف.", "Explanation cannot exceed 2000 characters."));
             }
             else
             {
@@ -319,8 +330,8 @@ namespace DVLD.QuestionBank
             if (!this.ValidateChildren())
             {
                 MessageBox.Show(
-                    "Please correct the highlighted errors.",
-                    "Validation Error",
+                    _Translate("يرجى تصحيح الأخطاء الموضحة قبل الحفظ.", "Please correct the highlighted errors."),
+                    _Translate("خطأ في التحقق من البيانات", "Validation Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
                 return;
@@ -329,7 +340,7 @@ namespace DVLD.QuestionBank
             if (cmbQuestionType.SelectedIndex == -1)
             {
                 errorProvider1.SetError(
-                    cmbQuestionType, "Please select a question type.");
+                    cmbQuestionType, _Translate("يرجى تحديد نوع السؤال.", "Please select a question type."));
                 return;
             }
 
@@ -363,8 +374,8 @@ namespace DVLD.QuestionBank
                 if (!_Question.Save())
                 {
                     MessageBox.Show(
-                        "Failed to save the question.",
-                        "Save Error",
+                        _Translate("تعذر حفظ السؤال.", "Failed to save the question."),
+                        _Translate("خطأ في حفظ السؤال", "Save Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                     return;
@@ -375,7 +386,8 @@ namespace DVLD.QuestionBank
                 _Mode = enMode.Update;
 
                 lblQuestionD.Text = _QuestionID.ToString();
-                lblTitle.Text = "Update Question";
+                lblTitle.Text = _Translate("تعديل السؤال", "Update Question");
+                this.Text = lblTitle.Text;
 
                 // التعديل يعيد السؤال إلى Draft
                 cmbReviewStatues.SelectedItem =
@@ -385,8 +397,8 @@ namespace DVLD.QuestionBank
                 linkLabel1.Visible = false;
 
                 MessageBox.Show(
-                    "Question saved successfully.",
-                    "Saved",
+                    _Translate("تم حفظ السؤال بنجاح.", "Question saved successfully."),
+                    _Translate("تم الحفظ", "Saved"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
@@ -394,7 +406,7 @@ namespace DVLD.QuestionBank
             {
                 MessageBox.Show(
                     ex.Message,
-                    "Save Error",
+                    _Translate("خطأ في حفظ السؤال", "Save Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -409,4 +421,4 @@ namespace DVLD.QuestionBank
         }
     }
 
-    }
+}

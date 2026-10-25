@@ -57,6 +57,18 @@ namespace DVLD.Licenses.Controls
         public clsLicense SelectedLicenseInfo
         { get { return ctrlDriverLicenseInfo1.SelectedLicenseInfo; } }
 
+
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
         public void LoadLicenseInfo(int LicenseID)
         {
 
@@ -91,7 +103,14 @@ namespace DVLD.Licenses.Controls
             if (!this.ValidateChildren())
             {
                 //Here we dont continue becuase the form is not valid
-                MessageBox.Show("Some fileds are not valide!, put the mouse over the red icon(s) to see the erro", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "بعض البيانات المدخلة غير صحيحة. مرّر مؤشر الفأرة فوق علامة الخطأ الحمراء لمعرفة السبب.",
+                        "Some fields are invalid. Hover over the red error icons to see the details."),
+                    _Translate("خطأ في التحقق من البيانات", "Validation Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 txtLicenseID.Focus();
                 return;
 
@@ -110,7 +129,12 @@ namespace DVLD.Licenses.Controls
             if (string.IsNullOrEmpty(txtLicenseID.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtLicenseID, "This field is required!");
+
+                errorProvider1.SetError(
+                    txtLicenseID,
+                    _Translate(
+                        "رقم الرخصة مطلوب.",
+                        "This field is required!"));
             }
             else
             {

@@ -28,54 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmShowQuestionInfo));
             this.lblTitle = new System.Windows.Forms.Label();
-            this.btnClose = new System.Windows.Forms.Button();
             this.ctrlQuestionInfo1 = new DVLD.QuestionBank.Controls.ctrlQuestionInfo();
+            this.btnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblTitle
             // 
+            resources.ApplyResources(this.lblTitle, "lblTitle");
             this.lblTitle.BackColor = System.Drawing.Color.Transparent;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.lblTitle.Location = new System.Drawing.Point(230, 9);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(258, 39);
-            this.lblTitle.TabIndex = 90;
-            this.lblTitle.Text = "Question Details";
-            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnClose
-            // 
-            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnClose.Image = global::DVLD.Properties.Resources.Close_32;
-            this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(540, 576);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(126, 37);
-            this.btnClose.TabIndex = 92;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // ctrlQuestionInfo1
             // 
+            resources.ApplyResources(this.ctrlQuestionInfo1, "ctrlQuestionInfo1");
             this.ctrlQuestionInfo1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(248)))), ((int)(((byte)(253)))));
             this.ctrlQuestionInfo1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.ctrlQuestionInfo1.Location = new System.Drawing.Point(12, 51);
             this.ctrlQuestionInfo1.Name = "ctrlQuestionInfo1";
-            this.ctrlQuestionInfo1.Size = new System.Drawing.Size(664, 517);
-            this.ctrlQuestionInfo1.TabIndex = 91;
             this.ctrlQuestionInfo1.Load += new System.EventHandler(this.ctrlQuestionInfo1_Load);
+            // 
+            // btnClose
+            // 
+            resources.ApplyResources(this.btnClose, "btnClose");
+            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnClose.Image = global::DVLD.Properties.Resources.Close_32;
+            this.btnClose.Name = "btnClose";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // frmShowQuestionInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(248)))), ((int)(((byte)(253)))));
-            this.ClientSize = new System.Drawing.Size(679, 618);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.ctrlQuestionInfo1);
             this.Controls.Add(this.lblTitle);
@@ -85,7 +72,6 @@
             this.Name = "frmShowQuestionInfo";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "Show QuestionInfo";
             this.ResumeLayout(false);
 
         }

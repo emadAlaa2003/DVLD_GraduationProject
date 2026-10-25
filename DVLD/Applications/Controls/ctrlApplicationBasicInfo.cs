@@ -32,13 +32,30 @@ namespace DVLD.Controls.ApplicationControls
   
         }
 
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         public void LoadApplicationInfo(int ApplicationID)
         {
             _Application = clsApplication.FindBaseApplication(ApplicationID);
             if (_Application == null)
             {
                 ResetApplicationInfo();
-                MessageBox.Show("No Application with ApplicationID = " + ApplicationID.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على الطلب رقم: ",
+                        "No application found with Application ID = ")
+                        + ApplicationID,
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
             else
                 _FillApplicationInfo();

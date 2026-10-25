@@ -34,6 +34,17 @@ namespace DVLD.DriverLicense
         public clsLicense SelectedLicenseInfo
         { get { return _License; } }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
         private void _LoadPersonImage()
         {
             if (_License.DriverInfo.PersonInfo.Gendor == 0)
@@ -47,7 +58,14 @@ namespace DVLD.DriverLicense
                 if (File.Exists(ImagePath))
                     pbPersonImage.Load(ImagePath);
                 else
-                    MessageBox.Show("Could not find this image: = " + ImagePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    MessageBox.Show(
+                        _Translate(
+                            "لم يتم العثور على صورة الشخص في المسار: ",
+                            "Could not find this image: ") + ImagePath,
+                        _Translate("خطأ", "Error"),
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
 
         }
 
@@ -57,26 +75,41 @@ namespace DVLD.DriverLicense
             _License = clsLicense.Find(_LicenseID);
             if (_License == null)
             {
-                MessageBox.Show("Could not find License ID = " + _LicenseID.ToString(),
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على رخصة قيادة برقم: ",
+                        "Could not find License ID = ") + _LicenseID,
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
                 _LicenseID = -1;
                 return;
             }
 
             lblLicenseID.Text = _License.LicenseID.ToString();
-            lblIsActive.Text = _License.IsActive ? "Yes" : "No";
-            lblIsDetained.Text = _License.IsDetained ? "Yes" : "No";
+            lblIsActive.Text = _License.IsActive
+     ? _Translate("نعم", "Yes")
+     : _Translate("لا", "No");
+            lblIsDetained.Text = _License.IsDetained
+     ? _Translate("نعم", "Yes")
+     : _Translate("لا", "No");
             lblClass.Text = _License.LicenseClassIfo.ClassName;
             lblFullName.Text = _License.DriverInfo.PersonInfo.FullName;
             lblNationalNo.Text = _License.DriverInfo.PersonInfo.NationalNo;
-            lblGendor.Text = _License.DriverInfo.PersonInfo.Gendor ==0 ? "Male":"Female";
+            lblGendor.Text = _License.DriverInfo.PersonInfo.Gendor == 0
+          ? _Translate("ذكر", "Male")
+          : _Translate("أنثى", "Female");
             lblDateOfBirth.Text = clsFormat.DateToShort(_License.DriverInfo.PersonInfo.DateOfBirth);
 
             lblDriverID.Text= _License.DriverID.ToString();
             lblIssueDate.Text = clsFormat.DateToShort(_License.IssueDate);
             lblExpirationDate.Text = clsFormat.DateToShort(_License.ExpirationDate);
             lblIssueReason.Text = _License.IssueReasonText;
-            lblNotes.Text= _License.Notes=="" ? "No Notes":_License.Notes;
+            lblNotes.Text = _License.Notes == ""
+     ? _Translate("لا توجد ملاحظات", "No Notes")
+     : _License.Notes;
             _LoadPersonImage();
 
 

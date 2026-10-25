@@ -36,13 +36,30 @@ namespace DVLD.Controls
             InitializeComponent();
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         public void LoadPersonInfo(int PersonID)
         {
             _Person=clsPerson.Find(PersonID);
             if (_Person == null)
             {
                 ResetPersonInfo();
-                MessageBox.Show("No Person with PersonID = " + PersonID.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على الشخص رقم: ",
+                        "No Person with PersonID = ") + PersonID,
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
            
@@ -55,7 +72,14 @@ namespace DVLD.Controls
             if (_Person == null)
             {
                 ResetPersonInfo();
-                MessageBox.Show("No Person with National No. = " + NationalNo.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على شخص بالرقم الوطني: ",
+                        "No Person with National No. = ") + NationalNo,
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
             
@@ -64,18 +88,33 @@ namespace DVLD.Controls
 
         private void _LoadPersonImage()
         {
+            // Clear the previous image path.
+            pbPersonImage.ImageLocation = null;
+
             if (_Person.Gendor == 0)
                 pbPersonImage.Image = Resources.Male_512;
             else
                 pbPersonImage.Image = Resources.Female_512;
 
-            string ImagePath = _Person.ImagePath;
-            if (ImagePath != "")
-                if (File.Exists(ImagePath))
-                    pbPersonImage.ImageLocation= ImagePath;
-                else
-                    MessageBox.Show("Could not find this image: = " + ImagePath, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            string imagePath = _Person.ImagePath;
 
+            if (string.IsNullOrWhiteSpace(imagePath))
+                return;
+
+            if (File.Exists(imagePath))
+            {
+                pbPersonImage.ImageLocation = imagePath;
+            }
+            else
+            {
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على صورة الشخص في المسار:\n",
+                        "Could not find this image:\n") + imagePath,
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
         }
 
         private void _FillPersonInfo()
@@ -85,7 +124,12 @@ namespace DVLD.Controls
             lblPersonID.Text=_Person.PersonID.ToString();
             lblNationalNo.Text = _Person.NationalNo;
             lblFullName.Text = _Person.FullName;
-            lblGendor.Text = _Person.Gendor == 0 ? "Male" : "Female";
+
+            lblGendor.Text =
+                _Person.Gendor == 0
+                    ? _Translate("ذكر", "Male")
+                    : _Translate("أنثى", "Female");
+
             lblEmail.Text = _Person.Email;
             lblPhone.Text = _Person.Phone;
             lblDateOfBirth.Text = _Person.DateOfBirth.ToShortDateString();

@@ -24,6 +24,16 @@ namespace DVLD.User
             _UserID=UserID;
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         private void _ResetDefualtValues()
         {
             txtCurrentPassword.Text = "";
@@ -41,9 +51,16 @@ namespace DVLD.User
             if (_User == null)
             {
                 //Here we dont continue becuase the form is not valid
-                MessageBox.Show("Could not Find User with id = " + _UserID,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                 this.Close();
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على المستخدم رقم: ",
+                        "Could not find User with ID = ") + _UserID,
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+                this.Close();
 
                 return;
 
@@ -58,7 +75,13 @@ namespace DVLD.User
             if (string.IsNullOrEmpty(txtCurrentPassword.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtCurrentPassword, "Username cannot be blank");
+
+                errorProvider1.SetError(
+                    txtCurrentPassword,
+                    _Translate(
+                        "يجب إدخال كلمة المرور الحالية.",
+                        "Current password cannot be blank."));
+
                 return;
             }
             else
@@ -69,7 +92,13 @@ namespace DVLD.User
             if (_User.Password != txtCurrentPassword.Text.Trim())
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtCurrentPassword, "Current password is wrong!");
+
+                errorProvider1.SetError(
+                    txtCurrentPassword,
+                    _Translate(
+                        "كلمة المرور الحالية غير صحيحة.",
+                        "Current password is incorrect!"));
+
                 return;
             }
             else
@@ -83,7 +112,13 @@ namespace DVLD.User
             if (string.IsNullOrEmpty(txtNewPassword.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtNewPassword, "New Password cannot be blank");
+
+                errorProvider1.SetError(
+                    txtNewPassword,
+                    _Translate(
+                        "يجب إدخال كلمة المرور الجديدة.",
+                        "New password cannot be blank."));
+
             }
             else
             {
@@ -96,7 +131,12 @@ namespace DVLD.User
             if (txtConfirmPassword.Text.Trim() != txtNewPassword.Text.Trim())
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtConfirmPassword, "Password Confirmation does not match New Password!");
+
+                errorProvider1.SetError(
+                    txtConfirmPassword,
+                    _Translate(
+                        "تأكيد كلمة المرور لا يطابق كلمة المرور الجديدة.",
+                        "Password confirmation does not match the new password!"));
             }
             else
             {
@@ -112,8 +152,15 @@ namespace DVLD.User
             if (!this.ValidateChildren())
             {
                 //Here we dont continue becuase the form is not valid
-                MessageBox.Show("Some fileds are not valide!, put the mouse over the red icon(s) to see the erro",
-                    "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "بعض البيانات المدخلة غير صحيحة. مرّر مؤشر الفأرة فوق علامات الخطأ الحمراء لمعرفة السبب.",
+                        "Some fields are invalid. Hover over the red error icons to see the details."),
+                    _Translate("خطأ في التحقق من البيانات", "Validation Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
                 return;
             }
 
@@ -121,14 +168,28 @@ namespace DVLD.User
 
             if (_User.Save())
             {
-                MessageBox.Show("Password Changed Successfully.",
-                   "Saved.", MessageBoxButtons.OK, MessageBoxIcon.Information );
+
+                MessageBox.Show(
+                    _Translate(
+                        "تم تغيير كلمة المرور بنجاح.",
+                        "Password changed successfully."),
+                    _Translate("تم الحفظ", "Saved"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
                 _ResetDefualtValues();
             }
             else
             {
-                MessageBox.Show("An Erro Occured, Password did not change.",
-                   "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "حدث خطأ أثناء تغيير كلمة المرور. لم يتم حفظ التغيير.",
+                        "An error occurred. Password was not changed."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
             }
         }
 

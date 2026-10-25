@@ -26,6 +26,15 @@ namespace DVLD.Tests
             InitializeComponent();
         }
 
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         private void frmListLocalDrivingLicesnseApplications_Load(object sender, EventArgs e)
         {
             _dtAllLocalDrivingLicenseApplications = clsLocalDrivingLicenseApplication.GetAllLocalDrivingLicenseApplications();
@@ -162,7 +171,14 @@ namespace DVLD.Tests
 
             if (Appointment == null)
             {
-                MessageBox.Show("No Vision Test Appointment Found!", "Set Appointment", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على موعد لاختبار النظر.",
+                        "No Vision Test Appointment Found!"),
+                    _Translate("حجز موعد اختبار", "Set Appointment"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
@@ -180,7 +196,16 @@ namespace DVLD.Tests
 
             if (!clsLocalDrivingLicenseApplication.DoesPassTestType(LocalDrivingLicenseApplicationID, clsTestType.enTestType.VisionTest))
             {
-                MessageBox.Show("Person Should Pass the Vision Test First!", "Not Allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+
+                MessageBox.Show(
+                    _Translate(
+                        "يجب على المتقدم اجتياز اختبار النظر أولًا.",
+                        "The applicant must pass the Vision Test first."),
+                    _Translate("غير مسموح", "Not Allowed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
                 return;
             }
 
@@ -190,7 +215,14 @@ namespace DVLD.Tests
 
             if (Appointment == null)
             {
-                MessageBox.Show("No Written Test Appointment Found!", "Set Appointment", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على موعد للاختبار النظري.",
+                        "No Written Test Appointment Found!"),
+                    _Translate("حجز موعد اختبار", "Set Appointment"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
@@ -206,7 +238,14 @@ namespace DVLD.Tests
 
             if (!clsLocalDrivingLicenseApplication.DoesPassTestType(LocalDrivingLicenseApplicationID, clsTestType.enTestType.WrittenTest))
             {
-                MessageBox.Show("Person Should Pass the Written Test First!", "Not Allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "يجب على المتقدم اجتياز الاختبار النظري أولًا.",
+                        "Person should pass the Written Test first!"),
+                    _Translate("غير مسموح", "Not Allowed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
@@ -216,7 +255,14 @@ namespace DVLD.Tests
 
             if (Appointment == null)
             {
-                MessageBox.Show("No Street Test Appointment Found!", "Set Appointment", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على موعد للاختبار العملي.",
+                        "No Street Test Appointment Found!"),
+                    _Translate("حجز موعد اختبار", "Set Appointment"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
@@ -341,62 +387,131 @@ namespace DVLD.Tests
             }
             else
             {
-                MessageBox.Show("No License Found!", "No License", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على رخصة قيادة لهذا الطلب.",
+                        "No License Found!"),
+                    _Translate("لا توجد رخصة", "No License"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
 
         }
 
-        private void CancelApplicaitonToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void CancelApplicaitonToolStripMenuItem_Click(
+            object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure do want to cancel this application?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (dgvLocalDrivingLicenseApplications.CurrentRow == null)
                 return;
 
-            int LocalDrivingLicenseApplicationID = (int)dgvLocalDrivingLicenseApplications.CurrentRow.Cells[0].Value;
-
-            clsLocalDrivingLicenseApplication LocalDrivingLicenseApplication =
-                clsLocalDrivingLicenseApplication.FindByLocalDrivingAppLicenseID(LocalDrivingLicenseApplicationID);
-
-            if (LocalDrivingLicenseApplication != null)
+            if (MessageBox.Show(
+                _Translate(
+                    "هل أنت متأكد من إلغاء طلب رخصة القيادة؟",
+                    "Are you sure you want to cancel this application?"),
+                _Translate("تأكيد الإلغاء", "Confirm Cancellation"),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2) != DialogResult.Yes)
             {
-                if (LocalDrivingLicenseApplication.Cancel())
-                {
-                    MessageBox.Show("Application Cancelled Successfully.", "Cancelled", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    //refresh the form again.
-                    frmListLocalDrivingLicesnseApplications_Load(null, null);
-                }
-                else
-                {
-                    MessageBox.Show("Could not cancel applicatoin.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                return;
+            }
+
+            int LocalDrivingLicenseApplicationID =
+                Convert.ToInt32(
+                    dgvLocalDrivingLicenseApplications.CurrentRow.Cells[0].Value);
+
+            clsLocalDrivingLicenseApplication application =
+                clsLocalDrivingLicenseApplication
+                .FindByLocalDrivingAppLicenseID(
+                    LocalDrivingLicenseApplicationID);
+
+            if (application == null)
+                return;
+
+            if (application.Cancel())
+            {
+                MessageBox.Show(
+                    _Translate(
+                        "تم إلغاء طلب رخصة القيادة بنجاح.",
+                        "Application cancelled successfully."),
+                    _Translate("تم الإلغاء", "Cancelled"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                frmListLocalDrivingLicesnseApplications_Load(null, null);
+            }
+            else
+            {
+                MessageBox.Show(
+                    _Translate(
+                        "تعذّر إلغاء طلب رخصة القيادة.",
+                        "Could not cancel the application."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
-        private void DeleteApplicationToolStripMenuItem_Click(object sender, EventArgs e)
+
+
+        private void DeleteApplicationToolStripMenuItem_Click(
+            object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure do want to delete this application?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (dgvLocalDrivingLicenseApplications.CurrentRow == null)
                 return;
 
-            int LocalDrivingLicenseApplicationID = (int)dgvLocalDrivingLicenseApplications.CurrentRow.Cells[0].Value;
-
-            clsLocalDrivingLicenseApplication LocalDrivingLicenseApplication =
-                clsLocalDrivingLicenseApplication.FindByLocalDrivingAppLicenseID(LocalDrivingLicenseApplicationID);
-
-            if (LocalDrivingLicenseApplication != null)
+            if (MessageBox.Show(
+                _Translate(
+                    "هل أنت متأكد من حذف طلب رخصة القيادة؟",
+                    "Are you sure you want to delete this application?"),
+                _Translate("تأكيد الحذف", "Confirm Delete"),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2) != DialogResult.Yes)
             {
-                if (LocalDrivingLicenseApplication.Delete())
-                {
-                    MessageBox.Show("Application Deleted Successfully.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    //refresh the form again.
-                    frmListLocalDrivingLicesnseApplications_Load(null, null);
-                }
-                else
-                {
-                    MessageBox.Show("Could not delete applicatoin, other data depends on it.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                return;
+            }
+
+            int LocalDrivingLicenseApplicationID =
+                Convert.ToInt32(
+                    dgvLocalDrivingLicenseApplications.CurrentRow.Cells[0].Value);
+
+            clsLocalDrivingLicenseApplication application =
+                clsLocalDrivingLicenseApplication
+                .FindByLocalDrivingAppLicenseID(
+                    LocalDrivingLicenseApplicationID);
+
+            if (application == null)
+                return;
+
+            if (application.Delete())
+            {
+                MessageBox.Show(
+                    _Translate(
+                        "تم حذف طلب رخصة القيادة بنجاح.",
+                        "Application deleted successfully."),
+                    _Translate("تم الحذف", "Deleted"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+                frmListLocalDrivingLicesnseApplications_Load(null, null);
+            }
+            else
+            {
+                MessageBox.Show(
+                    _Translate(
+                        "تعذّر حذف الطلب بسبب وجود بيانات أخرى مرتبطة به.",
+                        "Could not delete the application because other data depends on it."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
+
 
         private void showPersonLicenseHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {

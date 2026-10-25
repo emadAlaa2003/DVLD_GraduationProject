@@ -29,23 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAddUpdateQuestion));
             this.lblTitle = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.lblQuestionD = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.pictureBox14 = new System.Windows.Forms.PictureBox();
-            this.pictureBox13 = new System.Windows.Forms.PictureBox();
-            this.pictureBox12 = new System.Windows.Forms.PictureBox();
-            this.pictureBox11 = new System.Windows.Forms.PictureBox();
-            this.pictureBox9 = new System.Windows.Forms.PictureBox();
-            this.pictureBox8 = new System.Windows.Forms.PictureBox();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.chbIsActive = new System.Windows.Forms.CheckBox();
             this.label12 = new System.Windows.Forms.Label();
@@ -74,8 +62,22 @@
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.btnSave = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.pictureBox14 = new System.Windows.Forms.PictureBox();
+            this.pictureBox13 = new System.Windows.Forms.PictureBox();
+            this.pictureBox12 = new System.Windows.Forms.PictureBox();
+            this.pictureBox11 = new System.Windows.Forms.PictureBox();
+            this.pictureBox9 = new System.Windows.Forms.PictureBox();
+            this.pictureBox8 = new System.Windows.Forms.PictureBox();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox10 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).BeginInit();
@@ -89,48 +91,31 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTitle
             // 
+            resources.ApplyResources(this.lblTitle, "lblTitle");
             this.lblTitle.BackColor = System.Drawing.Color.Transparent;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.lblTitle.Location = new System.Drawing.Point(12, 9);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(893, 39);
-            this.lblTitle.TabIndex = 74;
-            this.lblTitle.Text = "Add New Question";
-            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label22
             // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.label22, "label22");
             this.label22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label22.Location = new System.Drawing.Point(15, 58);
-            this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(90, 17);
-            this.label22.TabIndex = 87;
-            this.label22.Text = "Question ID :";
             // 
             // lblQuestionD
             // 
-            this.lblQuestionD.AutoSize = true;
-            this.lblQuestionD.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            resources.ApplyResources(this.lblQuestionD, "lblQuestionD");
             this.lblQuestionD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.lblQuestionD.Location = new System.Drawing.Point(142, 56);
-            this.lblQuestionD.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblQuestionD.Name = "lblQuestionD";
-            this.lblQuestionD.Size = new System.Drawing.Size(33, 17);
-            this.lblQuestionD.TabIndex = 115;
-            this.lblQuestionD.Text = "N/A";
             // 
             // groupBox1
             // 
+            resources.ApplyResources(this.groupBox1, "groupBox1");
             this.groupBox1.Controls.Add(this.pictureBox14);
             this.groupBox1.Controls.Add(this.pictureBox13);
             this.groupBox1.Controls.Add(this.pictureBox12);
@@ -169,481 +154,363 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.txtQuestionText);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.groupBox1.Location = new System.Drawing.Point(12, 81);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(893, 555);
-            this.groupBox1.TabIndex = 116;
             this.groupBox1.TabStop = false;
             this.groupBox1.Tag = " ";
-            this.groupBox1.Text = " Question Deteils";
-            // 
-            // pictureBox14
-            // 
-            this.pictureBox14.Image = global::DVLD.Properties.Resources.Checkbox;
-            this.pictureBox14.Location = new System.Drawing.Point(5, 507);
-            this.pictureBox14.Name = "pictureBox14";
-            this.pictureBox14.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox14.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox14.TabIndex = 154;
-            this.pictureBox14.TabStop = false;
-            // 
-            // pictureBox13
-            // 
-            this.pictureBox13.Image = global::DVLD.Properties.Resources.Attachment;
-            this.pictureBox13.Location = new System.Drawing.Point(5, 423);
-            this.pictureBox13.Name = "pictureBox13";
-            this.pictureBox13.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox13.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox13.TabIndex = 153;
-            this.pictureBox13.TabStop = false;
-            // 
-            // pictureBox12
-            // 
-            this.pictureBox12.Image = global::DVLD.Properties.Resources.explintion1;
-            this.pictureBox12.Location = new System.Drawing.Point(5, 351);
-            this.pictureBox12.Name = "pictureBox12";
-            this.pictureBox12.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox12.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox12.TabIndex = 152;
-            this.pictureBox12.TabStop = false;
-            // 
-            // pictureBox11
-            // 
-            this.pictureBox11.Image = global::DVLD.Properties.Resources.D;
-            this.pictureBox11.Location = new System.Drawing.Point(5, 313);
-            this.pictureBox11.Name = "pictureBox11";
-            this.pictureBox11.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox11.TabIndex = 151;
-            this.pictureBox11.TabStop = false;
-            this.pictureBox11.Click += new System.EventHandler(this.pictureBox11_Click);
-            // 
-            // pictureBox9
-            // 
-            this.pictureBox9.Image = global::DVLD.Properties.Resources.C;
-            this.pictureBox9.Location = new System.Drawing.Point(5, 279);
-            this.pictureBox9.Name = "pictureBox9";
-            this.pictureBox9.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox9.TabIndex = 150;
-            this.pictureBox9.TabStop = false;
-            // 
-            // pictureBox8
-            // 
-            this.pictureBox8.Image = global::DVLD.Properties.Resources.B64;
-            this.pictureBox8.Location = new System.Drawing.Point(5, 250);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox8.TabIndex = 149;
-            this.pictureBox8.TabStop = false;
-            // 
-            // pictureBox7
-            // 
-            this.pictureBox7.Image = global::DVLD.Properties.Resources.A64;
-            this.pictureBox7.Location = new System.Drawing.Point(5, 217);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox7.TabIndex = 148;
-            this.pictureBox7.TabStop = false;
-            // 
-            // pictureBox6
-            // 
-            this.pictureBox6.Image = global::DVLD.Properties.Resources.icons8_one_page_48;
-            this.pictureBox6.Location = new System.Drawing.Point(5, 177);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox6.TabIndex = 147;
-            this.pictureBox6.TabStop = false;
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Image = global::DVLD.Properties.Resources.Magic_Wand80;
-            this.pictureBox5.Location = new System.Drawing.Point(705, 59);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox5.TabIndex = 146;
-            this.pictureBox5.TabStop = false;
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = global::DVLD.Properties.Resources.correctanswer;
-            this.pictureBox4.Location = new System.Drawing.Point(412, 173);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 145;
-            this.pictureBox4.TabStop = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::DVLD.Properties.Resources.reviewstatues;
-            this.pictureBox3.Location = new System.Drawing.Point(412, 145);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 144;
-            this.pictureBox3.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::DVLD.Properties.Resources.questionType;
-            this.pictureBox2.Location = new System.Drawing.Point(5, 149);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 143;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::DVLD.Properties.Resources.questiontext;
-            this.pictureBox1.Location = new System.Drawing.Point(5, 39);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(31, 26);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 142;
-            this.pictureBox1.TabStop = false;
             // 
             // linkLabel1
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabel1.Location = new System.Drawing.Point(742, 69);
+            resources.ApplyResources(this.linkLabel1, "linkLabel1");
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(132, 16);
-            this.linkLabel1.TabIndex = 141;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Generate Question ";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // chbIsActive
             // 
-            this.chbIsActive.AutoSize = true;
-            this.chbIsActive.Location = new System.Drawing.Point(110, 511);
+            resources.ApplyResources(this.chbIsActive, "chbIsActive");
             this.chbIsActive.Name = "chbIsActive";
-            this.chbIsActive.Size = new System.Drawing.Size(46, 19);
-            this.chbIsActive.TabIndex = 140;
-            this.chbIsActive.Text = "YES";
             this.chbIsActive.UseVisualStyleBackColor = true;
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
+            resources.ApplyResources(this.label12, "label12");
             this.label12.BackColor = System.Drawing.Color.Transparent;
-            this.label12.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label12.Location = new System.Drawing.Point(39, 512);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(68, 17);
-            this.label12.TabIndex = 139;
-            this.label12.Text = "Is Active :";
             // 
             // txtSourceEvidence
             // 
-            this.txtSourceEvidence.Location = new System.Drawing.Point(163, 431);
-            this.txtSourceEvidence.Multiline = true;
+            resources.ApplyResources(this.txtSourceEvidence, "txtSourceEvidence");
             this.txtSourceEvidence.Name = "txtSourceEvidence";
-            this.txtSourceEvidence.Size = new System.Drawing.Size(690, 57);
-            this.txtSourceEvidence.TabIndex = 138;
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
+            resources.ApplyResources(this.label11, "label11");
             this.label11.BackColor = System.Drawing.Color.Transparent;
-            this.label11.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label11.Location = new System.Drawing.Point(41, 431);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(115, 17);
-            this.label11.TabIndex = 137;
-            this.label11.Text = "Source Evidence: ";
             // 
             // txtExplanation
             // 
-            this.txtExplanation.Location = new System.Drawing.Point(163, 359);
-            this.txtExplanation.Multiline = true;
+            resources.ApplyResources(this.txtExplanation, "txtExplanation");
             this.txtExplanation.Name = "txtExplanation";
-            this.txtExplanation.Size = new System.Drawing.Size(690, 57);
-            this.txtExplanation.TabIndex = 136;
             this.txtExplanation.Validating += new System.ComponentModel.CancelEventHandler(this.txtExplanation_Validating);
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
+            resources.ApplyResources(this.label10, "label10");
             this.label10.BackColor = System.Drawing.Color.Transparent;
-            this.label10.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label10.Location = new System.Drawing.Point(39, 359);
-            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(89, 17);
-            this.label10.TabIndex = 135;
-            this.label10.Text = "Explanation: ";
             // 
             // TxtOptionD
             // 
-            this.TxtOptionD.Location = new System.Drawing.Point(133, 317);
+            resources.ApplyResources(this.TxtOptionD, "TxtOptionD");
             this.TxtOptionD.Name = "TxtOptionD";
-            this.TxtOptionD.Size = new System.Drawing.Size(720, 23);
-            this.TxtOptionD.TabIndex = 134;
             this.TxtOptionD.Validating += new System.ComponentModel.CancelEventHandler(this.TxtOptionD_Validating);
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
+            resources.ApplyResources(this.label9, "label9");
             this.label9.BackColor = System.Drawing.Color.Transparent;
-            this.label9.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label9.Location = new System.Drawing.Point(41, 317);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(73, 17);
-            this.label9.TabIndex = 133;
-            this.label9.Text = "Option D: ";
             // 
             // TxtOptionC
             // 
-            this.TxtOptionC.Location = new System.Drawing.Point(133, 283);
+            resources.ApplyResources(this.TxtOptionC, "TxtOptionC");
             this.TxtOptionC.Name = "TxtOptionC";
-            this.TxtOptionC.Size = new System.Drawing.Size(720, 23);
-            this.TxtOptionC.TabIndex = 132;
             this.TxtOptionC.Validating += new System.ComponentModel.CancelEventHandler(this.TxtOptionC_Validating);
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
+            resources.ApplyResources(this.label8, "label8");
             this.label8.BackColor = System.Drawing.Color.Transparent;
-            this.label8.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label8.Location = new System.Drawing.Point(41, 283);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(67, 17);
-            this.label8.TabIndex = 131;
-            this.label8.Text = "Option C:";
             // 
             // TxtOptionB
             // 
-            this.TxtOptionB.Location = new System.Drawing.Point(133, 254);
+            resources.ApplyResources(this.TxtOptionB, "TxtOptionB");
             this.TxtOptionB.Name = "TxtOptionB";
-            this.TxtOptionB.Size = new System.Drawing.Size(720, 23);
-            this.TxtOptionB.TabIndex = 130;
             this.TxtOptionB.Validating += new System.ComponentModel.CancelEventHandler(this.TxtOptionB_Validating);
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
+            resources.ApplyResources(this.label7, "label7");
             this.label7.BackColor = System.Drawing.Color.Transparent;
-            this.label7.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label7.Location = new System.Drawing.Point(41, 254);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(71, 17);
-            this.label7.TabIndex = 129;
-            this.label7.Text = "Option B :";
             // 
             // TxtOptionA
             // 
-            this.TxtOptionA.Location = new System.Drawing.Point(133, 225);
+            resources.ApplyResources(this.TxtOptionA, "TxtOptionA");
             this.TxtOptionA.Name = "TxtOptionA";
-            this.TxtOptionA.Size = new System.Drawing.Size(720, 23);
-            this.TxtOptionA.TabIndex = 128;
             this.TxtOptionA.Validating += new System.ComponentModel.CancelEventHandler(this.TxtOptionA_Validating);
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
+            resources.ApplyResources(this.label6, "label6");
             this.label6.BackColor = System.Drawing.Color.Transparent;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label6.Location = new System.Drawing.Point(41, 225);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(72, 17);
-            this.label6.TabIndex = 127;
-            this.label6.Text = "Option A :";
             // 
             // cmbCorrectOption
             // 
+            resources.ApplyResources(this.cmbCorrectOption, "cmbCorrectOption");
             this.cmbCorrectOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCorrectOption.FormattingEnabled = true;
             this.cmbCorrectOption.Items.AddRange(new object[] {
-            "A",
-            "B",
-            "C",
-            "D"});
-            this.cmbCorrectOption.Location = new System.Drawing.Point(596, 178);
+            resources.GetString("cmbCorrectOption.Items"),
+            resources.GetString("cmbCorrectOption.Items1"),
+            resources.GetString("cmbCorrectOption.Items2"),
+            resources.GetString("cmbCorrectOption.Items3")});
             this.cmbCorrectOption.Name = "cmbCorrectOption";
-            this.cmbCorrectOption.Size = new System.Drawing.Size(67, 23);
-            this.cmbCorrectOption.TabIndex = 126;
             this.cmbCorrectOption.Validating += new System.ComponentModel.CancelEventHandler(this.cmbCorrectOption_Validating);
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
+            resources.ApplyResources(this.label5, "label5");
             this.label5.BackColor = System.Drawing.Color.Transparent;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label5.Location = new System.Drawing.Point(448, 181);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(107, 17);
-            this.label5.TabIndex = 125;
-            this.label5.Text = "Correct Option :";
             // 
             // txtPageNumber
             // 
-            this.txtPageNumber.Location = new System.Drawing.Point(176, 181);
+            resources.ApplyResources(this.txtPageNumber, "txtPageNumber");
             this.txtPageNumber.Name = "txtPageNumber";
-            this.txtPageNumber.Size = new System.Drawing.Size(61, 23);
-            this.txtPageNumber.TabIndex = 124;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
+            resources.ApplyResources(this.label4, "label4");
             this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label4.Location = new System.Drawing.Point(41, 181);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(100, 17);
-            this.label4.TabIndex = 123;
-            this.label4.Text = "Page Number :";
             // 
             // cmbReviewStatues
             // 
+            resources.ApplyResources(this.cmbReviewStatues, "cmbReviewStatues");
             this.cmbReviewStatues.FormattingEnabled = true;
             this.cmbReviewStatues.Items.AddRange(new object[] {
-            "Draft",
-            "Approved",
-            "Rejected"});
-            this.cmbReviewStatues.Location = new System.Drawing.Point(596, 149);
+            resources.GetString("cmbReviewStatues.Items"),
+            resources.GetString("cmbReviewStatues.Items1"),
+            resources.GetString("cmbReviewStatues.Items2")});
             this.cmbReviewStatues.Name = "cmbReviewStatues";
-            this.cmbReviewStatues.Size = new System.Drawing.Size(201, 23);
-            this.cmbReviewStatues.TabIndex = 122;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
+            resources.ApplyResources(this.label3, "label3");
             this.label3.BackColor = System.Drawing.Color.Transparent;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label3.Location = new System.Drawing.Point(448, 152);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(101, 17);
-            this.label3.TabIndex = 121;
-            this.label3.Text = "Review Status :";
             // 
             // cmbQuestionType
             // 
+            resources.ApplyResources(this.cmbQuestionType, "cmbQuestionType");
             this.cmbQuestionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbQuestionType.FormattingEnabled = true;
             this.cmbQuestionType.Items.AddRange(new object[] {
-            "MultipleChoice",
-            "TrueFalse"});
-            this.cmbQuestionType.Location = new System.Drawing.Point(176, 152);
+            resources.GetString("cmbQuestionType.Items"),
+            resources.GetString("cmbQuestionType.Items1")});
             this.cmbQuestionType.Name = "cmbQuestionType";
-            this.cmbQuestionType.Size = new System.Drawing.Size(148, 23);
-            this.cmbQuestionType.TabIndex = 120;
             this.cmbQuestionType.SelectedIndexChanged += new System.EventHandler(this.cmbQuestionType_SelectedIndexChanged);
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
+            resources.ApplyResources(this.label2, "label2");
             this.label2.BackColor = System.Drawing.Color.Transparent;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label2.Location = new System.Drawing.Point(39, 153);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(105, 17);
-            this.label2.TabIndex = 119;
-            this.label2.Text = "Question Type :";
             // 
             // txtQuestionText
             // 
+            resources.ApplyResources(this.txtQuestionText, "txtQuestionText");
             this.txtQuestionText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.txtQuestionText.Location = new System.Drawing.Point(176, 49);
-            this.txtQuestionText.Multiline = true;
             this.txtQuestionText.Name = "txtQuestionText";
-            this.txtQuestionText.Size = new System.Drawing.Size(506, 79);
-            this.txtQuestionText.TabIndex = 118;
             this.txtQuestionText.Validating += new System.ComponentModel.CancelEventHandler(this.txtQuestionText_Validating);
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
+            resources.ApplyResources(this.label1, "label1");
             this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label1.Location = new System.Drawing.Point(41, 47);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(102, 17);
-            this.label1.TabIndex = 117;
-            this.label1.Text = "Question Text :";
             // 
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
+            resources.ApplyResources(this.errorProvider1, "errorProvider1");
             // 
             // btnSave
             // 
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            resources.ApplyResources(this.btnSave, "btnSave");
+            this.errorProvider1.SetError(this.btnSave, resources.GetString("btnSave.Error"));
+            this.errorProvider1.SetIconAlignment(this.btnSave, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("btnSave.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.btnSave, ((int)(resources.GetObject("btnSave.IconPadding"))));
             this.btnSave.Image = global::DVLD.Properties.Resources.Save_32;
-            this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSave.Location = new System.Drawing.Point(778, 644);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(126, 37);
-            this.btnSave.TabIndex = 118;
-            this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnClose
             // 
+            resources.ApplyResources(this.btnClose, "btnClose");
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.errorProvider1.SetError(this.btnClose, resources.GetString("btnClose.Error"));
+            this.errorProvider1.SetIconAlignment(this.btnClose, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("btnClose.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.btnClose, ((int)(resources.GetObject("btnClose.IconPadding"))));
             this.btnClose.Image = global::DVLD.Properties.Resources.Close_32;
-            this.btnClose.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnClose.Location = new System.Drawing.Point(644, 644);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(126, 37);
-            this.btnClose.TabIndex = 117;
-            this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // pictureBox14
+            // 
+            resources.ApplyResources(this.pictureBox14, "pictureBox14");
+            this.errorProvider1.SetError(this.pictureBox14, resources.GetString("pictureBox14.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox14, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox14.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox14, ((int)(resources.GetObject("pictureBox14.IconPadding"))));
+            this.pictureBox14.Image = global::DVLD.Properties.Resources.Checkbox;
+            this.pictureBox14.Name = "pictureBox14";
+            this.pictureBox14.TabStop = false;
+            // 
+            // pictureBox13
+            // 
+            resources.ApplyResources(this.pictureBox13, "pictureBox13");
+            this.errorProvider1.SetError(this.pictureBox13, resources.GetString("pictureBox13.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox13, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox13.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox13, ((int)(resources.GetObject("pictureBox13.IconPadding"))));
+            this.pictureBox13.Image = global::DVLD.Properties.Resources.Attachment;
+            this.pictureBox13.Name = "pictureBox13";
+            this.pictureBox13.TabStop = false;
+            // 
+            // pictureBox12
+            // 
+            resources.ApplyResources(this.pictureBox12, "pictureBox12");
+            this.errorProvider1.SetError(this.pictureBox12, resources.GetString("pictureBox12.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox12, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox12.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox12, ((int)(resources.GetObject("pictureBox12.IconPadding"))));
+            this.pictureBox12.Image = global::DVLD.Properties.Resources.explintion1;
+            this.pictureBox12.Name = "pictureBox12";
+            this.pictureBox12.TabStop = false;
+            // 
+            // pictureBox11
+            // 
+            resources.ApplyResources(this.pictureBox11, "pictureBox11");
+            this.errorProvider1.SetError(this.pictureBox11, resources.GetString("pictureBox11.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox11, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox11.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox11, ((int)(resources.GetObject("pictureBox11.IconPadding"))));
+            this.pictureBox11.Image = global::DVLD.Properties.Resources.D;
+            this.pictureBox11.Name = "pictureBox11";
+            this.pictureBox11.TabStop = false;
+            this.pictureBox11.Click += new System.EventHandler(this.pictureBox11_Click);
+            // 
+            // pictureBox9
+            // 
+            resources.ApplyResources(this.pictureBox9, "pictureBox9");
+            this.errorProvider1.SetError(this.pictureBox9, resources.GetString("pictureBox9.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox9, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox9.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox9, ((int)(resources.GetObject("pictureBox9.IconPadding"))));
+            this.pictureBox9.Image = global::DVLD.Properties.Resources.C;
+            this.pictureBox9.Name = "pictureBox9";
+            this.pictureBox9.TabStop = false;
+            // 
+            // pictureBox8
+            // 
+            resources.ApplyResources(this.pictureBox8, "pictureBox8");
+            this.errorProvider1.SetError(this.pictureBox8, resources.GetString("pictureBox8.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox8, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox8.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox8, ((int)(resources.GetObject("pictureBox8.IconPadding"))));
+            this.pictureBox8.Image = global::DVLD.Properties.Resources.B64;
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.TabStop = false;
+            // 
+            // pictureBox7
+            // 
+            resources.ApplyResources(this.pictureBox7, "pictureBox7");
+            this.errorProvider1.SetError(this.pictureBox7, resources.GetString("pictureBox7.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox7, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox7.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox7, ((int)(resources.GetObject("pictureBox7.IconPadding"))));
+            this.pictureBox7.Image = global::DVLD.Properties.Resources.A64;
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.TabStop = false;
+            // 
+            // pictureBox6
+            // 
+            resources.ApplyResources(this.pictureBox6, "pictureBox6");
+            this.errorProvider1.SetError(this.pictureBox6, resources.GetString("pictureBox6.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox6, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox6.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox6, ((int)(resources.GetObject("pictureBox6.IconPadding"))));
+            this.pictureBox6.Image = global::DVLD.Properties.Resources.icons8_one_page_48;
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.TabStop = false;
+            // 
+            // pictureBox5
+            // 
+            resources.ApplyResources(this.pictureBox5, "pictureBox5");
+            this.errorProvider1.SetError(this.pictureBox5, resources.GetString("pictureBox5.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox5, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox5.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox5, ((int)(resources.GetObject("pictureBox5.IconPadding"))));
+            this.pictureBox5.Image = global::DVLD.Properties.Resources.Magic_Wand80;
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.TabStop = false;
+            // 
+            // pictureBox4
+            // 
+            resources.ApplyResources(this.pictureBox4, "pictureBox4");
+            this.errorProvider1.SetError(this.pictureBox4, resources.GetString("pictureBox4.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox4, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox4.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox4, ((int)(resources.GetObject("pictureBox4.IconPadding"))));
+            this.pictureBox4.Image = global::DVLD.Properties.Resources.correctanswer;
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            resources.ApplyResources(this.pictureBox3, "pictureBox3");
+            this.errorProvider1.SetError(this.pictureBox3, resources.GetString("pictureBox3.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox3, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox3.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox3, ((int)(resources.GetObject("pictureBox3.IconPadding"))));
+            this.pictureBox3.Image = global::DVLD.Properties.Resources.reviewstatues;
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            resources.ApplyResources(this.pictureBox2, "pictureBox2");
+            this.errorProvider1.SetError(this.pictureBox2, resources.GetString("pictureBox2.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox2, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox2.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox2, ((int)(resources.GetObject("pictureBox2.IconPadding"))));
+            this.pictureBox2.Image = global::DVLD.Properties.Resources.questionType;
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
+            this.errorProvider1.SetError(this.pictureBox1, resources.GetString("pictureBox1.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox1, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox1.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox1, ((int)(resources.GetObject("pictureBox1.IconPadding"))));
+            this.pictureBox1.Image = global::DVLD.Properties.Resources.questiontext;
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.TabStop = false;
+            // 
             // pictureBox10
             // 
+            resources.ApplyResources(this.pictureBox10, "pictureBox10");
+            this.errorProvider1.SetError(this.pictureBox10, resources.GetString("pictureBox10.Error"));
+            this.errorProvider1.SetIconAlignment(this.pictureBox10, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("pictureBox10.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.pictureBox10, ((int)(resources.GetObject("pictureBox10.IconPadding"))));
             this.pictureBox10.Image = global::DVLD.Properties.Resources.Number_32;
-            this.pictureBox10.Location = new System.Drawing.Point(112, 55);
             this.pictureBox10.Name = "pictureBox10";
-            this.pictureBox10.Size = new System.Drawing.Size(23, 23);
-            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox10.TabIndex = 114;
             this.pictureBox10.TabStop = false;
             // 
             // frmAddUpdateQuestion
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(248)))), ((int)(((byte)(253)))));
-            this.ClientSize = new System.Drawing.Size(917, 694);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.groupBox1);
@@ -656,12 +523,11 @@
             this.MinimizeBox = false;
             this.Name = "frmAddUpdateQuestion";
             this.ShowIcon = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Add / Update Question";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.frmAddUpdateQuestion_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).EndInit();
@@ -675,7 +541,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

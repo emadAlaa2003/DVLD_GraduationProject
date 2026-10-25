@@ -21,6 +21,7 @@ namespace DVLD.Tests
 
         private clsLocalDrivingLicenseApplication _LocalDrivingLicenseApplication;
 
+
         public clsTestType.enTestType TestTypeID
         {
             get
@@ -33,31 +34,30 @@ namespace DVLD.Tests
 
                 switch (_TestTypeID)
                 {
-
                     case clsTestType.enTestType.VisionTest:
-                        {
-                            gbTestType.Text = "Vision Test";
-                            pbTestTypeImage.Image = Resources.Vision_512;
-                            break;
-                        }
+                        gbTestType.Text = _Translate(
+                            "اختبار النظر", "Vision Test");
+
+                        pbTestTypeImage.Image = Resources.Vision_512;
+                        break;
 
                     case clsTestType.enTestType.WrittenTest:
-                        {
-                            gbTestType.Text = "Written Test";
-                            pbTestTypeImage.Image = Resources.Written_Test_512;
-                            break;
-                        }
+                        gbTestType.Text = _Translate(
+                            "الاختبار النظري", "Written Test");
+
+                        pbTestTypeImage.Image = Resources.Written_Test_512;
+                        break;
+
                     case clsTestType.enTestType.StreetTest:
-                        {
-                            gbTestType.Text = "Street Test";
-                            pbTestTypeImage.Image = Resources.driving_test_512;
-                            break;
+                        gbTestType.Text = _Translate(
+                            "اختبار القيادة العملي", "Street Test");
 
-
-                        }
+                        pbTestTypeImage.Image = Resources.driving_test_512;
+                        break;
                 }
             }
         }
+
 
         public int TestAppointmentID
         {
@@ -79,6 +79,17 @@ namespace DVLD.Tests
         private int _LocalDrivingLicenseApplicationID = -1;
         private clsTestAppointment _TestAppointment;
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
         public void LoadInfo(int TestAppointmentID)
         {
 
@@ -90,8 +101,16 @@ namespace DVLD.Tests
             //incase we did not find any appointment .
             if (_TestAppointment == null)
             {
-                MessageBox.Show("Error: No  Appointment ID = " + _TestAppointmentID.ToString(),
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على موعد الاختبار رقم: ",
+                        "Error: No Appointment with ID = ")
+                        + _TestAppointmentID,
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
                 _TestAppointmentID = -1;
                 return;
             }
@@ -103,8 +122,16 @@ namespace DVLD.Tests
 
             if (_LocalDrivingLicenseApplication == null)
             {
-                MessageBox.Show("Error: No Local Driving License Application with ID = " + _LocalDrivingLicenseApplicationID.ToString(),
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على طلب رخصة القيادة رقم: ",
+                        "Error: No Local Driving License Application with ID = ")
+                        + _LocalDrivingLicenseApplicationID,
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
                 return;
             }
             
@@ -120,7 +147,10 @@ namespace DVLD.Tests
 
             lblDate.Text = clsFormat.DateToShort(_TestAppointment.AppointmentDate);
             lblFees.Text = _TestAppointment.PaidFees.ToString();
-            lblTestID.Text = (_TestAppointment.TestID==-1)? "Not Taken Yet":_TestAppointment.TestID.ToString();
+
+            lblTestID.Text = (_TestAppointment.TestID == -1)
+                ? _Translate("لم يُجرَ الاختبار بعد", "Not Taken Yet")
+                : _TestAppointment.TestID.ToString();
 
 
 

@@ -23,12 +23,29 @@ namespace DVLD.Documents
             InitializeComponent();
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         private void btnBrowser_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Title = "Select PDF Document";
-                openFileDialog.Filter = "PDF Files (*.pdf)|*.pdf";
+
+                openFileDialog.Title = _Translate(
+                    "اختيار مستند PDF",
+                    "Select PDF Document");
+
+                openFileDialog.Filter = _Translate(
+                    "ملفات PDF (*.pdf)|*.pdf",
+                    "PDF Files (*.pdf)|*.pdf");
+
                 openFileDialog.Multiselect = false;
 
                 if (openFileDialog.ShowDialog() != DialogResult.OK)
@@ -38,22 +55,30 @@ namespace DVLD.Documents
 
                 if (!fileInfo.Exists)
                 {
+
                     MessageBox.Show(
-                        "The selected file does not exist.",
-                        "Error",
+                        _Translate(
+                            "الملف المحدد غير موجود.",
+                            "The selected file does not exist."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
+
 
                     return;
                 }
 
                 if (fileInfo.Extension.ToLower() != ".pdf")
                 {
+
                     MessageBox.Show(
-                        "Please select a PDF file.",
-                        "Invalid File",
+                        _Translate(
+                            "يرجى اختيار ملف بصيغة PDF.",
+                            "Please select a PDF file."),
+                        _Translate("ملف غير صالح", "Invalid File"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
+
 
                     return;
                 }
@@ -67,7 +92,11 @@ namespace DVLD.Documents
                     (fileInfo.Length / 1024.0 / 1024.0).ToString("F2")
                     + " MB";
 
-                txtFileType.Text = "PDF Document";
+
+                txtFileType.Text = _Translate(
+                    "مستند PDF",
+                    "PDF Document");
+
 
                 progressBar1.Value = 0;
                 lblProgress.Text = "0%";
@@ -82,11 +111,15 @@ namespace DVLD.Documents
             if (string.IsNullOrWhiteSpace(_SelectedFilePath) ||
                 !File.Exists(_SelectedFilePath))
             {
+
                 MessageBox.Show(
-                    "Please select a PDF file first.",
-                    "No File Selected",
+                    _Translate(
+                        "يرجى اختيار ملف PDF قبل بدء الرفع.",
+                        "Please select a PDF file first."),
+                    _Translate("لم يتم اختيار ملف", "No File Selected"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
+
 
                 return;
             }
@@ -178,12 +211,16 @@ namespace DVLD.Documents
                             {
                                 btnUpload.Enabled = true;
 
+
                                 MessageBox.Show(
-                                    "Upload failed.\n\n" +
-                                    responseText,
-                                    "Upload Failed",
+                                    _Translate(
+                                        "فشل رفع المستند إلى الخادم.\n\nالتفاصيل:\n",
+                                        "Upload failed.\n\nDetails:\n")
+                                        + responseText,
+                                    _Translate("فشل رفع المستند", "Upload Failed"),
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
+
 
                                 return;
                             }
@@ -193,10 +230,12 @@ namespace DVLD.Documents
                             lblProgress.Text = "100%";
 
 
+
                             MessageBox.Show(
-                                "Document uploaded successfully.\n\n" +
-                                "Processing will continue in the background.",
-                                "Upload Complete",
+                                _Translate(
+                                    "تم رفع المستند بنجاح.\n\nستستمر معالجة المستند في الخلفية.",
+                                    "Document uploaded successfully.\n\nProcessing will continue in the background."),
+                                _Translate("اكتمل رفع المستند", "Upload Complete"),
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
 
@@ -210,12 +249,16 @@ namespace DVLD.Documents
             {
                 btnUpload.Enabled = true;
 
+
                 MessageBox.Show(
-                    "Could not upload the document.\n\n" +
-                    ex.Message,
-                    "Upload Error",
+                    _Translate(
+                        "تعذّر رفع المستند.\n\nالتفاصيل:\n",
+                        "Could not upload the document.\n\nDetails:\n")
+                        + ex.Message,
+                    _Translate("خطأ أثناء الرفع", "Upload Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+
             }
             finally
             {

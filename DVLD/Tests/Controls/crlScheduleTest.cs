@@ -47,20 +47,23 @@ namespace DVLD.Tests
 
                     case clsTestType.enTestType.VisionTest:
                         {
-                            gbTestType.Text = "Vision Test";
+                            gbTestType.Text =
+                             _Translate("اختبار النظر", "Vision Test");
                             pbTestTypeImage.Image = Resources.Vision_512;
                             break;
                         }
 
                     case clsTestType.enTestType.WrittenTest:
                         {
-                            gbTestType.Text = "Written Test";
+                            gbTestType.Text =
+                                      _Translate("الاختبار النظري", "Written Test");
                             pbTestTypeImage.Image = Resources.Written_Test_512;
                             break;
                         }
                     case clsTestType.enTestType.StreetTest:
                         {
-                            gbTestType.Text = "Street Test";
+                            gbTestType.Text =
+                                _Translate("اختبار القيادة العملي", "Street Test");
                             pbTestTypeImage.Image = Resources.driving_test_512;
                             break;
                         
@@ -69,6 +72,17 @@ namespace DVLD.Tests
                 }
             }
         }
+
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
 
         public void LoadInfo(int LocalDrivingLicenseApplicationID,int AppointmentID=-1 )
         {
@@ -85,8 +99,14 @@ namespace DVLD.Tests
 
            if ( _LocalDrivingLicenseApplication==null)
             {
-                MessageBox.Show("Error: No Local Driving License Application with ID = " + _LocalDrivingLicenseApplicationID.ToString(),
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+    _Translate(
+        "لم يتم العثور على طلب رخصة القيادة رقم: ",
+        "Error: No Local Driving License Application with ID = ")
+        + _LocalDrivingLicenseApplicationID,
+    _Translate("خطأ", "Error"),
+    MessageBoxButtons.OK,
+    MessageBoxIcon.Error);
                 btnSave.Enabled = false;
                 return;
             }
@@ -103,13 +123,15 @@ namespace DVLD.Tests
             {
                 lblRetakeAppFees.Text = clsApplicationType.Find((int)clsApplication.enApplicationType.RetakeTest).Fees.ToString();
                 gbRetakeTestInfo.Enabled = true;
-                lblTitle.Text = "Schedule Retake Test";
+                lblTitle.Text =
+               _Translate("حجز موعد إعادة الاختبار", "Schedule Retake Test");
                 lblRetakeTestAppID.Text = "0";
             }
             else
             {
                 gbRetakeTestInfo.Enabled = false;
-                lblTitle.Text = "Schedule Test";
+                lblTitle.Text =
+     _Translate("حجز موعد اختبار", "Schedule Test");
                 lblRetakeAppFees.Text = "0";
                 lblRetakeTestAppID.Text = "N/A";
             }
@@ -158,7 +180,9 @@ namespace DVLD.Tests
         {
             if (_Mode == enMode.AddNew && clsLocalDrivingLicenseApplication.IsThereAnActiveScheduledTest(_LocalDrivingLicenseApplicationID, _TestTypeID))
             {
-                lblUserMessage.Text = "Person Already have an active appointment for this test";
+                lblUserMessage.Text = _Translate(
+     "يوجد لهذا الشخص موعد نشط لهذا الاختبار.",
+     "This person already has an active appointment for this test.");
                 btnSave.Enabled = false;
                 dtpTestDate.Enabled = false;
                 return false;
@@ -172,8 +196,14 @@ namespace DVLD.Tests
 
             if (_TestAppointment == null)
             {
-                MessageBox.Show("Error: No Appointment with ID = " + _TestAppointmentID.ToString(),
-                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+    _Translate(
+        "لم يتم العثور على موعد الاختبار رقم: ",
+        "Error: No Appointment with ID = ")
+        + _TestAppointmentID,
+    _Translate("خطأ", "Error"),
+    MessageBoxButtons.OK,
+    MessageBoxIcon.Error);
                 btnSave.Enabled = false;
                 return false;
             }
@@ -197,7 +227,7 @@ namespace DVLD.Tests
             {
                 lblRetakeAppFees.Text = _TestAppointment.RetakeTestAppInfo.PaidFees.ToString();
                 gbRetakeTestInfo.Enabled = true;
-                lblTitle.Text = "Schedule Retake Test";
+                lblTitle.Text = _Translate("حجز موعد إعادة الاختبار", "Schedule Retake Test");
                 lblRetakeTestAppID.Text = _TestAppointment.RetakeTestApplicationID.ToString();
 
             }
@@ -210,7 +240,9 @@ namespace DVLD.Tests
             if (_TestAppointment.IsLocked)
             {
                 lblUserMessage.Visible = true;
-                lblUserMessage.Text = "Person already sat for the test, appointment loacked.";
+                lblUserMessage.Text = _Translate(
+     "لا يمكن تعديل الموعد لأن الشخص تقدم للاختبار بالفعل.",
+     "This person has already taken the test. The appointment is locked.");
                 dtpTestDate.Enabled = false;
                 btnSave.Enabled = false;
                 return false;
@@ -240,7 +272,9 @@ namespace DVLD.Tests
                     //we check if pass visiontest 1.
                     if (!_LocalDrivingLicenseApplication.DoesPassTestType(clsTestType.enTestType.VisionTest))
                     {
-                        lblUserMessage.Text = "Cannot Sechule, Vision Test should be passed first";
+                        lblUserMessage.Text = _Translate(
+                          "لا يمكن حجز الموعد، يجب اجتياز اختبار النظر أولًا.",
+                          "Cannot Schedule. Vision Test must be passed first.");
                         lblUserMessage.Visible = true;
                         btnSave.Enabled = false;
                         dtpTestDate.Enabled = false;
@@ -262,7 +296,9 @@ namespace DVLD.Tests
                     //we check if pass Written 2.
                     if (!_LocalDrivingLicenseApplication.DoesPassTestType(clsTestType.enTestType.WrittenTest))
                     {
-                        lblUserMessage.Text = "Cannot Sechule, Written Test should be passed first";
+                        lblUserMessage.Text = _Translate(
+     "لا يمكن حجز الموعد، يجب اجتياز الاختبار النظري أولًا.",
+     "Cannot Schedule. Written Test must be passed first.");
                         lblUserMessage.Visible = true;
                         btnSave.Enabled = false;
                         dtpTestDate.Enabled = false;
@@ -305,8 +341,13 @@ namespace DVLD.Tests
                 if (!Application.Save())
                 {
                     _TestAppointment.RetakeTestApplicationID = -1;
-                    MessageBox.Show("Faild to Create application", "Faild", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
+                    MessageBox.Show(
+                        _Translate(
+                            "فشل إنشاء طلب إعادة الاختبار.",
+                            "Failed to create application."),
+                        _Translate("فشل العملية", "Failed"),
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error); return false;
                 }
 
                 _TestAppointment.RetakeTestApplicationID = Application.ApplicationID;
@@ -335,11 +376,31 @@ namespace DVLD.Tests
             if (_TestAppointment.Save())
             {
                 _Mode = enMode.Update;
-              MessageBox.Show("Data Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
-               
+                MessageBox.Show(
+                    _Translate(
+                        "تم حفظ البيانات بنجاح.",
+                        "Data Saved Successfully."),
+                    _Translate("تم الحفظ", "Saved"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else
-                MessageBox.Show("Error: Data Is not Saved Successfully.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    _Translate(
+                        "حدث خطأ، لم يتم حفظ البيانات.",
+                        "Error: Data was not saved successfully."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+        }
+
+        private void lblLocalDrivingLicenseAppID_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
 
         }
     }

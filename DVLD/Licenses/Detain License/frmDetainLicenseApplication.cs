@@ -27,24 +27,56 @@ namespace DVLD.Applications.Detain_License
             InitializeComponent();
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         private void btnDetain_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to detain this license?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+
+            if (MessageBox.Show(
+                    _Translate(
+                        "هل أنت متأكد من رغبتك في حجز رخصة القيادة؟",
+                        "Are you sure you want to detain this license?"),
+                    _Translate("تأكيد الحجز", "Confirm"),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }
 
-         
+
+
             _DetainID = ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.Detain(Convert.ToSingle(txtFineFees.Text), clsGlobal.CurrentUser.UserID);
             if (_DetainID == -1)
             {
-                MessageBox.Show("Faild to Detain License", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "فشلت عملية حجز رخصة القيادة.",
+                        "Failed to detain the license."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 
                 return;
             }
 
             lblDetainID.Text = _DetainID.ToString();
-            MessageBox.Show("License Detained Successfully with ID=" + _DetainID.ToString(), "License Issued", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            MessageBox.Show(
+                _Translate(
+                    "تم حجز رخصة القيادة بنجاح. رقم الحجز: ",
+                    "License detained successfully with ID = ")
+                    + _DetainID,
+                _Translate("تم حجز الرخصة", "License Detained"),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 
             btnDetain.Enabled = false;
             ctrlDriverLicenseInfoWithFilter1.FilterEnabled = false;
@@ -81,7 +113,14 @@ namespace DVLD.Applications.Detain_License
             //ToDo: make sure the license is not detained already.
           if(  ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.IsDetained)
             {
-                MessageBox.Show("Selected License i already detained, choose another one.", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "الرخصة المختارة محجوزة بالفعل. يرجى اختيار رخصة أخرى.",
+                        "The selected license is already detained. Please choose another license."),
+                    _Translate("غير مسموح", "Not allowed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
@@ -114,7 +153,12 @@ namespace DVLD.Applications.Detain_License
             if (string.IsNullOrEmpty(txtFineFees.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtFineFees, "Fees cannot be empty!");
+
+                errorProvider1.SetError(
+                    txtFineFees,
+                    _Translate(
+                        "يجب إدخال قيمة الغرامة.",
+                        "Fees cannot be empty!"));
                 return;
             }
             else
@@ -127,7 +171,12 @@ namespace DVLD.Applications.Detain_License
             if (!clsValidatoin.IsNumber(txtFineFees.Text))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtFineFees, "Invalid Number.");
+
+                errorProvider1.SetError(
+                    txtFineFees,
+                    _Translate(
+                        "يرجى إدخال قيمة رقمية صحيحة للغرامة.",
+                        "Invalid Number."));
             }
             else
             {

@@ -53,10 +53,14 @@ namespace DVLD.People
                 lblRecordsCount.Text = "0";
 
                 MessageBox.Show(
-                    "Could not load people data.\n\n" + ex.Message,
-                    "Database Error",
+                    _Translate(
+                        "تعذّر تحميل بيانات الأشخاص.\n\n",
+                        "Could not load people data.\n\n")
+                        + ex.Message,
+                    _Translate("خطأ في قاعدة البيانات", "Database Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+
             }
         }
 
@@ -64,6 +68,17 @@ namespace DVLD.People
         {
             InitializeComponent();
         }
+
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
 
         private void frmListPeople_Load(object sender, EventArgs e)
         {
@@ -220,33 +235,69 @@ namespace DVLD.People
 
         private void sendEmailToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This Feature Is Not Implemented Yet!", "Not Ready!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
+            MessageBox.Show(
+                 _Translate(
+                     "ميزة إرسال البريد الإلكتروني غير متاحة حاليًا.",
+                     "This feature is not implemented yet."),
+                 _Translate("الميزة غير متاحة", "Not Ready"),
+                 MessageBoxButtons.OK,
+                 MessageBoxIcon.Information);
         }
 
         private void phoneCallToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This Feature Is Not Implemented Yet!", "Not Ready!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
+            MessageBox.Show(
+                   _Translate(
+                       "ميزة الاتصال الهاتفي غير متوفرة حاليًا.",
+                       "This feature is not implemented yet!"),
+                   _Translate("الميزة غير متوفرة", "Not Ready!"),
+                   MessageBoxButtons.OK,
+                   MessageBoxIcon.Information);
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           
-            if (MessageBox.Show("Are you sure you want to delete Person [" + dgvPeople.CurrentRow.Cells[0].Value + "]", "Confirm Delete", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
 
+            if (dgvPeople.CurrentRow == null ||
+        dgvPeople.CurrentRow.IsNewRow)
+                return;
+
+            int personID = Convert.ToInt32(
+                dgvPeople.CurrentRow.Cells["PersonID"].Value);
+
+            DialogResult result = MessageBox.Show(
+                _Translate(
+                    "هل أنت متأكد من حذف الشخص رقم " + personID + "؟",
+                    "Are you sure you want to delete Person [" + personID + "]?"),
+                _Translate("تأكيد الحذف", "Confirm Delete"),
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question,
+                MessageBoxDefaultButton.Button2);
+
+            if (result != DialogResult.Yes)
+                return;
+
+            if (clsPerson.DeletePerson(personID))
             {
+                MessageBox.Show(
+                    _Translate(
+                        "تم حذف الشخص بنجاح.",
+                        "Person deleted successfully."),
+                    _Translate("تم الحذف", "Successful"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
 
-                //Perform Delele and refresh
-                if (clsPerson.DeletePerson((int)dgvPeople.CurrentRow.Cells[0].Value))
-                {
-                    MessageBox.Show("Person Deleted Successfully.", "Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    _RefreshPeoplList();
-                }
-
-                else
-                    MessageBox.Show("Person was not deleted because it has data linked to it.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                _RefreshPeoplList();
+            }
+            else
+            {
+                MessageBox.Show(
+                    _Translate(
+                        "تعذّر حذف الشخص بسبب وجود بيانات مرتبطة به.",
+                        "Person was not deleted because it has data linked to it."),
+                    _Translate("فشل الحذف", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
 
         }

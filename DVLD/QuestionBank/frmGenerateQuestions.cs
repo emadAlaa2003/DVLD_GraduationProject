@@ -37,6 +37,17 @@ namespace DVLD.QuestionBank
         {
             InitializeComponent();
         }
+
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         public frmGenerateQuestions(DVLD.frmMain frmMain)
         {
             InitializeComponent();
@@ -139,11 +150,15 @@ namespace DVLD.QuestionBank
             {
                 if (cmbDocuments.SelectedValue == null)
                 {
+
                     MessageBox.Show(
-                        "Please select a document first.",
-                        "No Document Selected",
+                        _Translate(
+                            "يرجى اختيار مستند قبل البدء بتوليد الأسئلة.",
+                            "Please select a document first."),
+                        _Translate("لم يتم اختيار مستند", "No Document Selected"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
+
 
                     return;
                 }
@@ -204,11 +219,15 @@ namespace DVLD.QuestionBank
                         if (result == null ||
                             result.QuestionGenerationJobID <= 0)
                         {
+
                             MessageBox.Show(
-                                "Could not read the generation Job ID.",
-                                "Generation Error",
+                                _Translate(
+                                    "تعذّر قراءة رقم مهمة توليد الأسئلة من استجابة الخادم.",
+                                    "Could not read the question generation job ID."),
+                                _Translate("خطأ في توليد الأسئلة", "Generation Error"),
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Error);
+
 
                             return;
                         }
@@ -222,14 +241,19 @@ namespace DVLD.QuestionBank
                                 _CurrentQuestionGenerationJobID);
                         }
 
+
                         MessageBox.Show(
-                            "Question generation started successfully.\n\n" +
-                            "Job ID: " +
-                            _CurrentQuestionGenerationJobID +
-                            "\n\nYou can continue using the application.",
-                            "Generation Started",
+                            _Translate(
+                                "تم بدء مهمة توليد الأسئلة بنجاح.\n\nرقم المهمة: ",
+                                "Question generation started successfully.\n\nJob ID: ")
+                            + _CurrentQuestionGenerationJobID
+                            + _Translate(
+                                "\n\nيمكنك متابعة استخدام البرنامج أثناء معالجة المهمة.",
+                                "\n\nYou can continue using the application while the job is being processed."),
+                            _Translate("بدأ توليد الأسئلة", "Generation Started"),
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
+
 
                         this.Close();
 

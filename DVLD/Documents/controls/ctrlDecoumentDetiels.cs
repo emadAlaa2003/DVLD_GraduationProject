@@ -29,6 +29,43 @@ namespace DVLD.Documents.Controls
         }
 
 
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
+        private string _TranslateProcessingStatus(string status)
+        {
+            if (string.IsNullOrWhiteSpace(status))
+                return _Translate("غير معروف", "Unknown");
+
+            switch (status.Trim().ToLowerInvariant())
+            {
+                case "pending":
+                    return _Translate("قيد الانتظار", "Pending");
+
+                case "processing":
+                    return _Translate("جارٍ المعالجة", "Processing");
+
+                case "ready":
+                    return _Translate("جاهز", "Ready");
+
+                case "completed":
+                    return _Translate("مكتمل", "Completed");
+
+                case "failed":
+                    return _Translate("فشلت المعالجة", "Failed");
+
+                default:
+                    return status;
+            }
+        }
+
         public void ResetDocumentInfo()
         {
             _DocumentID = -1;
@@ -75,38 +112,49 @@ namespace DVLD.Documents.Controls
                 .ToString("dd/MM/yyyy HH:mm");
 
 
+
             lblIsActive.Text =
                 _Document.IsActive
-                    ? "Yes"
-                    : "No";
+                    ? _Translate("نعم", "Yes")
+                    : _Translate("لا", "No");
+
 
 
             lblProcessingStatus.Text =
-                _Document.ProcessingStatus;
+                _TranslateProcessingStatus(
+                    _Document.ProcessingStatus);
+
+
 
 
             lblTotalPages.Text =
                 _Document.TotalPages.HasValue
                     ? _Document.TotalPages.Value.ToString()
-                    : "N/A";
+                    : _Translate("غير متوفر", "N/A");
+
 
 
             lblChunkCount.Text =
                 _Document.ChunkCount.ToString();
 
 
+
             lblProcessedAt.Text =
                 _Document.ProcessedAt.HasValue
                     ? _Document.ProcessedAt.Value
                         .ToString("dd/MM/yyyy HH:mm")
-                    : "N/A";
+                    : _Translate("غير متوفر", "N/A");
+
+
 
 
             lblErrorMessage.Text =
-                string.IsNullOrWhiteSpace(
-                    _Document.ErrorMessage)
-                    ? "No processing errors."
+                string.IsNullOrWhiteSpace(_Document.ErrorMessage)
+                    ? _Translate(
+                        "لا توجد أخطاء في المعالجة.",
+                        "No processing errors.")
                     : _Document.ErrorMessage;
+
         }
 
 
@@ -122,10 +170,13 @@ namespace DVLD.Documents.Controls
             {
                 ResetDocumentInfo();
 
+
                 MessageBox.Show(
-                    "No document with DocumentID = " +
-                    DocumentID.ToString(),
-                    "Error",
+                    _Translate(
+                        "لم يتم العثور على المستند رقم: ",
+                        "No document found with ID = ")
+                        + DocumentID,
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 

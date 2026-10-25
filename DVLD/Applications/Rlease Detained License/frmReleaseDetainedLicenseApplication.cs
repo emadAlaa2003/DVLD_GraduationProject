@@ -27,6 +27,16 @@ namespace DVLD.Applications.Rlease_Detained_License
             InitializeComponent();
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         public frmReleaseDetainedLicenseApplication(int LicenseID)
         {
             InitializeComponent();
@@ -58,7 +68,14 @@ namespace DVLD.Applications.Rlease_Detained_License
             //ToDo: make sure the license is not detained already.
             if (!ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.IsDetained)
             {
-                MessageBox.Show("Selected License i is not detained, choose another one.", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "الرخصة المختارة غير محجوزة. يرجى اختيار رخصة محجوزة.",
+                        "The selected license is not detained. Please choose another license."),
+                    _Translate("غير مسموح", "Not allowed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
@@ -97,12 +114,20 @@ namespace DVLD.Applications.Rlease_Detained_License
 
         private void btnRelease_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to release this detained  license?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+
+            if (MessageBox.Show(
+                    _Translate(
+                        "هل أنت متأكد من رغبتك في الإفراج عن رخصة القيادة المحجوزة؟",
+                        "Are you sure you want to release this detained license?"),
+                    _Translate("تأكيد الإفراج", "Confirm"),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }
 
-            int ApplicationID=-1 ;
+
+            int ApplicationID =-1 ;
            
 
             bool IsReleased = ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.ReleaseDetainedLicense(clsGlobal.CurrentUser.UserID,ref ApplicationID); ;
@@ -111,11 +136,25 @@ namespace DVLD.Applications.Rlease_Detained_License
             
             if (! IsReleased )
             {
-                MessageBox.Show("Faild to to release the Detain License", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "فشلت عملية الإفراج عن رخصة القيادة المحجوزة.",
+                        "Failed to release the detained license."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
-            MessageBox.Show("Detained License released Successfully ", "Detained License Released", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            MessageBox.Show(
+                _Translate(
+                    "تم الإفراج عن رخصة القيادة المحجوزة بنجاح.",
+                    "Detained license released successfully."),
+                _Translate("تم الإفراج عن الرخصة", "Detained License Released"),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 
             btnRelease.Enabled = false;
             ctrlDriverLicenseInfoWithFilter1.FilterEnabled = false;

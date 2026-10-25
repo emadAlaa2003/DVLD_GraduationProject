@@ -23,6 +23,17 @@ namespace DVLD.Licenses
             InitializeComponent();
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
         private void frmRenewLocalDrivingLicenseApplication_Load(object sender, EventArgs e)
         {
             ctrlDriverLicenseInfoWithFilter1.txtLicenseIDFocus();
@@ -61,8 +72,17 @@ namespace DVLD.Licenses
             //check the license is not Expired.
             if (!ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.IsLicenseExpired())
             {
-                MessageBox.Show("Selected License is not yet expiared, it will expire on: " + clsFormat.DateToShort(ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.ExpirationDate)    
-                    ,"Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لا يمكن تجديد الرخصة لأنها لم تنتهِ بعد. تاريخ انتهاء الرخصة: ",
+                        "The selected license has not expired yet. Expiration date: ")
+                    + clsFormat.DateToShort(
+                        ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.ExpirationDate),
+                    _Translate("غير مسموح", "Not allowed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
                 btnRenewLicense.Enabled = false;
                 return;
             }
@@ -70,8 +90,14 @@ namespace DVLD.Licenses
             //check the license is not Expired.
             if (!ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.IsActive)
             {
-                MessageBox.Show("Selected License is not Not Active, choose an active license." 
-                    , "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    _Translate(
+                        "لا يمكن تجديد رخصة غير نشطة. يرجى اختيار رخصة نشطة.",
+                        "The selected license is not active. Please choose an active license."),
+                    _Translate("غير مسموح", "Not allowed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
                 btnRenewLicense.Enabled = false;
                 return;
             }
@@ -105,10 +131,18 @@ namespace DVLD.Licenses
 
         private void btnRenewLicense_Click_1(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to Renew the license?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+
+            if (MessageBox.Show(
+                    _Translate(
+                        "هل أنت متأكد من رغبتك في تجديد رخصة القيادة؟",
+                        "Are you sure you want to renew the license?"),
+                    _Translate("تأكيد تجديد الرخصة", "Confirm"),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }
+
 
 
             clsLicense NewLicense =
@@ -117,7 +151,14 @@ namespace DVLD.Licenses
 
             if (NewLicense == null)
             {
-                MessageBox.Show("Faild to Renew the License", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "فشل تجديد رخصة القيادة.",
+                        "Failed to renew the license."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 
                 return;
             }
@@ -125,7 +166,15 @@ namespace DVLD.Licenses
             lblApplicationID.Text = NewLicense.ApplicationID.ToString();
             _NewLicenseID = NewLicense.LicenseID;
             lblRenewedLicenseID.Text = _NewLicenseID.ToString();
-            MessageBox.Show("Licensed Renewed Successfully with ID=" + _NewLicenseID.ToString(), "License Issued", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            MessageBox.Show(
+                _Translate(
+                    "تم تجديد رخصة القيادة بنجاح. رقم الرخصة الجديدة: ",
+                    "License renewed successfully with ID = ")
+                + _NewLicenseID,
+                _Translate("تم تجديد الرخصة", "License Renewed"),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 
             btnRenewLicense.Enabled = false;
             ctrlDriverLicenseInfoWithFilter1.FilterEnabled = false;

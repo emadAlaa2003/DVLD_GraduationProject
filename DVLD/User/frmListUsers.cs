@@ -20,6 +20,16 @@ namespace DVLD.User
             InitializeComponent();
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -219,15 +229,29 @@ namespace DVLD.User
             int UserID = (int)dgvUsers.CurrentRow.Cells[0].Value;
             if (clsUser.DeleteUser(UserID))
             {
-                MessageBox.Show("User has been deleted successfully", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                MessageBox.Show(
+                    _Translate(
+                        "تم حذف المستخدم بنجاح.",
+                        "User has been deleted successfully."),
+                    _Translate("تم الحذف", "Deleted"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
                 frmListUsers_Load(null, null);
             }
 
             else
-                MessageBox.Show("User is not delted due to data connected to it.", "Faild", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "تعذّر حذف المستخدم بسبب وجود بيانات مرتبطة به.",
+                        "User cannot be deleted because related data exists."),
+                    _Translate("فشل الحذف", "Failed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 
 
-            
+
 
 
         }

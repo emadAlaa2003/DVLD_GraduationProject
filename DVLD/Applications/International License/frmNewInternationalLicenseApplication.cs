@@ -27,6 +27,17 @@ namespace DVLD.Applications.International_License
             InitializeComponent();
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
         private void ctrlDriverLicenseInfoWithFilter1_OnLicenseSelected(int obj)
         {
             int SelectedLicenseID = obj;
@@ -49,7 +60,14 @@ namespace DVLD.Applications.International_License
 
             if (ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.LicenseClass != 3)
             {
-                MessageBox.Show("Selected License should be Class 3, select another one.", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "يجب أن تكون الرخصة المختارة من الفئة الثالثة. يرجى اختيار رخصة أخرى.",
+                        "Selected License should be Class 3, select another one."),
+                    _Translate("غير مسموح", "Not allowed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
@@ -58,7 +76,15 @@ namespace DVLD.Applications.International_License
 
             if (ActiveInternaionalLicenseID != -1)
             {
-                MessageBox.Show("Person already have an active international license with ID = " + ActiveInternaionalLicenseID.ToString(), "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "يمتلك هذا الشخص رخصة قيادة دولية سارية بالفعل، رقم الرخصة: ",
+                        "Person already has an active international license with ID = ")
+                        + ActiveInternaionalLicenseID,
+                    _Translate("غير مسموح", "Not allowed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 llShowLicenseInfo.Enabled = true;
                 _InternationalLicenseID = ActiveInternaionalLicenseID;
                 btnIssueLicense.Enabled = false;
@@ -89,18 +115,25 @@ namespace DVLD.Applications.International_License
 
         private void btnIssueLicense_Click(object sender, EventArgs e)
         {
-           
-            if ( MessageBox.Show("Are you sure you want to issue the license?","Confirm",MessageBoxButtons.YesNo ,MessageBoxIcon.Question)==DialogResult.No)
+
+
+            if (MessageBox.Show(
+                    _Translate(
+                        "هل أنت متأكد من إصدار رخصة القيادة الدولية؟",
+                        "Are you sure you want to issue the license?"),
+                    _Translate("تأكيد الإصدار", "Confirm"),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }
 
-           
-
-          
 
 
-           clsInternationalLicense InternationalLicense= new clsInternationalLicense();
+
+
+
+            clsInternationalLicense InternationalLicense = new clsInternationalLicense();
             //those are the information for the base application, because it inhirts from application, they are part of the sub class.
 
             InternationalLicense.ApplicantPersonID = ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.DriverInfo.PersonID;
@@ -120,7 +153,14 @@ namespace DVLD.Applications.International_License
 
             if (!InternationalLicense.Save())
             {
-                MessageBox.Show("Faild to Issue International License" , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "فشل إصدار رخصة القيادة الدولية.",
+                        "Failed to Issue International License."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 
                 return;
             }
@@ -128,7 +168,15 @@ namespace DVLD.Applications.International_License
             lblApplicationID.Text = InternationalLicense.ApplicationID.ToString();
             _InternationalLicenseID = InternationalLicense.InternationalLicenseID;
             lblInternationalLicenseID.Text = InternationalLicense.InternationalLicenseID.ToString();
-            MessageBox.Show("International License Issued Successfully with ID=" + InternationalLicense.InternationalLicenseID.ToString() , "License Issued", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            MessageBox.Show(
+                _Translate(
+                    "تم إصدار رخصة القيادة الدولية بنجاح، رقم الرخصة: ",
+                    "International License Issued Successfully with ID = ")
+                    + InternationalLicense.InternationalLicenseID,
+                _Translate("تم إصدار الرخصة", "License Issued"),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 
             btnIssueLicense.Enabled = false;
             ctrlDriverLicenseInfoWithFilter1.FilterEnabled = false;

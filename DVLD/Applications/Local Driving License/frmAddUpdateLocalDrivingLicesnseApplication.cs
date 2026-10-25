@@ -41,6 +41,42 @@ namespace DVLD.Applications
 
         }
 
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
+        private void UpdateTitleLanguage()
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            string title;
+
+            if (_Mode == enMode.AddNew)
+            {
+                title = isArabic
+                    ? "إضافة طلب رخصة قيادة محلية جديد"
+                    : "New Local Driving License Application";
+            }
+            else
+            {
+                title = isArabic
+                    ? "تعديل طلب رخصة قيادة محلية"
+                    : "Update Local Driving License Application";
+            }
+
+            lblTitle.Text = title;
+            this.Text = title;
+        }
+
+
         private void _FillLicenseClassesInComoboBox()
         {
             DataTable dtLicenseClasses = clsLicenseClass.GetAllLicenseClasses();
@@ -60,8 +96,7 @@ namespace DVLD.Applications
             if (_Mode == enMode.AddNew)
             {
                 
-                lblTitle.Text = "New Local Driving License Application";
-                this.Text = "New Local Driving License Application";
+                
                 _LocalDrivingLicenseApplication = new clsLocalDrivingLicenseApplication();
                 ctrlPersonCardWithFilter1.FilterFocus();
                 tpApplicationInfo.Enabled = false;
@@ -73,15 +108,14 @@ namespace DVLD.Applications
             }
             else
             {
-                lblTitle.Text = "Update Local Driving License Application";
-                this.Text = "Update Local Driving License Application";
+                
            
                 tpApplicationInfo.Enabled = true;
                 btnSave.Enabled = true;
              
 
             }
-
+            UpdateTitleLanguage();
         }
 
         private void _LoadData()
@@ -92,7 +126,15 @@ namespace DVLD.Applications
 
             if (_LocalDrivingLicenseApplication == null)
             {
-                MessageBox.Show("No Application with ID = " + _LocalDrivingLicenseApplicationID, "Application Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على طلب رخصة القيادة رقم: ",
+                        "No application found with ID = ")
+                        + _LocalDrivingLicenseApplicationID,
+                    _Translate("الطلب غير موجود", "Application Not Found"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 this.Close();
 
                 return;
@@ -154,7 +196,14 @@ namespace DVLD.Applications
             else
 
             {
-                MessageBox.Show("Please Select a Person", "Select a Person", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "يرجى اختيار شخص أولًا قبل المتابعة.",
+                        "Please select a person before continuing."),
+                    _Translate("اختيار شخص", "Select a Person"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 ctrlPersonCardWithFilter1.FilterFocus();
             }
         }
@@ -166,7 +215,14 @@ namespace DVLD.Applications
             if (!this.ValidateChildren())
             {
                 //Here we dont continue becuase the form is not valid
-                MessageBox.Show("Some fileds are not valide!, put the mouse over the red icon(s) to see the erro", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "بعض البيانات المدخلة غير صحيحة. مرّر مؤشر الفأرة فوق علامات الخطأ الحمراء لمعرفة السبب.",
+                        "Some fields are invalid. Hover over the red error icons to see the details."),
+                    _Translate("خطأ في التحقق من البيانات", "Validation Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
 
             }
@@ -178,7 +234,15 @@ namespace DVLD.Applications
 
             if (ActiveApplicationID != -1)
             {
-                MessageBox.Show("Choose another License Class, the selected Person Already have an active application for the selected class with id=" + ActiveApplicationID, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "هذا الشخص لديه طلب رخصة قيادة فعال لنفس الفئة.\n\nرقم الطلب: ",
+                        "This person already has an active application for the selected license class.\n\nApplication ID: ")
+                        + ActiveApplicationID,
+                    _Translate("طلب موجود مسبقًا", "Existing Application"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 cbLicenseClass.Focus();
                 return;
             }
@@ -188,7 +252,14 @@ namespace DVLD.Applications
            if( clsLicense.IsLicenseExistByPersonID(ctrlPersonCardWithFilter1.PersonID, LicenseClassID))
             {
 
-                MessageBox.Show("Person already have a license with the same applied driving class, Choose diffrent driving class", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "هذا الشخص يمتلك بالفعل رخصة قيادة من الفئة المختارة. يرجى اختيار فئة أخرى.",
+                        "This person already has a driving license for the selected class. Please choose another class."),
+                    _Translate("غير مسموح", "Not Allowed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
@@ -207,13 +278,27 @@ namespace DVLD.Applications
                 lblLocalDrivingLicebseApplicationID.Text = _LocalDrivingLicenseApplication.LocalDrivingLicenseApplicationID.ToString();
                 //change form mode to update.
                 _Mode = enMode.Update;
-                lblTitle.Text = "Update Local Driving License Application";
+                UpdateTitleLanguage();
 
-                MessageBox.Show("Data Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                MessageBox.Show(
+                    _Translate(
+                        "تم حفظ طلب رخصة القيادة بنجاح.",
+                        "Driving license application saved successfully."),
+                    _Translate("تم الحفظ", "Saved"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
 
             }
             else
-                MessageBox.Show("Error: Data Is not Saved Successfully.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "تعذّر حفظ طلب رخصة القيادة.",
+                        "Could not save the driving license application."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 
 
 

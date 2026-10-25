@@ -61,7 +61,16 @@ namespace DVLD.Controls
             InitializeComponent();
         }
 
-       
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         private int _PersonID = -1;
 
         public int PersonID  
@@ -116,7 +125,14 @@ namespace DVLD.Controls
             if (!this.ValidateChildren())
             {
                 //Here we dont continue becuase the form is not valid
-                MessageBox.Show("Some fileds are not valide!, put the mouse over the red icon(s) to see the erro", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "بعض البيانات المدخلة غير صحيحة. مرّر مؤشر الفأرة فوق علامات الخطأ الحمراء لمعرفة السبب.",
+                        "Some fields are invalid. Hover over the red error icons to see the details."),
+                    _Translate("خطأ في التحقق من البيانات", "Validation Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
 
             }
@@ -137,7 +153,12 @@ namespace DVLD.Controls
             if (string.IsNullOrEmpty(txtFilterValue.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtFilterValue, "This field is required!");
+
+                errorProvider1.SetError(
+                    txtFilterValue,
+                    _Translate(
+                        "يجب إدخال قيمة للبحث.",
+                        "This field is required!"));
             }
             else
             {

@@ -41,12 +41,41 @@ namespace DVLD.People
 
         }
 
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         public frmAddUpdatePerson(int PersonID)
         {
             InitializeComponent();
 
             _Mode = enMode.Update;
             _PersonID = PersonID;
+        }
+
+        private void UpdateTitleLanguage()
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            if (_Mode == enMode.AddNew)
+            {
+                lblTitle.Text =
+                    _Translate("إضافة شخص جديد", "Add New Person");
+            }
+            else
+            {
+                lblTitle.Text =
+                    _Translate("تعديل بيانات شخص", "Update Person");
+            }
+
+            this.Text = lblTitle.Text;
         }
 
         private void _ResetDefualtValues()
@@ -56,13 +85,10 @@ namespace DVLD.People
 
             if (_Mode == enMode.AddNew)
             {
-                lblTitle.Text = "Add New Person";
                 _Person = new clsPerson();
-            } 
-            else
-            {
-                lblTitle.Text = "Update Person";
             }
+
+            UpdateTitleLanguage();
 
             //set default image for the person.
             if (rbMale.Checked)
@@ -113,7 +139,14 @@ namespace DVLD.People
 
             if (_Person == null)
             {
-                MessageBox.Show("No Person with ID = " + _PersonID ,"Person Not Found",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على الشخص رقم: ",
+                        "No Person with ID = ") + _PersonID,
+                    _Translate("الشخص غير موجود", "Person Not Found"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 this.Close();
                 return;
             }
@@ -197,8 +230,15 @@ namespace DVLD.People
                         }
                         else
                         {
-                            MessageBox.Show("Error Copying Image File", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return false;
+
+                        MessageBox.Show(
+                            _Translate(
+                                "حدث خطأ أثناء نسخ صورة الشخص.",
+                                "Error copying image file."),
+                            _Translate("خطأ", "Error"),
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return false;
                         }
                     }
 
@@ -212,7 +252,14 @@ namespace DVLD.People
             if (!this.ValidateChildren())
             {
                 //Here we dont continue becuase the form is not valid
-                MessageBox.Show("Some fileds are not valide!, put the mouse over the red icon(s) to see the erro","Validation Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "بعض البيانات المدخلة غير صحيحة. مرّر مؤشر الفأرة فوق علامات الخطأ الحمراء لمعرفة السبب.",
+                        "Some fields are invalid. Hover over the red error icons to see the details."),
+                    _Translate("خطأ في التحقق من البيانات", "Validation Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
 
             }
@@ -246,22 +293,37 @@ namespace DVLD.People
 
             if (_Person.Save())
             {
-                 lblPersonID.Text = _Person.PersonID.ToString();
-                //change form mode to update.
+                lblPersonID.Text = _Person.PersonID.ToString();
+
                 _Mode = enMode.Update;
-                lblTitle.Text = "Update Person";
 
-                MessageBox.Show("Data Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                UpdateTitleLanguage();
 
-    
+
+                MessageBox.Show(
+                    _Translate(
+                        "تم حفظ بيانات الشخص بنجاح.",
+                        "Person data saved successfully."),
+                    _Translate("تم الحفظ", "Saved"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+
                 // Trigger the event to send data back to the caller form.
                 DataBack?.Invoke(this, _Person.PersonID);
             }
             else
-                MessageBox.Show("Error: Data Is not Saved Successfully.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            
-            
+                MessageBox.Show(
+                    _Translate(
+                        "حدث خطأ أثناء حفظ بيانات الشخص. لم يتم حفظ التغييرات.",
+                        "An error occurred. Person data was not saved."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
+
+
         }
 
         private void llSetImage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -317,7 +379,12 @@ namespace DVLD.People
             if (string.IsNullOrEmpty(Temp.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(Temp, "This field is required!");
+
+                errorProvider1.SetError(
+                    Temp,
+                    _Translate(
+                        "هذا الحقل مطلوب.",
+                        "This field is required!"));
             }
             else
             {
@@ -337,9 +404,14 @@ namespace DVLD.People
             if (!clsValidatoin.ValidateEmail(txtEmail.Text))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtEmail, "Invalid Email Address Format!");
+
+                errorProvider1.SetError(
+                    txtEmail,
+                    _Translate(
+                        "صيغة البريد الإلكتروني غير صحيحة.",
+                        "Invalid Email Address Format!"));
             }
-           else
+            else
             { 
                 errorProvider1.SetError(txtEmail, null); 
             };
@@ -352,7 +424,12 @@ namespace DVLD.People
             if (string.IsNullOrEmpty(txtNationalNo.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtNationalNo, "This field is required!");
+
+                errorProvider1.SetError(
+                    txtNationalNo,
+                    _Translate(
+                        "هذا الحقل مطلوب.",
+                        "This field is required!"));
                 return;
             }
             else
@@ -364,8 +441,13 @@ namespace DVLD.People
             if (txtNationalNo.Text.Trim() != _Person.NationalNo && clsPerson.isPersonExist(txtNationalNo.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtNationalNo, "National Number is used for another person!");
-            
+
+                errorProvider1.SetError(
+                    txtNationalNo,
+                    _Translate(
+                        "الرقم الوطني مستخدم بالفعل لشخص آخر.",
+                        "National Number is used for another person!"));
+
             }
             else
             {

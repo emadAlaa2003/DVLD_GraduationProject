@@ -29,14 +29,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ctrlPersonCardWithFilter));
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.gbFilters = new System.Windows.Forms.GroupBox();
-            this.btnAddNewPerson = new System.Windows.Forms.Button();
-            this.btnFind = new System.Windows.Forms.Button();
             this.cbFilterBy = new System.Windows.Forms.ComboBox();
             this.txtFilterValue = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ctrlPersonCard1 = new DVLD.Controls.ctrlPersonCard();
+            this.btnAddNewPerson = new System.Windows.Forms.Button();
+            this.btnFind = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.gbFilters.SuspendLayout();
             this.SuspendLayout();
@@ -44,110 +45,95 @@
             // errorProvider1
             // 
             this.errorProvider1.ContainerControl = this;
+            resources.ApplyResources(this.errorProvider1, "errorProvider1");
             // 
             // gbFilters
             // 
-            this.gbFilters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.gbFilters, "gbFilters");
             this.gbFilters.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(248)))), ((int)(((byte)(253)))));
             this.gbFilters.Controls.Add(this.btnAddNewPerson);
             this.gbFilters.Controls.Add(this.btnFind);
             this.gbFilters.Controls.Add(this.cbFilterBy);
             this.gbFilters.Controls.Add(this.txtFilterValue);
             this.gbFilters.Controls.Add(this.label1);
-            this.gbFilters.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbFilters.Location = new System.Drawing.Point(10, 13);
-            this.gbFilters.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.errorProvider1.SetError(this.gbFilters, resources.GetString("gbFilters.Error"));
+            this.errorProvider1.SetIconAlignment(this.gbFilters, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("gbFilters.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.gbFilters, ((int)(resources.GetObject("gbFilters.IconPadding"))));
             this.gbFilters.Name = "gbFilters";
-            this.gbFilters.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.gbFilters.Size = new System.Drawing.Size(829, 76);
-            this.gbFilters.TabIndex = 16;
             this.gbFilters.TabStop = false;
-            this.gbFilters.Text = "Filter";
+            // 
+            // cbFilterBy
+            // 
+            resources.ApplyResources(this.cbFilterBy, "cbFilterBy");
+            this.cbFilterBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.errorProvider1.SetError(this.cbFilterBy, resources.GetString("cbFilterBy.Error"));
+            this.cbFilterBy.FormattingEnabled = true;
+            this.errorProvider1.SetIconAlignment(this.cbFilterBy, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("cbFilterBy.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.cbFilterBy, ((int)(resources.GetObject("cbFilterBy.IconPadding"))));
+            this.cbFilterBy.Items.AddRange(new object[] {
+            resources.GetString("cbFilterBy.Items"),
+            resources.GetString("cbFilterBy.Items1")});
+            this.cbFilterBy.Name = "cbFilterBy";
+            // 
+            // txtFilterValue
+            // 
+            resources.ApplyResources(this.txtFilterValue, "txtFilterValue");
+            this.txtFilterValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.errorProvider1.SetError(this.txtFilterValue, resources.GetString("txtFilterValue.Error"));
+            this.errorProvider1.SetIconAlignment(this.txtFilterValue, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("txtFilterValue.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.txtFilterValue, ((int)(resources.GetObject("txtFilterValue.IconPadding"))));
+            this.txtFilterValue.Name = "txtFilterValue";
+            this.txtFilterValue.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterValue_KeyPress);
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.errorProvider1.SetError(this.label1, resources.GetString("label1.Error"));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
+            this.errorProvider1.SetIconAlignment(this.label1, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("label1.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.label1, ((int)(resources.GetObject("label1.IconPadding"))));
+            this.label1.Name = "label1";
+            // 
+            // ctrlPersonCard1
+            // 
+            resources.ApplyResources(this.ctrlPersonCard1, "ctrlPersonCard1");
+            this.ctrlPersonCard1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(248)))), ((int)(((byte)(253)))));
+            this.errorProvider1.SetError(this.ctrlPersonCard1, resources.GetString("ctrlPersonCard1.Error"));
+            this.errorProvider1.SetIconAlignment(this.ctrlPersonCard1, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("ctrlPersonCard1.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.ctrlPersonCard1, ((int)(resources.GetObject("ctrlPersonCard1.IconPadding"))));
+            this.ctrlPersonCard1.Name = "ctrlPersonCard1";
             // 
             // btnAddNewPerson
             // 
-            this.btnAddNewPerson.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            resources.ApplyResources(this.btnAddNewPerson, "btnAddNewPerson");
+            this.errorProvider1.SetError(this.btnAddNewPerson, resources.GetString("btnAddNewPerson.Error"));
+            this.errorProvider1.SetIconAlignment(this.btnAddNewPerson, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("btnAddNewPerson.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.btnAddNewPerson, ((int)(resources.GetObject("btnAddNewPerson.IconPadding"))));
             this.btnAddNewPerson.Image = global::DVLD.Properties.Resources.AddPerson_32;
-            this.btnAddNewPerson.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnAddNewPerson.Location = new System.Drawing.Point(594, 20);
-            this.btnAddNewPerson.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnAddNewPerson.Name = "btnAddNewPerson";
-            this.btnAddNewPerson.Size = new System.Drawing.Size(44, 36);
-            this.btnAddNewPerson.TabIndex = 20;
             this.btnAddNewPerson.UseVisualStyleBackColor = true;
             this.btnAddNewPerson.Click += new System.EventHandler(this.btnAddNewPerson_Click);
             // 
             // btnFind
             // 
-            this.btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            resources.ApplyResources(this.btnFind, "btnFind");
+            this.errorProvider1.SetError(this.btnFind, resources.GetString("btnFind.Error"));
+            this.errorProvider1.SetIconAlignment(this.btnFind, ((System.Windows.Forms.ErrorIconAlignment)(resources.GetObject("btnFind.IconAlignment"))));
+            this.errorProvider1.SetIconPadding(this.btnFind, ((int)(resources.GetObject("btnFind.IconPadding"))));
             this.btnFind.Image = global::DVLD.Properties.Resources.SearchPerson;
-            this.btnFind.Location = new System.Drawing.Point(543, 20);
-            this.btnFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnFind.Name = "btnFind";
-            this.btnFind.Size = new System.Drawing.Size(44, 36);
-            this.btnFind.TabIndex = 18;
             this.btnFind.UseVisualStyleBackColor = true;
             this.btnFind.Click += new System.EventHandler(this.btnFind_Click);
             // 
-            // cbFilterBy
-            // 
-            this.cbFilterBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFilterBy.FormattingEnabled = true;
-            this.cbFilterBy.Items.AddRange(new object[] {
-            "National No.",
-            "Person ID"});
-            this.cbFilterBy.Location = new System.Drawing.Point(96, 25);
-            this.cbFilterBy.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.cbFilterBy.Name = "cbFilterBy";
-            this.cbFilterBy.Size = new System.Drawing.Size(210, 25);
-            this.cbFilterBy.TabIndex = 16;
-            // 
-            // txtFilterValue
-            // 
-            this.txtFilterValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtFilterValue.Location = new System.Drawing.Point(313, 25);
-            this.txtFilterValue.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtFilterValue.Name = "txtFilterValue";
-            this.txtFilterValue.Size = new System.Drawing.Size(214, 25);
-            this.txtFilterValue.TabIndex = 17;
-            this.txtFilterValue.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFilterValue_KeyPress);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(61)))), ((int)(((byte)(125)))));
-            this.label1.Location = new System.Drawing.Point(16, 28);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 17);
-            this.label1.TabIndex = 19;
-            this.label1.Text = "Find By:";
-            // 
-            // ctrlPersonCard1
-            // 
-            this.ctrlPersonCard1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctrlPersonCard1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(248)))), ((int)(((byte)(253)))));
-            this.ctrlPersonCard1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ctrlPersonCard1.Location = new System.Drawing.Point(1, 92);
-            this.ctrlPersonCard1.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
-            this.ctrlPersonCard1.Name = "ctrlPersonCard1";
-            this.ctrlPersonCard1.Size = new System.Drawing.Size(835, 275);
-            this.ctrlPersonCard1.TabIndex = 0;
-            // 
             // ctrlPersonCardWithFilter
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(248)))), ((int)(((byte)(253)))));
             this.Controls.Add(this.gbFilters);
             this.Controls.Add(this.ctrlPersonCard1);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "ctrlPersonCardWithFilter";
-            this.Size = new System.Drawing.Size(842, 366);
             this.Load += new System.EventHandler(this.ctrlPersonCardWithFilter_Load);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.gbFilters.ResumeLayout(false);

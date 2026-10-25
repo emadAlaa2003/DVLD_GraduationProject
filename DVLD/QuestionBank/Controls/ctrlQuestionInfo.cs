@@ -31,8 +31,10 @@ namespace DVLD.QuestionBank.Controls
         public void ResetnQuestionInfo()
         {
             _QuestionID = -1;
+
             lblQuestionD.Text = "[????]";
-            lblQuestionD.Text = "[????]";
+            lblQuestionType.Text = "[????]";
+
             lblSourceBook.Text = "[????]";
             lblPageNo.Text ="?????";
             lblIsActive.Text =  "[????]";
@@ -59,6 +61,17 @@ namespace DVLD.QuestionBank.Controls
             rdbQuestionD.AutoCheck = false;
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
         private void _FillQuestionInfo()
         {
             if (_Question == null)
@@ -69,21 +82,60 @@ namespace DVLD.QuestionBank.Controls
 
             lblQuestionD.Text = _Question.QuestionID.ToString();
 
-            lblIsActive.Text =
-                _Question.IsActive ? "Yes" : "No";
 
-            lblReviewStatus.Text =
-                _Question.ReviewStatus.ToString();
+            lblQuestionType.Text =
+                _Question.QuestionType ==
+                clsQuestionBank.enQuestionType.MultipleChoice
+                    ? _Translate("اختيار من متعدد", "Multiple Choice")
+                    : _Translate("صح أو خطأ", "True / False");
+
+
+            lblIsActive.Text =
+                _Question.IsActive
+                    ? _Translate("نعم", "Yes")
+                    : _Translate("لا", "No");
+
+
+
+            switch (_Question.ReviewStatus)
+            {
+                case clsQuestionBank.enReviewStatus.Draft:
+                    lblReviewStatus.Text =
+                        _Translate("مسودة", "Draft");
+                    break;
+
+                case clsQuestionBank.enReviewStatus.Approved:
+                    lblReviewStatus.Text =
+                        _Translate("معتمد", "Approved");
+                    break;
+
+                case clsQuestionBank.enReviewStatus.Rejected:
+                    lblReviewStatus.Text =
+                        _Translate("مرفوض", "Rejected");
+                    break;
+
+                default:
+                    lblReviewStatus.Text =
+                        _Question.ReviewStatus.ToString();
+                    break;
+            }
+
 
             // Source Information
+
             lblSourceBook.Text =
                 _Question.SourceDocumentID.HasValue
-                    ? "Document ID: " +
-                      _Question.SourceDocumentID.Value.ToString()
-                    : "Manual Question";
+                    ? _Translate("مستند رقم: ", "Document ID: ")
+                      + _Question.SourceDocumentID.Value
+                    : _Translate("سؤال يدوي", "Manual Question");
+
+
 
             lblPageNo.Text =
-                _Question.SourcePageNumber?.ToString() ?? "N/A";
+                _Question.SourcePageNumber.HasValue
+                    ? _Question.SourcePageNumber.Value.ToString()
+                    : _Translate("غير متوفر", "N/A");
+
 
             // Question Text
             lblTextQuestion.Text =
@@ -130,10 +182,14 @@ namespace DVLD.QuestionBank.Controls
             rdbQuestionD.Visible = !isTrueFalse;
 
             // Explanation
+
             lblExplanation.Text =
                 string.IsNullOrWhiteSpace(_Question.Explanation)
-                    ? "No explanation available."
+                    ? _Translate(
+                        "لا يوجد شرح متاح لهذا السؤال.",
+                        "No explanation available.")
                     : _Question.Explanation;
+
         }
 
         public void LoadQuestionInfo(int QuestionID)
@@ -142,7 +198,14 @@ namespace DVLD.QuestionBank.Controls
             if (_Question == null)
             {
                 ResetnQuestionInfo();
-                MessageBox.Show("No Question with QuestionID = " + QuestionID.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على السؤال رقم: ",
+                        "No question found with ID = ") + QuestionID,
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 

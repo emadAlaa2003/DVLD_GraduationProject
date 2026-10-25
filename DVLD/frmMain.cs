@@ -155,6 +155,34 @@ namespace DVLD
             _QuestionGenerationTimer.Tick += _QuestionGenerationTimer_Tick;
         }
 
+
+      
+
+        private void ApplyMenuDirectionRecursive(
+            ToolStripItemCollection items,
+            RightToLeft direction)
+        {
+            foreach (ToolStripItem item in items)
+            {
+                item.RightToLeft = direction;
+
+                ToolStripDropDownItem dropDownItem =
+                    item as ToolStripDropDownItem;
+
+                if (dropDownItem == null)
+                    continue;
+
+                dropDownItem.DropDown.RightToLeft = direction;
+
+                ApplyMenuDirectionRecursive(
+                    dropDownItem.DropDownItems, direction);
+            }
+        }
+
+
+       
+
+
         private void CenterWelcomePanel()
         {
             if (pnlWelcome == null || pnlWelcome.Parent == null)
@@ -193,15 +221,26 @@ namespace DVLD
             }
         }
 
+
         private void UpdateStatusBar()
         {
-            lblStatusUser.Text =
-                clsGlobal.CurrentUser != null
-                ? "User: " + clsGlobal.CurrentUser.UserName
-                : "User: -";
+            bool isArabic =
+                System.Globalization.CultureInfo
+                .CurrentUICulture.TwoLetterISOLanguageName == "ar";
 
-            lblStatusReady.Text = "● Ready";
+            string username = clsGlobal.CurrentUser != null
+                ? clsGlobal.CurrentUser.UserName
+                : "-";
+
+            lblStatusUser.Text = isArabic
+                ? "المستخدم: " + username
+                : "User: " + username;
+
+            lblStatusReady.Text = isArabic
+                ? "● جاهز"
+                : "● Ready";
         }
+
 
         private void localLicenseToolStripMenuItem_Click(object sender, EventArgs e)
         {

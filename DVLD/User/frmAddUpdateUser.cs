@@ -40,14 +40,27 @@ namespace DVLD.User
             _UserID = UserID;
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
         private void _ResetDefualtValues()
         {
             //this will initialize the reset the defaule values
 
             if (_Mode == enMode.AddNew)
             {
-                lblTitle.Text = "Add New User";
-                this.Text = "Add New User";
+
+                lblTitle.Text = _Translate("إضافة مستخدم جديد", "Add New User");
+                this.Text = lblTitle.Text;
+
                 _User = new clsUser();
              
                 tpLoginInfo.Enabled = false;
@@ -56,9 +69,11 @@ namespace DVLD.User
             }
             else
             {
-                lblTitle.Text = "Update User";
-                this.Text = "Update User";
-             
+
+                lblTitle.Text = _Translate("تعديل بيانات المستخدم", "Update User");
+                this.Text = lblTitle.Text;
+
+
                 tpLoginInfo.Enabled = true;
                 btnSave.Enabled=true;
              
@@ -81,7 +96,14 @@ namespace DVLD.User
 
             if (_User == null)
             {
-                MessageBox.Show("No User with ID = " + _User, "User Not Found", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على المستخدم رقم: ",
+                        "No User with ID = ") + _UserID,
+                    _Translate("المستخدم غير موجود", "User Not Found"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 this.Close();
 
                 return;
@@ -112,8 +134,15 @@ namespace DVLD.User
             if (!this.ValidateChildren())
             {
                 //Here we dont continue becuase the form is not valid
-                MessageBox.Show("Some fileds are not valide!, put the mouse over the red icon(s) to see the erro", 
-                    "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "بعض البيانات المدخلة غير صحيحة. مرّر مؤشر الفأرة فوق علامات الخطأ الحمراء لمعرفة السبب.",
+                        "Some fields are invalid. Hover over the red error icons to see the details."),
+                    _Translate("خطأ في التحقق من البيانات", "Validation Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
                 return;
 
             }
@@ -128,14 +157,34 @@ namespace DVLD.User
             {
                 lblUserID.Text = _User.UserID.ToString();
                 //change form mode to update.
-                _Mode = enMode.Update;
-                lblTitle.Text = "Update User";
-                this.Text = "Update User";
 
-                MessageBox.Show("Data Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                _Mode = enMode.Update;
+
+                lblTitle.Text = _Translate(
+                    "تعديل بيانات المستخدم",
+                    "Update User");
+
+                this.Text = lblTitle.Text;
+
+
+
+                MessageBox.Show(
+                    _Translate(
+                        "تم حفظ بيانات المستخدم بنجاح.",
+                        "Data Saved Successfully."),
+                    _Translate("تم الحفظ", "Saved"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else
-                MessageBox.Show("Error: Data Is not Saved Successfully.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "حدث خطأ، لم يتم حفظ بيانات المستخدم.",
+                        "Error: Data was not saved successfully."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 
         }
 
@@ -144,7 +193,12 @@ namespace DVLD.User
             if (txtConfirmPassword.Text.Trim() != txtPassword.Text.Trim())
             {
                     e.Cancel = true;
-                    errorProvider1.SetError(txtConfirmPassword, "Password Confirmation does not match Password!");
+
+                errorProvider1.SetError(
+                    txtConfirmPassword,
+                    _Translate(
+                        "تأكيد كلمة المرور غير مطابق لكلمة المرور.",
+                        "Password confirmation does not match password!"));
             }
             else
             {
@@ -158,7 +212,12 @@ namespace DVLD.User
             if ( string.IsNullOrEmpty ( txtPassword.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtPassword, "Password cannot be blank");
+
+                errorProvider1.SetError(
+                    txtPassword,
+                    _Translate(
+                        "يجب إدخال كلمة المرور.",
+                        "Password cannot be blank."));
             }
             else
             {
@@ -172,7 +231,12 @@ namespace DVLD.User
             if (string.IsNullOrEmpty(txtUserName.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtUserName, "Username cannot be blank");
+
+                errorProvider1.SetError(
+                    txtUserName,
+                    _Translate(
+                        "يجب إدخال اسم المستخدم.",
+                        "Username cannot be blank."));
                 return;
             }
             else
@@ -187,7 +251,13 @@ namespace DVLD.User
                 if (clsUser.isUserExist(txtUserName.Text.Trim()))
                 {
                     e.Cancel = true;
-                    errorProvider1.SetError(txtUserName, "username is used by another user");
+
+                    errorProvider1.SetError(
+                        txtUserName,
+                        _Translate(
+                            "اسم المستخدم مستخدم بالفعل. يرجى اختيار اسم آخر.",
+                            "Username is already used by another user."));
+
                 }
                 else
                 {
@@ -202,8 +272,14 @@ namespace DVLD.User
                         if (clsUser.isUserExist(txtUserName.Text.Trim()))
                         {
                             e.Cancel = true;
-                            errorProvider1.SetError(txtUserName, "username is used by another user");
-                            return;
+
+                        errorProvider1.SetError(
+                            txtUserName,
+                            _Translate(
+                                "اسم المستخدم مستخدم بالفعل. يرجى اختيار اسم آخر.",
+                                "Username is already used by another user."));
+
+                        return;
                         }
                         else
                         {
@@ -231,7 +307,14 @@ namespace DVLD.User
                 if (clsUser.isUserExistForPersonID(ctrlPersonCardWithFilter1.PersonID))
                 {
 
-                    MessageBox.Show("Selected Person already has a user, choose another one.", "Select another Person", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    MessageBox.Show(
+                        _Translate(
+                            "الشخص المحدد لديه حساب مستخدم بالفعل. يرجى اختيار شخص آخر.",
+                            "The selected person already has a user account. Please choose another person."),
+                        _Translate("اختر شخصًا آخر", "Select another Person"),
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                     ctrlPersonCardWithFilter1.FilterFocus();
                 } 
                 
@@ -246,7 +329,14 @@ namespace DVLD.User
             else
             
             {
-                MessageBox.Show("Please Select a Person", "Select a Person", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "يرجى اختيار شخص أولًا.",
+                        "Please Select a Person."),
+                    _Translate("اختيار شخص", "Select a Person"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 ctrlPersonCardWithFilter1.FilterFocus();
 
             }

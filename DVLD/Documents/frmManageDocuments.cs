@@ -19,6 +19,15 @@ namespace DVLD.Documents
         {
             InitializeComponent();
         }
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
         private DataTable _dtAllDocuments = new DataTable();
         private DataTable _dtDocuments = new DataTable();
 
@@ -54,8 +63,8 @@ namespace DVLD.Documents
                 lblRecordsCount.Text = "0";
 
                 MessageBox.Show(
-                    "Could not load document data.\n\n" + ex.Message,
-                    "Database Error",
+                    _Translate("تعذّر تحميل بيانات المستندات.\n\n", "Could not load document data.\n\n") + ex.Message,
+                    _Translate("خطأ في قاعدة البيانات", "Database Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -271,8 +280,8 @@ namespace DVLD.Documents
             if (document == null)
             {
                 MessageBox.Show(
-                    "Document was not found.",
-                    "Error",
+                    _Translate("لم يتم العثور على المستند.", "Document was not found."),
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -282,8 +291,8 @@ namespace DVLD.Documents
             if (document.Activate())
             {
                 MessageBox.Show(
-                    "Document activated successfully.",
-                    "Success",
+                    _Translate("تم تفعيل المستند بنجاح.", "Document activated successfully."),
+                    _Translate("تم بنجاح", "Success"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 
@@ -292,8 +301,8 @@ namespace DVLD.Documents
             else
             {
                 MessageBox.Show(
-                    "Could not activate the document.",
-                    "Error",
+                    _Translate("تعذّر تفعيل المستند.", "Could not activate the document."),
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -314,8 +323,8 @@ namespace DVLD.Documents
             if (document == null)
             {
                 MessageBox.Show(
-                    "Document was not found.",
-                    "Error",
+                    _Translate("لم يتم العثور على المستند.", "Document was not found."),
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -325,8 +334,8 @@ namespace DVLD.Documents
             if (document.Deactivate())
             {
                 MessageBox.Show(
-                    "Document deactivated successfully.",
-                    "Success",
+                    _Translate("تم تعطيل المستند بنجاح.", "Document deactivated successfully."),
+                    _Translate("تم بنجاح", "Success"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 
@@ -335,8 +344,8 @@ namespace DVLD.Documents
             else
             {
                 MessageBox.Show(
-                    "Could not deactivate the document.",
-                    "Error",
+                    _Translate("تعذّر تعطيل المستند.", "Could not deactivate the document."),
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -361,8 +370,8 @@ namespace DVLD.Documents
             if (!isActive)
             {
                 MessageBox.Show(
-                    "The document must be active before reprocessing.",
-                    "Reprocess Document",
+                    _Translate("يجب تفعيل المستند قبل إعادة معالجته.", "The document must be active before reprocessing."),
+                    _Translate("إعادة معالجة المستند", "Reprocess Document"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
@@ -371,8 +380,8 @@ namespace DVLD.Documents
 
             DialogResult result =
                 MessageBox.Show(
-                    "Are you sure you want to reprocess this document?",
-                    "Confirm Reprocess",
+                    _Translate("هل أنت متأكد من رغبتك في إعادة معالجة هذا المستند؟", "Are you sure you want to reprocess this document?"),
+                    _Translate("تأكيد إعادة المعالجة", "Confirm Reprocess"),
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
 
@@ -400,9 +409,9 @@ namespace DVLD.Documents
                     if (!response.IsSuccessStatusCode)
                     {
                         MessageBox.Show(
-                            "Reprocess failed.\n\n" +
+                            _Translate("فشلت إعادة معالجة المستند.\n\n", "Reprocess failed.\n\n") +
                             responseText,
-                            "Reprocess Failed",
+                            _Translate("فشل إعادة المعالجة", "Reprocess Failed"),
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
 
@@ -410,8 +419,8 @@ namespace DVLD.Documents
                     }
 
                     MessageBox.Show(
-                        "Document reprocessed successfully.",
-                        "Reprocess Complete",
+                        _Translate("تم إرسال طلب إعادة معالجة المستند بنجاح.", "Document reprocessing request submitted successfully."),
+                        _Translate("تم بدء إعادة المعالجة", "Reprocessing Started"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                 }
@@ -421,9 +430,9 @@ namespace DVLD.Documents
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "Could not reprocess the document.\n\n" +
+                    _Translate("تعذّرت إعادة معالجة المستند.\n\n", "Could not reprocess the document.\n\n") +
                     ex.Message,
-                    "Reprocess Error",
+                    _Translate("خطأ في إعادة المعالجة", "Reprocess Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }

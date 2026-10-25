@@ -20,6 +20,17 @@ namespace DVLD.People
             InitializeComponent();
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
         public frmMobileAccount(int PersonID)
             : this()
         {
@@ -39,11 +50,15 @@ namespace DVLD.People
 
                 if (_Person == null)
                 {
+
                     MessageBox.Show(
-                        "Person was not found.",
-                        "Error",
+                        _Translate(
+                            "لم يتم العثور على الشخص.",
+                            "Person was not found."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
+
 
                     this.Close();
                     return;
@@ -62,31 +77,41 @@ namespace DVLD.People
             }
             catch (Exception ex)
             {
+
                 MessageBox.Show(
-                    "Could not load mobile account information.\n\n" +
-                    ex.Message,
-                    "Error",
+                    _Translate(
+                        "تعذّر تحميل معلومات حساب المواطن.\n\n",
+                        "Could not load mobile account information.\n\n")
+                        + ex.Message,
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+
             }
         }
 
+
         private void _RefreshAccountState()
         {
-            // No mobile account exists yet.
             if (_MobileUser == null)
             {
-                lblUsernameValue.Text = "Not Created";
-                lblStatusValue.Text = "No Account";
+                lblUsernameValue.Text =
+                    _Translate("لم يتم إنشاء حساب", "Not Created");
+
+                lblStatusValue.Text =
+                    _Translate("لا يوجد حساب", "No Account");
 
                 lblTemporaryPasswordValue.Text =
-                    "Will appear after account creation";
+                    _Translate(
+                        "ستظهر بعد إنشاء الحساب",
+                        "Will appear after account creation");
 
                 btnCreateAccount.Enabled = true;
                 btnResetPassword.Enabled = false;
                 btnToggleActive.Enabled = false;
 
-                btnToggleActive.Text = "Deactivate";
+                btnToggleActive.Text =
+                    _Translate("تعطيل الحساب", "Deactivate");
 
                 pbMobileAccount.Image =
                     Properties.Resources.MobileAccount_NoAccount;
@@ -94,19 +119,14 @@ namespace DVLD.People
                 return;
             }
 
-            lblUsernameValue.Text =
-                _MobileUser.Username;
+            lblUsernameValue.Text = _MobileUser.Username;
 
-            if (string.IsNullOrEmpty(_TemporaryPassword))
-            {
-                lblTemporaryPasswordValue.Text =
-                    "Shown only after create / reset";
-            }
-            else
-            {
-                lblTemporaryPasswordValue.Text =
-                    _TemporaryPassword;
-            }
+            lblTemporaryPasswordValue.Text =
+                string.IsNullOrEmpty(_TemporaryPassword)
+                    ? _Translate(
+                        "تظهر فقط بعد إنشاء الحساب أو إعادة تعيين كلمة المرور",
+                        "Shown only after create / reset")
+                    : _TemporaryPassword;
 
             btnCreateAccount.Enabled = false;
             btnResetPassword.Enabled = true;
@@ -114,25 +134,28 @@ namespace DVLD.People
 
             if (_MobileUser.IsActive)
             {
-                lblStatusValue.Text = "Active";
+                lblStatusValue.Text =
+                    _Translate("نشط", "Active");
 
                 btnToggleActive.Text =
-                    "Deactivate";
+                    _Translate("تعطيل الحساب", "Deactivate");
 
                 pbMobileAccount.Image =
                     Properties.Resources.MobileAccount_Active;
             }
             else
             {
-                lblStatusValue.Text = "Inactive";
+                lblStatusValue.Text =
+                    _Translate("غير نشط", "Inactive");
 
                 btnToggleActive.Text =
-                    "Activate";
+                    _Translate("تفعيل الحساب", "Activate");
 
                 pbMobileAccount.Image =
                     Properties.Resources.MobileAccount_Inactive;
             }
         }
+
 
         private void btnCreateAccount_Click(
             object sender,
@@ -140,11 +163,14 @@ namespace DVLD.People
         {
             try
             {
+
                 if (_MobileUser != null)
                 {
                     MessageBox.Show(
-                        "This person already has a mobile account.",
-                        "Mobile Account",
+                        _Translate(
+                            "هذا الشخص لديه حساب موبايل بالفعل.",
+                            "This person already has a mobile account."),
+                        _Translate("حساب المواطن", "Mobile Account"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
 
@@ -154,8 +180,10 @@ namespace DVLD.People
                 if (_Person == null)
                 {
                     MessageBox.Show(
-                        "Person information is not available.",
-                        "Error",
+                        _Translate(
+                            "معلومات الشخص غير متوفرة.",
+                            "Person information is not available."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
 
@@ -165,23 +193,31 @@ namespace DVLD.People
                 if (string.IsNullOrWhiteSpace(_Person.NationalNo))
                 {
                     MessageBox.Show(
-                        "This person does not have a valid National Number.",
-                        "Error",
+                        _Translate(
+                            "لا يوجد رقم وطني صالح لهذا الشخص.",
+                            "This person does not have a valid National Number."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
 
                     return;
                 }
 
+
+
                 if (MessageBox.Show(
-                    "Create a mobile account for this person?\n\n" +
-                    "The National Number will be used as the username.",
-                    "Confirm",
+                    _Translate(
+                        "هل أنت متأكد من إنشاء حساب موبايل لهذا الشخص؟\n\n" +
+                        "سيتم استخدام الرقم الوطني كاسم مستخدم.",
+                        "Create a mobile account for this person?\n\n" +
+                        "The National Number will be used as the username."),
+                    _Translate("تأكيد إنشاء الحساب", "Confirm"),
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question) != DialogResult.Yes)
                 {
                     return;
                 }
+
 
                 // Username = National Number
                 string Username =
@@ -206,12 +242,17 @@ namespace DVLD.People
 
                 if (_MobileUser == null)
                 {
+
                     MessageBox.Show(
-                        "Could not create the mobile account.\n\n" +
-                        "The National Number may already be used by another mobile account.",
-                        "Error",
+                        _Translate(
+                            "تعذّر إنشاء حساب المواطن.\n\n" +
+                            "قد يكون الرقم الوطني مستخدمًا في حساب آخر.",
+                            "Could not create the mobile account.\n\n" +
+                            "The National Number may already be used by another mobile account."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
+
 
                     return;
                 }
@@ -221,23 +262,36 @@ namespace DVLD.People
 
                 _RefreshAccountState();
 
+
                 MessageBox.Show(
-                    "Mobile account created successfully.\n\n" +
-                    "Username: " + _MobileUser.Username +
-                    "\nTemporary Password: " + Password +
-                    "\n\nGive these credentials to the citizen.",
-                    "Account Created",
+                    _Translate(
+                        "تم إنشاء حساب المواطن بنجاح.\n\nاسم المستخدم: ",
+                        "Mobile account created successfully.\n\nUsername: ")
+                    + _MobileUser.Username
+                    + _Translate(
+                        "\nكلمة المرور المؤقتة: ",
+                        "\nTemporary Password: ")
+                    + Password
+                    + _Translate(
+                        "\n\nيرجى تسليم بيانات الدخول للمواطن بطريقة آمنة.",
+                        "\n\nGive these credentials to the citizen securely."),
+                    _Translate("تم إنشاء الحساب", "Account Created"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+
             }
             catch (Exception ex)
             {
+
                 MessageBox.Show(
-                    "Could not create the mobile account.\n\n" +
-                    ex.Message,
-                    "Error",
+                    _Translate(
+                        "تعذّر إنشاء حساب المواطن.\n\n",
+                        "Could not create the mobile account.\n\n")
+                        + ex.Message,
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+
             }
         }
         private void btnResetPassword_Click(
@@ -249,14 +303,19 @@ namespace DVLD.People
                 if (_MobileUser == null)
                     return;
 
+
                 if (MessageBox.Show(
-                    "Generate a new temporary password?",
-                    "Reset Password",
+                    _Translate(
+                        "هل تريد إنشاء كلمة مرور مؤقتة جديدة؟",
+                        "Generate a new temporary password?"),
+                    _Translate("إعادة تعيين كلمة المرور", "Reset Password"),
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question) != DialogResult.Yes)
                 {
                     return;
                 }
+
+           
 
                 string Password =
     _Person.FirstName.Trim() +
@@ -269,11 +328,15 @@ namespace DVLD.People
                 if (!_MobileUser.ResetPasswordHash(
                     PasswordHash))
                 {
+
                     MessageBox.Show(
-                        "Password could not be reset.",
-                        "Error",
+                        _Translate(
+                            "تعذّرت إعادة تعيين كلمة المرور.",
+                            "Password could not be reset."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
+
 
                     return;
                 }
@@ -283,22 +346,34 @@ namespace DVLD.People
                 _RefreshAccountState();
 
                 MessageBox.Show(
-                    "Password reset successfully.\n\n" +
-                    "Username: " + _MobileUser.Username +
-                    "\nNew Temporary Password: " + Password +
-                    "\n\nGive the new password to the citizen.",
-                    "Password Reset",
+                    _Translate(
+                        "تمت إعادة تعيين كلمة المرور بنجاح.\n\nاسم المستخدم: ",
+                        "Password reset successfully.\n\nUsername: ")
+                    + _MobileUser.Username
+                    + _Translate(
+                        "\nكلمة المرور المؤقتة الجديدة: ",
+                        "\nNew Temporary Password: ")
+                    + Password
+                    + _Translate(
+                        "\n\nيرجى تسليم كلمة المرور الجديدة للمواطن بطريقة آمنة.",
+                        "\n\nGive the new password to the citizen securely."),
+                    _Translate("تم تغيير كلمة المرور", "Password Reset"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+
             }
             catch (Exception ex)
             {
+
                 MessageBox.Show(
-                    "Could not reset the password.\n\n" +
-                    ex.Message,
-                    "Error",
+                    _Translate(
+                        "تعذّرت إعادة تعيين كلمة المرور.\n\n",
+                        "Could not reset the password.\n\n")
+                        + ex.Message,
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+
             }
         }
 
@@ -311,52 +386,70 @@ namespace DVLD.People
                 if (_MobileUser == null)
                     return;
 
-                bool NewStatus =
-                    !_MobileUser.IsActive;
 
-                string ActionText =
-                    NewStatus ? "activate" : "deactivate";
+                bool NewStatus = !_MobileUser.IsActive;
+
+                string confirmationMessage = NewStatus
+                    ? _Translate(
+                        "هل أنت متأكد من تفعيل حساب المواطن؟",
+                        "Are you sure you want to activate this mobile account?")
+                    : _Translate(
+                        "هل أنت متأكد من تعطيل حساب المواطن؟",
+                        "Are you sure you want to deactivate this mobile account?");
 
                 if (MessageBox.Show(
-                    "Are you sure you want to " +
-                    ActionText +
-                    " this mobile account?",
-                    "Confirm",
+                    confirmationMessage,
+                    _Translate("تأكيد العملية", "Confirm"),
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question) != DialogResult.Yes)
                 {
                     return;
                 }
 
+
                 if (!_MobileUser.SetIsActive(NewStatus))
                 {
+
                     MessageBox.Show(
-                        "Account status could not be updated.",
-                        "Error",
+                        _Translate(
+                            "تعذّر تحديث حالة حساب المواطن.",
+                            "Account status could not be updated."),
+                        _Translate("خطأ", "Error"),
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
+
 
                     return;
                 }
 
                 _RefreshAccountState();
 
+
                 MessageBox.Show(
                     NewStatus
-                        ? "Mobile account activated successfully."
-                        : "Mobile account deactivated successfully.",
-                    "Mobile Account",
+                        ? _Translate(
+                            "تم تفعيل حساب المواطن بنجاح.",
+                            "Mobile account activated successfully.")
+                        : _Translate(
+                            "تم تعطيل حساب المواطن بنجاح.",
+                            "Mobile account deactivated successfully."),
+                    _Translate("حساب المواطن", "Mobile Account"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+
             }
             catch (Exception ex)
             {
+
                 MessageBox.Show(
-                    "Could not update account status.\n\n" +
-                    ex.Message,
-                    "Error",
+                    _Translate(
+                        "تعذّر تحديث حالة حساب المواطن.\n\n",
+                        "Could not update account status.\n\n")
+                        + ex.Message,
+                    _Translate("خطأ", "Error"),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+
             }
         }
 

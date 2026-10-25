@@ -28,13 +28,31 @@ namespace DVLD.Controls
             InitializeComponent();
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
         public void LoadUserInfo(int UserID)
         {
             _User = clsUser.FindByUserID (UserID);
             if (_User == null)
             {
                 _ResetPersonInfo();
-                MessageBox.Show("No User with UserID = " + UserID.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لم يتم العثور على المستخدم رقم: ",
+                        "No User with UserID = ") + UserID,
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
            
@@ -47,11 +65,13 @@ namespace DVLD.Controls
             ctrlPersonCard1.LoadPersonInfo(_User.PersonID);
             lblUserID.Text = _User.UserID.ToString();
             lblUserName.Text = _User.UserName.ToString();
-            
+
+
             if (_User.IsActive)
-                 lblIsActive.Text = "Yes";
+                lblIsActive.Text = _Translate("نعم", "Yes");
             else
-                lblIsActive.Text = "No";
+                lblIsActive.Text = _Translate("لا", "No");
+
 
         }
 

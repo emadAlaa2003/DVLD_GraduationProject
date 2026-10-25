@@ -23,8 +23,18 @@ namespace DVLD.Applications
             InitializeComponent();
 
             _ApplicationTypeID = ApplicationTypeID; 
-
         }
+
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
 
         private void frmEditApplicationType_Load(object sender, EventArgs e)
         {
@@ -48,7 +58,14 @@ namespace DVLD.Applications
             if (!this.ValidateChildren())
             {
                 //Here we dont continue becuase the form is not valid
-                MessageBox.Show("Some fileds are not valide!, put the mouse over the red icon(s) to see the erro", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "بعض البيانات المدخلة غير صحيحة. مرّر مؤشر الفأرة فوق علامات الخطأ الحمراء لمعرفة السبب.",
+                        "Some fields are invalid. Hover over the red error icons to see the details."),
+                    _Translate("خطأ في التحقق من البيانات", "Validation Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
 
             }
@@ -59,10 +76,24 @@ namespace DVLD.Applications
 
             if (_ApplicationType.Save())
             {
-                MessageBox.Show("Data Saved Successfully.", "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                MessageBox.Show(
+                    _Translate(
+                        "تم حفظ تعديلات نوع الطلب بنجاح.",
+                        "Data saved successfully."),
+                    _Translate("تم الحفظ", "Saved"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else
-                MessageBox.Show("Error: Data Is not Saved Successfully.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "حدث خطأ، لم يتم حفظ تعديلات نوع الطلب.",
+                        "Error: Data was not saved successfully."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 
         }
 
@@ -73,7 +104,12 @@ namespace DVLD.Applications
             if (string.IsNullOrEmpty(txtTitle.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtTitle, "Title cannot be empty!");
+
+                errorProvider1.SetError(
+                    txtTitle,
+                    _Translate(
+                        "يجب إدخال اسم نوع الطلب.",
+                        "Title cannot be empty!"));
             }
             else
             {
@@ -91,7 +127,12 @@ namespace DVLD.Applications
             if (string.IsNullOrEmpty(txtFees.Text.Trim()))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtFees, "Fees cannot be empty!");
+
+                errorProvider1.SetError(
+                    txtFees,
+                    _Translate(
+                        "يجب إدخال قيمة الرسوم.",
+                        "Fees cannot be empty!"));
                 return;
             }
             else
@@ -104,7 +145,12 @@ namespace DVLD.Applications
             if (!clsValidatoin.IsNumber(txtFees.Text))
             {
                 e.Cancel = true;
-                errorProvider1.SetError(txtFees, "Invalid Number.");
+
+                errorProvider1.SetError(
+                    txtFees,
+                    _Translate(
+                        "يرجى إدخال قيمة رقمية صحيحة للرسوم.",
+                        "Invalid Number."));
             }
             else
             {

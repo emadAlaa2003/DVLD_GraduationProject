@@ -24,6 +24,17 @@ namespace DVLD.Applications.ReplaceLostOrDamagedLicense
             InitializeComponent();
         }
 
+
+        private string _Translate(string arabic, string english)
+        {
+            bool isArabic =
+                System.Globalization.CultureInfo.CurrentUICulture
+                .TwoLetterISOLanguageName == "ar";
+
+            return isArabic ? arabic : english;
+        }
+
+
         private int _GetApplicationTypeID()
         {
             //this will decide which application type to use accirding 
@@ -60,16 +71,32 @@ namespace DVLD.Applications.ReplaceLostOrDamagedLicense
 
         private void rbDamagedLicense_CheckedChanged(object sender, EventArgs e)
         {
-            lblTitle.Text = "Replacement for Damaged License";
-            this.Text=lblTitle.Text;
-            lblApplicationFees.Text = clsApplicationType.Find(_GetApplicationTypeID()).Fees.ToString();
+            if (!rbDamagedLicense.Checked)
+                return;
+
+            lblTitle.Text = _Translate(
+                "إصدار بدل تالف لرخصة القيادة",
+                "Replacement for Damaged License");
+
+            this.Text = lblTitle.Text;
+
+            lblApplicationFees.Text =
+                clsApplicationType.Find(_GetApplicationTypeID()).Fees.ToString();
         }
 
         private void rbLostLicense_CheckedChanged(object sender, EventArgs e)
         {
-            lblTitle.Text = "Replacement for Lost License";
+            if (!rbLostLicense.Checked)
+                return;
+
+            lblTitle.Text = _Translate(
+                "إصدار بدل فاقد لرخصة القيادة",
+                "Replacement for Lost License");
+
             this.Text = lblTitle.Text;
-            lblApplicationFees.Text = clsApplicationType.Find(_GetApplicationTypeID()).Fees.ToString();
+
+            lblApplicationFees.Text =
+                clsApplicationType.Find(_GetApplicationTypeID()).Fees.ToString();
         }
 
         private void frmReplaceLostOrDamagedLicenseApplication_Activated(object sender, EventArgs e)
@@ -91,8 +118,15 @@ namespace DVLD.Applications.ReplaceLostOrDamagedLicense
             //dont allow a replacement if is Active .
             if (!ctrlDriverLicenseInfoWithFilter1.SelectedLicenseInfo.IsActive)
             {
-                MessageBox.Show("Selected License is not Not Active, choose an active license."
-                    , "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "لا يمكن إصدار رخصة بديلة لأن الرخصة المختارة غير نشطة. يرجى اختيار رخصة نشطة.",
+                        "The selected license is not active. Please choose an active license."),
+                    _Translate("غير مسموح", "Not allowed"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+
                 btnIssueReplacement.Enabled = false;
                 return;
             }
@@ -102,10 +136,18 @@ namespace DVLD.Applications.ReplaceLostOrDamagedLicense
 
         private void btnIssueReplacement_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to Issue a Replacement for the license?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+
+            if (MessageBox.Show(
+                    _Translate(
+                        "هل أنت متأكد من إصدار رخصة قيادة بديلة؟",
+                        "Are you sure you want to issue a replacement license?"),
+                    _Translate("تأكيد الإصدار", "Confirm"),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question) == DialogResult.No)
             {
                 return;
             }
+
 
 
             clsLicense NewLicense =
@@ -114,7 +156,14 @@ namespace DVLD.Applications.ReplaceLostOrDamagedLicense
 
             if (NewLicense == null)
             {
-                MessageBox.Show("Faild to Issue a replacemnet for this  License", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                MessageBox.Show(
+                    _Translate(
+                        "فشل إصدار رخصة القيادة البديلة.",
+                        "Failed to issue a replacement license."),
+                    _Translate("خطأ", "Error"),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
 
                 return;
             }
@@ -123,7 +172,15 @@ namespace DVLD.Applications.ReplaceLostOrDamagedLicense
             _NewLicenseID = NewLicense.LicenseID;
 
             lblRreplacedLicenseID.Text = _NewLicenseID.ToString();
-            MessageBox.Show("Licensed Replaced Successfully with ID=" + _NewLicenseID.ToString(), "License Issued", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            MessageBox.Show(
+                _Translate(
+                    "تم إصدار رخصة القيادة البديلة بنجاح. رقم الرخصة الجديدة: ",
+                    "License replaced successfully with ID = ")
+                    + _NewLicenseID,
+                _Translate("تم إصدار الرخصة البديلة", "License Issued"),
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 
             btnIssueReplacement.Enabled = false;
             gbReplacementFor.Enabled = false;
