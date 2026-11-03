@@ -1,0 +1,1363 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="tlpDashboard.ColumnCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="lblDate.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="lblDate.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9.75pt</value>
+  </data>
+  <data name="lblDate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 84</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblDate.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblDate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 17</value>
+  </data>
+  <data name="lblDate.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblDate.Text" xml:space="preserve">
+    <value>Today's Date</value>
+  </data>
+  <data name="&gt;&gt;lblDate.Name" xml:space="preserve">
+    <value>lblDate</value>
+  </data>
+  <data name="&gt;&gt;lblDate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDate.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;lblDate.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblWelcome.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblWelcome.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 12pt</value>
+  </data>
+  <data name="lblWelcome.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 53</value>
+  </data>
+  <data name="lblWelcome.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblWelcome.Size" type="System.Drawing.Size, System.Drawing">
+    <value>113, 21</value>
+  </data>
+  <data name="lblWelcome.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblWelcome.Text" xml:space="preserve">
+    <value>Welcome, User</value>
+  </data>
+  <data name="&gt;&gt;lblWelcome.Name" xml:space="preserve">
+    <value>lblWelcome</value>
+  </data>
+  <data name="&gt;&gt;lblWelcome.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblWelcome.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;lblWelcome.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblDashboardTitle.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblDashboardTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 21.75pt</value>
+  </data>
+  <data name="lblDashboardTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 13</value>
+  </data>
+  <data name="lblDashboardTitle.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblDashboardTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>156, 40</value>
+  </data>
+  <data name="lblDashboardTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblDashboardTitle.Text" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="&gt;&gt;lblDashboardTitle.Name" xml:space="preserve">
+    <value>lblDashboardTitle</value>
+  </data>
+  <data name="&gt;&gt;lblDashboardTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDashboardTitle.Parent" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;lblDashboardTitle.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="pnlHeader.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlHeader.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 20</value>
+  </data>
+  <data name="pnlHeader.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="pnlHeader.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="pnlHeader.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1160, 110</value>
+  </data>
+  <data name="pnlHeader.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;pnlHeader.Name" xml:space="preserve">
+    <value>pnlHeader</value>
+  </data>
+  <data name="&gt;&gt;pnlHeader.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlHeader.Parent" xml:space="preserve">
+    <value>tlpDashboard</value>
+  </data>
+  <data name="&gt;&gt;pnlHeader.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tlpStatistics.ColumnCount" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="pictureBox4.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Stretch</value>
+  </data>
+  <data name="pictureBox4.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAA8NJREFUWEft
+        V2tPE0EUxR+gv0U/+hs0vqmIGkAxSnzgI74fqYqJEkJQEXxgRAQx4iuKIsYYY3wrPigFilIosJR2W7Zp
+        VbS0e517md2Z1haVhU96kpN25t6Zc/buzOxuxn8kAwCmxYIhmx4Ybo6rmhoPaGCRQ3pAa4BgcDaXSA+W
+        NENXQ00pJpkM6vFA6AheIJdLBAamUFxQ1excMhGs7EtTDph8xsGvzeSyAnTPpcRvH9vBf/ka+C7WW6J6
+        5QaMtLtkA8haLivAOgNGQqj5ETjmZ0HrnMxJYdvC5RB+8lwyEPJyWQEWYItkLMGVvxE+F+6AqEeRBk2M
+        P9we6Fq3mXGL3K9zWQEpCK1zbeA9d1EeYIk4F84p93FZATmIZfNW1YgB6jD4auqhM7cA2havBPcuO60R
+        ecx4xLlwTrmPywrIwWQDKI59PfuKQDlxBtqX50PHijUQ7R2geF/xcejeceAXqvXXKW7ZgGv1BujZe9hs
+        f2n5SDnDd5qpPeUGnJk5dOVGO9o3SDn+ugazbzxaNuDebYf27NXw5c17EkczmBN51ULxzrz11E4mVgbj
+        lg18c3bSfZcnV8rPmfHgzbswWHGe6DlSAt3b90P3tj3gPVtN29CyAeTXD05QSiug134UfLVXqRJyPPLy
+        HbjWbEowiXTMXwafCnfSfzmfywrIQUw2DIx6/dB7qJj2sTwxnm6+6suUE3nxlvXZoM2WC9rjpxALR0Af
+        jcFIjwcGys+aY3E7GxpcVsAIIGUDnsPFdCwPVV2iKmBJIy9bwFNUQnlqwy12cm4C59Jcag+ysicjcPse
+        xYxdg+SyAkYAKRtoW7QClJNiB8jsKtjKyruL8kPsrPdW1wkTus7lGdh/19pCtjYOmGO5rIA8sWxg+PZ9
+        GOn4bMZkhp+9BqXsNOXHwmHSSmdCqTzPqpRnjuWyAvLEuO/7S8rN9nj0VY+dkno0yqVSm8A+x8JscxyX
+        FZAnRXHHvCwYKD2V8hkv04MLlInhgpORbKKXbc/OVevHNWA+jkcHfWTCacuhSX5LtsqViiouLWCYGCir
+        pF2Dv1wj1eM45DUM/C2Vk2NbTb3ZmLj4GPrLKsiEY0E2fO9yj41hb9tcVoAZqEue+E8ZGwrQAYVCeBgp
+        lVXgvVDLzo9jdBDhTtIaH5j5+PLLZQXYi+IsFowbSROh1vQQunfa6UxAYXyKYnW+f+pJyGMvwEu4bCJY
+        aQ7KiVNB9pFyh92Z9N8G7FYUsURLlUhHPag1gqpO53LpgZ9RzOlVKwtToh/vOZY97ZX/w8jI+AlW/WQ5
+        EbZf2AAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="pictureBox4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictureBox4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="pictureBox4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 33</value>
+  </data>
+  <data name="pictureBox4.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;pictureBox4.Name" xml:space="preserve">
+    <value>pictureBox4</value>
+  </data>
+  <data name="&gt;&gt;pictureBox4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictureBox4.Parent" xml:space="preserve">
+    <value>pnlDetainedLicenses</value>
+  </data>
+  <data name="&gt;&gt;pictureBox4.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblDetainedCount.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblDetainedCount.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 24pt, style=Bold</value>
+  </data>
+  <data name="lblDetainedCount.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 55</value>
+  </data>
+  <data name="lblDetainedCount.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblDetainedCount.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 45</value>
+  </data>
+  <data name="lblDetainedCount.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblDetainedCount.Text" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="&gt;&gt;lblDetainedCount.Name" xml:space="preserve">
+    <value>lblDetainedCount</value>
+  </data>
+  <data name="&gt;&gt;lblDetainedCount.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDetainedCount.Parent" xml:space="preserve">
+    <value>pnlDetainedLicenses</value>
+  </data>
+  <data name="&gt;&gt;lblDetainedCount.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblDetainedTitle.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblDetainedTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 12pt, style=Bold</value>
+  </data>
+  <data name="lblDetainedTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>44, 9</value>
+  </data>
+  <data name="lblDetainedTitle.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblDetainedTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>147, 21</value>
+  </data>
+  <data name="lblDetainedTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblDetainedTitle.Text" xml:space="preserve">
+    <value>Detained Licenses</value>
+  </data>
+  <data name="&gt;&gt;lblDetainedTitle.Name" xml:space="preserve">
+    <value>lblDetainedTitle</value>
+  </data>
+  <data name="&gt;&gt;lblDetainedTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDetainedTitle.Parent" xml:space="preserve">
+    <value>pnlDetainedLicenses</value>
+  </data>
+  <data name="&gt;&gt;lblDetainedTitle.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="pnlDetainedLicenses.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlDetainedLicenses.Location" type="System.Drawing.Point, System.Drawing">
+    <value>878, 8</value>
+  </data>
+  <data name="pnlDetainedLicenses.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>8, 8, 8, 8</value>
+  </data>
+  <data name="pnlDetainedLicenses.Size" type="System.Drawing.Size, System.Drawing">
+    <value>274, 124</value>
+  </data>
+  <data name="pnlDetainedLicenses.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;pnlDetainedLicenses.Name" xml:space="preserve">
+    <value>pnlDetainedLicenses</value>
+  </data>
+  <data name="&gt;&gt;pnlDetainedLicenses.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlDetainedLicenses.Parent" xml:space="preserve">
+    <value>tlpStatistics</value>
+  </data>
+  <data name="&gt;&gt;pnlDetainedLicenses.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="pictureBox3.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Stretch</value>
+  </data>
+  <data name="pictureBox3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAqdJREFUWEft
+        l1trE0EUx+MH0M+ggj6rrWifKoKvolBavOCzryL4pHjBG1YsIrEtGPHBWmzVlyhSAtZS1qqbkFhCd2Ol
+        lV7SNrEEmmilmB7PGWezs5PJdhsHH9QDP5I5lzn/3R1mZ0P/TTYA2ABFuxUZQPII/B6ZefzthyWribeo
+        bbA4vgmW7JfVk2hhFcVcoQvk7bzGrnyN5t+zQzAzfMkXylHVulgXeEuvobo2dYHL1OtzYLRv9oVyVLUC
+        ZSh93MHbuoYBeuZCogXz7zvA6j8C6d7DjET3XtbEGctQjHKcsfXkGOSTXcKcFR7ytq6h84uYNDV4lk2Y
+        ur+/MmHqwQEwww2VsQzFKMcZJ+81szmyb66LzYk53tY1dOIicZPM8C7IPDshFtWBBWOP2yDeuVuOrfK2
+        rkkJv54n3gXZv16cOyn7eVvX5AQ/AcvZQSgXPihjMtoFlCZfwMitbfhcb1TFVGgTkOhugomBU5CMNIN5
+        txG+TcfY8xUXoQP5V3JvWZ02AZOx08xntG+BgtXLGvxRAQRtMrPDuJsKvrXQKqAetAtYyb2DeNceyCXC
+        VTEV2gR8ip6ExdEIbs1HYaRjOxQnojBrXFW+kMhfLoyyOm0C0o8OgXFzK/NnjWuwPPOKCaGxDPkpTnXa
+        BPwopCDdc5CtcNpixVw/tAmol79HAO2E5AsC5Tp16xHgeR1TkShgIX4HPsfOBIJynboaApSv4zkxyexs
+        hLG+VvwffMGpsJ8ex3dHg+zP87auobNHTKJTDCmnU41qvw9CMrKPzTE9dF5sDnT45W1dg6/jOzFYFhPp
+        PGfjuU41eRBo01owb+NcVXexhbf1GiZelBL1U8pE/b8NivZlxHMntFGynkPe3sjb1Tb6jMKCPsSzMOsk
+        xz94Wmpe+T9sodBPTAZadnKTURIAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="pictureBox3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictureBox3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="pictureBox3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 33</value>
+  </data>
+  <data name="pictureBox3.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;pictureBox3.Name" xml:space="preserve">
+    <value>pictureBox3</value>
+  </data>
+  <data name="&gt;&gt;pictureBox3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictureBox3.Parent" xml:space="preserve">
+    <value>pnlTodayTests</value>
+  </data>
+  <data name="&gt;&gt;pictureBox3.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblTodayTestsCount.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblTodayTestsCount.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 24pt, style=Bold</value>
+  </data>
+  <data name="lblTodayTestsCount.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 55</value>
+  </data>
+  <data name="lblTodayTestsCount.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblTodayTestsCount.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 45</value>
+  </data>
+  <data name="lblTodayTestsCount.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblTodayTestsCount.Text" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="&gt;&gt;lblTodayTestsCount.Name" xml:space="preserve">
+    <value>lblTodayTestsCount</value>
+  </data>
+  <data name="&gt;&gt;lblTodayTestsCount.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTodayTestsCount.Parent" xml:space="preserve">
+    <value>pnlTodayTests</value>
+  </data>
+  <data name="&gt;&gt;lblTodayTestsCount.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblTodayTestsTitle.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblTodayTestsTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 12pt, style=Bold</value>
+  </data>
+  <data name="lblTodayTestsTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>44, 9</value>
+  </data>
+  <data name="lblTodayTestsTitle.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblTodayTestsTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 21</value>
+  </data>
+  <data name="lblTodayTestsTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblTodayTestsTitle.Text" xml:space="preserve">
+    <value>Today's Tests</value>
+  </data>
+  <data name="&gt;&gt;lblTodayTestsTitle.Name" xml:space="preserve">
+    <value>lblTodayTestsTitle</value>
+  </data>
+  <data name="&gt;&gt;lblTodayTestsTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblTodayTestsTitle.Parent" xml:space="preserve">
+    <value>pnlTodayTests</value>
+  </data>
+  <data name="&gt;&gt;lblTodayTestsTitle.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="pnlTodayTests.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlTodayTests.Location" type="System.Drawing.Point, System.Drawing">
+    <value>588, 8</value>
+  </data>
+  <data name="pnlTodayTests.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>8, 8, 8, 8</value>
+  </data>
+  <data name="pnlTodayTests.Size" type="System.Drawing.Size, System.Drawing">
+    <value>274, 124</value>
+  </data>
+  <data name="pnlTodayTests.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;pnlTodayTests.Name" xml:space="preserve">
+    <value>pnlTodayTests</value>
+  </data>
+  <data name="&gt;&gt;pnlTodayTests.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlTodayTests.Parent" xml:space="preserve">
+    <value>tlpStatistics</value>
+  </data>
+  <data name="&gt;&gt;pnlTodayTests.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="pictureBox2.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Stretch</value>
+  </data>
+  <data name="pictureBox2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABBVJREFUWEft
+        V1tPVFcUxh/QvttWbZqaNE2bYNS2hvQRn4ymkdioD94vbUVSRRBfsIlgbBONGqNBhtuMdQRqSYFSQNLh
+        6pSWphFhBKVKZwaU8cwoURmI8LnXcu9z9sBAlFOe9Eu+7LPXWnt/65x9PQmvMRkA5gVGjXX+aLg2EA2H
+        BGGPkbuCZYEnxgopMT0MGG8Go+Ga+B3Z5kRgJJxDLyjlYkGOORQ36R8xDkvJWARHjS/jNZgDjgfGIolS
+        1oIcczPw38dDcPgakNtRbotnu35D58P/9AQQHAm7pKyFwGj4vgq4MRxEUtlBzM/f8r/wI9deNN3tthKI
+        hgelrAXhmFABWV4XFhbuwOU7f8AfNcyGs2GjEP74QhpWVx3V7RNS1oLmxBfVR7Gy4rDewBYPep38QrpN
+        ylrQnasqc5i6zRvqRVpzAVJqvueS6rp/Jma3u3kodJuUtaA7JyfQMNCJdwt34v3i3Uj+OZtLqpOd/Msv
+        HZgy7kSyk992AqurcrHMvd+czVQuvbjfHNez3bXIvOqcQrKT33YCi0u+xr6WQrNOpDrZ6fm8r37K8ms3
+        bpmxthP4tDQDG+uOm3XihroTbKfnyUPwVv5W5PnqzFjbCVAH1GlmWzHcfa1cUp3sejsiLdvWoR786v+b
+        S6rbTuDOk/vY05iHtx1buaN3HNu4TnYVQ0InO6uR+OO35pcgLrm4D+tqfrCXQMu9GzjQVoTkimzuMFns
+        EVQnu4rZ7TnHIinVx+DubUFTsIvLtaKuklGxRClrQXfqCRT3eHgTWSRIq2HTlVNcUp3s5HfdbGSBY39d
+        FodqLFoGfEj1nGc/xSkNKWtBOYgqge6HAV7vtNzoWY+hOtnJT7FJZVl4OjEuZZ/DO9jDiaZ68vDZpQze
+        YVV7KWtB71wlcGXgGmde7e8wfTrJTv7FJV/hUJsLV4Vgc7CbxfseDOJDZyo+Lz+EB9FHwu/EB849Zlsp
+        a0HveH3tcSSVZ/Fz0z2faY9H8i8SXyHnzzKkNeZjQcE2lPh+x4rSTD6E+odDnBD5KU61k7IW9E7PiR2M
+        3iyt2YGfbnv5VJyJiWJibqk/jUdjUaypzOW27xXtQsdQH4sTNtefEvtG5owJmMcxLan01iJe69TZi3CB
+        YztuRgY4ib1i0tX1/yOlgZ5IEAsLdiBD7B9SY+pxTJcElYBi17AfFf3tcd9aZ3GvR4zvN1gqzgs1BxSa
+        xXJc5k7nS4l2MwpJWQvimnRBF39Zegav4xO5JdNBteqXI1xSnezkV7F0+ZWyFoJjkSXCOa6CZkO6R9IJ
+        uL3hDNaIvYJKmk+3hT0mdtRIkbKxEFfm72IC54aVYmSm/zcQPw9HRJCtLzEDq0IIvSHlpgf9RonfqdJ4
+        E3MWHOIfHvHZp33zVxgJCc8AuLj9i8Q/FpUAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="pictureBox2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictureBox2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="pictureBox2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 33</value>
+  </data>
+  <data name="pictureBox2.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.Name" xml:space="preserve">
+    <value>pictureBox2</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.Parent" xml:space="preserve">
+    <value>pnlActiveLicenses</value>
+  </data>
+  <data name="&gt;&gt;pictureBox2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblActiveLicensesCount.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblActiveLicensesCount.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 24pt, style=Bold</value>
+  </data>
+  <data name="lblActiveLicensesCount.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 55</value>
+  </data>
+  <data name="lblActiveLicensesCount.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblActiveLicensesCount.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 45</value>
+  </data>
+  <data name="lblActiveLicensesCount.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblActiveLicensesCount.Text" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="&gt;&gt;lblActiveLicensesCount.Name" xml:space="preserve">
+    <value>lblActiveLicensesCount</value>
+  </data>
+  <data name="&gt;&gt;lblActiveLicensesCount.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblActiveLicensesCount.Parent" xml:space="preserve">
+    <value>pnlActiveLicenses</value>
+  </data>
+  <data name="&gt;&gt;lblActiveLicensesCount.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblActiveLicensesTitle.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblActiveLicensesTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 12pt, style=Bold</value>
+  </data>
+  <data name="lblActiveLicensesTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>44, 9</value>
+  </data>
+  <data name="lblActiveLicensesTitle.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblActiveLicensesTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>125, 21</value>
+  </data>
+  <data name="lblActiveLicensesTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblActiveLicensesTitle.Text" xml:space="preserve">
+    <value>Active Licenses</value>
+  </data>
+  <data name="&gt;&gt;lblActiveLicensesTitle.Name" xml:space="preserve">
+    <value>lblActiveLicensesTitle</value>
+  </data>
+  <data name="&gt;&gt;lblActiveLicensesTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblActiveLicensesTitle.Parent" xml:space="preserve">
+    <value>pnlActiveLicenses</value>
+  </data>
+  <data name="&gt;&gt;lblActiveLicensesTitle.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="pnlActiveLicenses.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlActiveLicenses.Location" type="System.Drawing.Point, System.Drawing">
+    <value>298, 8</value>
+  </data>
+  <data name="pnlActiveLicenses.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>8, 8, 8, 8</value>
+  </data>
+  <data name="pnlActiveLicenses.Size" type="System.Drawing.Size, System.Drawing">
+    <value>274, 124</value>
+  </data>
+  <data name="pnlActiveLicenses.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;pnlActiveLicenses.Name" xml:space="preserve">
+    <value>pnlActiveLicenses</value>
+  </data>
+  <data name="&gt;&gt;pnlActiveLicenses.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlActiveLicenses.Parent" xml:space="preserve">
+    <value>tlpStatistics</value>
+  </data>
+  <data name="&gt;&gt;pnlActiveLicenses.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lblPendingCount.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblPendingCount.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 24pt, style=Bold</value>
+  </data>
+  <data name="lblPendingCount.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 55</value>
+  </data>
+  <data name="lblPendingCount.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblPendingCount.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 45</value>
+  </data>
+  <data name="lblPendingCount.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblPendingCount.Text" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="&gt;&gt;lblPendingCount.Name" xml:space="preserve">
+    <value>lblPendingCount</value>
+  </data>
+  <data name="&gt;&gt;lblPendingCount.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblPendingCount.Parent" xml:space="preserve">
+    <value>pnlPendingApplications</value>
+  </data>
+  <data name="&gt;&gt;lblPendingCount.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="pictureBox1.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Stretch</value>
+  </data>
+  <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAA1FJREFUWEft
+        l8tPE0Ecx/EP0KuKcjExRmMU1ERNjPFmjCY+QuRgouhZ8EFUUDCgwAUVRSNRiF7A8DJBQQVjRPEALfJS
+        oaWiQCu0tFSEFnxg+Tq/YdbdbqdSAr2o3+STZme+M9/fzu7ObiP+Sy8A8+we7Hd4UMtwMTBLHIMelA+O
+        YrOICC63Gwvso3gimWQumGRk0QmKOH/xMw9f+G/Y6qaLSH+xzji9mTD0fEXUiSYsPGr4MwlG5D51BIyX
+        4HN6ES1iVbEOuuYBA6rbR3hAfEE3ksutUuIL3nNPZIIBRQ3ugDkkFIlYVaxxSGfiKAXQr6yfUDxbs94i
+        MtGIO6+GpD4NdhGrijXSTRJgnkkBmVX92JI5VURhvUvqFUyKWFUSEyeUAp6ZvNyjZWVyi9SrIGJVyUxE
+        KAUQNR0eVLaOcOhSbM/plPoURKwqmYkItQAtO6+YOLI+BRGrSmYitAU8fjOK3VdNUmKvd6HT/oOP+XsL
+        kPXLCFsBBS9dWMQ2GzpWoOOkkj7syzNj+almLD1mxLKk11ib2gqTY0I6JyFiVclMhLaAFts3pN63qbtg
+        mRXbst/x/o3pbUgp68XFB1YcvGXBErYXrGKP4ouuMem8IlaVzERoC9D35dY6eF/2Qxt++iZR2ujihZAs
+        9nFsON+GaLYSvW5fwFgRq0pvUAhWAHtzYs25VsTdMPNAUs6jT9yryPDBw49vPnf6jSVErCq9QSFYAY3s
+        LUntdNaK9AWQ1rNVOFzY7TeWELGq9AaFYAXQzkftdaYvIopdkpp+3lbRNCRagF2XO7D3mtlvLCFiVekN
+        CtOtQIlmBQaGv2PHpQ7efui2hbfRChyZzQrQ5kMTyljM7vTYPBMPUsTuRdytH8TJex/R0D01Nr8utHtA
+        +jq2fvbx16z2A0RhD1taCrhQacUEJWtkGhjHurRWxKS1oY/NoZtX+jq260zTQk9CYnEvL4IeuTOlPbyY
+        A/ldfB9YndKCeot0H3CJWFWssVhnCpmKpmH+LlhxuhlRx43YlNGOsxU2mIPshPTxK2JVOccQwzp9enM4
+        YF/GsSLWX6wjQzZgTvGiit0iwf8bMFMmIzwr4UW1y4X5Ii646G8U+ztVxgbN+MaU4KRrTsse9Mz/YUVE
+        /ALv65uFLXTKdQAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="pictureBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictureBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="pictureBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 33</value>
+  </data>
+  <data name="pictureBox1.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Name" xml:space="preserve">
+    <value>pictureBox1</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.Parent" xml:space="preserve">
+    <value>pnlPendingApplications</value>
+  </data>
+  <data name="&gt;&gt;pictureBox1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblPendingTitle.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblPendingTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 12pt, style=Bold</value>
+  </data>
+  <data name="lblPendingTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>44, 9</value>
+  </data>
+  <data name="lblPendingTitle.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblPendingTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>174, 21</value>
+  </data>
+  <data name="lblPendingTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblPendingTitle.Text" xml:space="preserve">
+    <value>Pending Applications</value>
+  </data>
+  <data name="&gt;&gt;lblPendingTitle.Name" xml:space="preserve">
+    <value>lblPendingTitle</value>
+  </data>
+  <data name="&gt;&gt;lblPendingTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblPendingTitle.Parent" xml:space="preserve">
+    <value>pnlPendingApplications</value>
+  </data>
+  <data name="&gt;&gt;lblPendingTitle.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="pnlPendingApplications.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlPendingApplications.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 8</value>
+  </data>
+  <data name="pnlPendingApplications.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>8, 8, 8, 8</value>
+  </data>
+  <data name="pnlPendingApplications.Size" type="System.Drawing.Size, System.Drawing">
+    <value>274, 124</value>
+  </data>
+  <data name="pnlPendingApplications.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;pnlPendingApplications.Name" xml:space="preserve">
+    <value>pnlPendingApplications</value>
+  </data>
+  <data name="&gt;&gt;pnlPendingApplications.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlPendingApplications.Parent" xml:space="preserve">
+    <value>tlpStatistics</value>
+  </data>
+  <data name="&gt;&gt;pnlPendingApplications.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tlpStatistics.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tlpStatistics.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 130</value>
+  </data>
+  <data name="tlpStatistics.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tlpStatistics.RowCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tlpStatistics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1160, 140</value>
+  </data>
+  <data name="tlpStatistics.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tlpStatistics.Name" xml:space="preserve">
+    <value>tlpStatistics</value>
+  </data>
+  <data name="&gt;&gt;tlpStatistics.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tlpStatistics.Parent" xml:space="preserve">
+    <value>tlpDashboard</value>
+  </data>
+  <data name="&gt;&gt;tlpStatistics.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tlpStatistics.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="pnlDetainedLicenses" Row="0" RowSpan="1" Column="3" ColumnSpan="1" /&gt;&lt;Control Name="pnlTodayTests" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="pnlActiveLicenses" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="pnlPendingApplications" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,25,Percent,25,Percent,25,Percent,25" /&gt;&lt;Rows Styles="Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="tlpBottomSection.ColumnCount" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="pictureBox5.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Stretch</value>
+  </data>
+  <data name="pictureBox5.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAzVJREFUWEft
+        V+tLk1Ectj+g/grtSwVJHyooqC/Rh+iTKEJ9qCCoDIxAjEK7KEV0W1FRpqSooElJ2kyhvC/bvC1MIW9t
+        Xjbd5mWbGjb3dM7Zed9z9vJubmwfgnrgYXvP7/n9nt97zns5b8p/aAFgi8OHTKcPzeTXRYgE6SR8M+fF
+        fm4RGR4Ptjm8aNIUSBaDsz4U0xPkduFgZx7FfMS5zqgXkxmD7jq3DAeZ8iwdscoTj62MejGZMeg2pv3Y
+        zW0F+JqHic0TK2gYWGA8WmRhVI4jUavrs62G1aQkXpXcVoAE3IpgejmI08+HkHqhNSm8WDaCWW9YEw5u
+        K0AGg4qg2jTPEu822CKeWSRqdTfrJlit2q8uuYEgtxWQgrhdP8mSZrxBdSzrwSCjrNOjVkdr0Fq0pqzj
+        tgJysPhdqAF57OO3RUZ5TI96OlqL1pTHuK2AHLxSPcqS7jXakkJai9aUPbitgBw89Sx5F6BCWlP24LYC
+        clBvCRIhrRXXEvx1DbxudyItR0znoYKeqONa0lhCDQzY19j9XFg7zljW5og6rmXCDcTDzh8+lJJGHhnt
+        eGtxY8z9O/EGYl2CXZc61P8K0y93st+EGthsCQpqxrHvigk7cztQ3joFY98c8ipGYBlbwknDIFJJk2df
+        flfrUXJbATkY7xKUdziZvnnQRbYVgOFDKJ9iPbCB43cs2JPXFZbDbQXkYLwNnHs1jIPXTMyQQm6AoqZ7
+        lh33Sq9mbisgF4y3gWyDFZn3+7kd8MQYyn/RYsPKrwA6hz3suGVoSc3htgJkUH0dx9vAeTIDB66KGbC7
+        VnHmqZXVOFzYozcDuq9jh1KwpDWU8L5/QTWJxgp+DTT1z/MWQrD+XEbdFweOFZuxN98k57i4rQDZsVYp
+        gsmFAI7cMrOisXJ7Tht25Laj9JMdU+41+NcCMI8uIvvhANJIvLJrTjRANr/cVmBmBekkuKGIJjwBdrsp
+        t95mzK8aZc8HbWP02VDyeUaYh5jBbcNBAjc0wrjZPepnjRuMU6jv9WDcHQjX+NFAVifytwHZsRYRoToT
+        SaUfjS4XtnK7yKCfUSShllC9MBPgPP/gyYh45v8wUlL+AM7IQ8bSGtQ2AAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="pictureBox5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictureBox5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 8</value>
+  </data>
+  <data name="pictureBox5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 33</value>
+  </data>
+  <data name="pictureBox5.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;pictureBox5.Name" xml:space="preserve">
+    <value>pictureBox5</value>
+  </data>
+  <data name="&gt;&gt;pictureBox5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictureBox5.Parent" xml:space="preserve">
+    <value>pnlTodayAppointments</value>
+  </data>
+  <data name="&gt;&gt;pictureBox5.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="dgvTodayAppointments.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="dgvTodayAppointments.ColumnHeadersHeight" type="System.Int32, mscorlib">
+    <value>40</value>
+  </data>
+  <data name="dgvTodayAppointments.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 55</value>
+  </data>
+  <data name="dgvTodayAppointments.Size" type="System.Drawing.Size, System.Drawing">
+    <value>760, 260</value>
+  </data>
+  <data name="dgvTodayAppointments.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;dgvTodayAppointments.Name" xml:space="preserve">
+    <value>dgvTodayAppointments</value>
+  </data>
+  <data name="&gt;&gt;dgvTodayAppointments.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dgvTodayAppointments.Parent" xml:space="preserve">
+    <value>pnlTodayAppointments</value>
+  </data>
+  <data name="&gt;&gt;dgvTodayAppointments.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblAppointmentsTitle.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblAppointmentsTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 14.25pt, style=Bold</value>
+  </data>
+  <data name="lblAppointmentsTitle.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblAppointmentsTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>43, 12</value>
+  </data>
+  <data name="lblAppointmentsTitle.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblAppointmentsTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>249, 25</value>
+  </data>
+  <data name="lblAppointmentsTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblAppointmentsTitle.Text" xml:space="preserve">
+    <value>Today's Test Appointments</value>
+  </data>
+  <data name="&gt;&gt;lblAppointmentsTitle.Name" xml:space="preserve">
+    <value>lblAppointmentsTitle</value>
+  </data>
+  <data name="&gt;&gt;lblAppointmentsTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblAppointmentsTitle.Parent" xml:space="preserve">
+    <value>pnlTodayAppointments</value>
+  </data>
+  <data name="&gt;&gt;lblAppointmentsTitle.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="pnlTodayAppointments.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlTodayAppointments.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 8</value>
+  </data>
+  <data name="pnlTodayAppointments.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>8, 8, 8, 8</value>
+  </data>
+  <data name="pnlTodayAppointments.Size" type="System.Drawing.Size, System.Drawing">
+    <value>796, 344</value>
+  </data>
+  <data name="pnlTodayAppointments.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;pnlTodayAppointments.Name" xml:space="preserve">
+    <value>pnlTodayAppointments</value>
+  </data>
+  <data name="&gt;&gt;pnlTodayAppointments.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlTodayAppointments.Parent" xml:space="preserve">
+    <value>tlpBottomSection</value>
+  </data>
+  <data name="&gt;&gt;pnlTodayAppointments.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="pictureBox6.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>Stretch</value>
+  </data>
+  <data name="pictureBox6.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAzdJREFUWEft
+        l91Lk1Ecx+0PqD+gN4OKiIgUvOmq6CYqKCIroi6S7qKbIOgmqCjpoqtIKLU3a5FYWqxyKb2ABUojyZdt
+        ufmS23Tq45zbdM6XZ79+5/Sbxz37Pc/UuqsvfGA85/uc73nbOefJ+y+jAGAFxF3HIO5ugJhbQ+APGYKY
+        5zmykyLMBWHfKjQ6mEr+Bimsu1R0kOIyJXu+jPDUeAeEGksg0V3NlmcRdV2hyEzhkB9nX8hBuPkSdN1Z
+        DREndo4pZ9BhwlVAsUo059wLpkwHG8BbsUE2YLLLxnpY4h4bxSphwWiW0YpoJ/hf7JXhgtmhJt7HE6JY
+        JXyIi4Q1s4ghF8E9VQXgu7cZn7myPBakKFaJMZkyE/oIvsqNEHx7CgL2o9Bfs4f1WUGxSpyJxwWBVwfB
+        d38LzMYHcAR2QKihhPFZQ7FKnIljvPWmHPpxtw30ZFT+DrdcZr1WUKwSZzIiFpqY74C9GLeNFEyNtM0v
+        Qo6hxjNsPQKKVeJMRoL2I+DFuZ+J/sQGYBPmkhD+dgu0ltIM/C8PyQZEnDfYegQUq8SZFhJrvy0rHWur
+        kOFm0qdj0PO4EBfmbvyrdrB1CShWiTOlmdOaofvhNuivPSC6TVG8hj/jznh3LUz11bF1paFYJc6UZtBx
+        UvY+9Ok8hFvLMkgMNlM0QFJrx/B1MPzhLFvPQihWiTOl6bUVzS8sIwOO07/TUzqO0H7oebQd9LCTrWch
+        FKvEmawQp6C3Il8uOqFIZ5VsUKyjjPUboVglzmTFtL9eBka9tTCXGIHuB1vBX7cPyxa3JVOsEmeyQvRU
+        NCAZ9kDo/Tnwlq/H0/Ed6+WgWCXOZIXWdAFD82Ey0IQNWQOjXy6yPjMoVokzWRG0H4a+6l2S3idFkIp8
+        Z31mUKwSPlzScSw2G/GXE9Mw0VXFeixgj+OQwWSKPuqUwy7CB+tPsJ4caBSrhFfxp4yRJeF7JsN9lZuW
+        ehMiPA6KVYKIqxAL9WxzNuKQEQ0Y+3qNLc9J3FVMsZnCK/NV9gUD4gouruJiM+LKc/Aa9y2Lb4Oo+zqa
+        FjUSy+ANaD9WUpy5xGcUUoMvLHphWjAiP3hw2E17/g8rL+8Xt7rck6/ZLo8AAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="pictureBox6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="pictureBox6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 4</value>
+  </data>
+  <data name="pictureBox6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 33</value>
+  </data>
+  <data name="pictureBox6.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;pictureBox6.Name" xml:space="preserve">
+    <value>pictureBox6</value>
+  </data>
+  <data name="&gt;&gt;pictureBox6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pictureBox6.Parent" xml:space="preserve">
+    <value>pnlQuickActions</value>
+  </data>
+  <data name="&gt;&gt;pictureBox6.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btnSearchLicense.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="btnSearchLicense.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnSearchLicense.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 11.25pt, style=Bold</value>
+  </data>
+  <data name="btnSearchLicense.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAA5lJREFUWEft
+        V1tLVFEUtj/QY1mJSSQUkdRDDz70UNlDEPSQJITvQaiZWJpI2kU0qTAkCooMzDBvSWmpIXY1He/3a+rM
+        mOPMOHkZzdFRV2vt2eecPcejjTq++cHH7Flrr/2ts9Y++5zjswU1AGCbyQ4XRu1QjrQiYYMcNdsh3zwF
+        wVxiZdhssN00BR81FvEGl5ApdIFczh3syjdPXCZWN5lLugOdYerJm8RFyzQc4bIK0EE9lycO2BbgZpER
+        zmd2w7mMrnXx4pNeyPo+JopLfMVlFaBxTJqArYCzD7tgT5QOztzv1FzcEwbfboWdEbXwoMykTsDEZRWg
+        kTYJm1A7OMsCH30yqwPXRLqQ0MweCEpsUvuWuKwCcUJJyyRLgH4lW+vwHEuISGNx/mpMfjvM1lLbuawC
+        0alOoLRtCgKu1jEbkcZkazQ6ILVkRJPPv7p675UETqW1s342G+egyeBg45B7HfDsixV8I11JqXksqYXF
+        eiWBfTH1EJdnkP3X3+iZTfq/Gr1aAbp6qQJk06oA/Se7tJbX9sBeYQ/Q+APfA4mFRojPN8ik/2SX1vJK
+        ApmVZvC7opMToDHZxJgesxNefBtjG5Du+4pOfAqhfcMJ9FoXYDceSGGPe6Gqe5qRxmQj3wje68nFw+Av
+        VEjiSWxTVPYQG4vrE7msAtEpJqAbmoX91xrg56+/sp/GZCNf9GuXwOWX/dBqnIH5hSUYszsht8YKQQmN
+        EBDjSkxcn8hlFYjO8g47Cyqon3ALUpOqQZsuqUiPD9PlMNgcEIiJUrXUsVxWgegc/LPIAk9gCQvqxqG4
+        aVKT4U/7WOmnHQtccjnS3hthV6SrXaIGl1UgOomFDRMQGFvPKrEaT6e3cyltVLSNs3lULXF9LqtAdErU
+        YyXKsB1aV08MSe/Y3AT+Rzod6Uywr9KCVGwB3bZ9HrRAfhx7yqqeGbYJEwu0N2GzfgbbWMdeTFSxmo9j
+        k2qSR4zN1bMSX8rqR8FpmHMugXlyHnKqLeAfXYcbsJa1SxVn5bIK0JijmuQR6SC68+63fL+LPJ7SDgfi
+        GuDQjUaoGZiVY+jll8sqsMzAUXQuSpPWyl6LE7KrbZBWOgIZFaNQ2enadDX4dnU4oQkOxjfCj37XYYZv
+        xqFc1h3ouCUu6i2KSVR02D/j9lj52wAD7iLXXYmVSC3Aw83hG6EzcLmVQZ9R+DmVh4Hr2pgqWqjnVHa/
+        qJrAHRG6cC6zBYSPzz9oX24VSpYE6QAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnSearchLicense.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnSearchLicense.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 169</value>
+  </data>
+  <data name="btnSearchLicense.Size" type="System.Drawing.Size, System.Drawing">
+    <value>270, 44</value>
+  </data>
+  <data name="btnSearchLicense.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="btnSearchLicense.Text" xml:space="preserve">
+    <value>Search for License</value>
+  </data>
+  <data name="&gt;&gt;btnSearchLicense.Name" xml:space="preserve">
+    <value>btnSearchLicense</value>
+  </data>
+  <data name="&gt;&gt;btnSearchLicense.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnSearchLicense.Parent" xml:space="preserve">
+    <value>pnlQuickActions</value>
+  </data>
+  <data name="&gt;&gt;btnSearchLicense.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btnNewLicenseApplication.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="btnNewLicenseApplication.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnNewLicenseApplication.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 11.25pt, style=Bold</value>
+  </data>
+  <data name="btnNewLicenseApplication.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAA1FJREFUWEft
+        V0tPU0EUxh+gWwlG0Y1rTTRGQkyM7gwbYzRx4SNuXCgKRKMuFKWIaAImmphQFmgEDV34QrRB4yMSw0Ol
+        VKgRQiotvYW2RtqiIKHHc8aZztzbe+EWYaN+yZfczj1zvm/mzOM25z+MAIAlWgJ2hxPgRkaQ8IcMjybA
+        NRqHzVzCGrEYLNPi8MQkyUIwhaykAXI5PdjIDeIfQz/h/odxW7zVHlPFLImzW84l9cCXe4zBO699guVH
+        OmzzgHNQ19+CM2NJWMdlJfAF1VwXvKPGB1sqvaYjVnm5VUubKLv7RZfDgre5rAQ2Rg1BzADR2G5ki2ec
+        iR90DqRNYDlNYzk1LiuBjbRIdIHZGqjGmdhfN8ieqRyzmEhxWQmTINsGnvmSTNTIm+1R03gil5UwC7Jr
+        gPi0L5GxJmhmzGKJXFbCLCgbAypFSRbUQGtvHKpaQrPyfWCSxS6KgcMNQ+namjH3aAc4X0VY7KIYyIZ/
+        p4G5SkD7v6TJDxvPeWBFcSfkYUm2VnlxK8ZMzwMuK2EMIKoGaBGecg2bch+KrynrgpXHO+FQ/QBUPgzA
+        GZcfCio8zNzeG58h+C2ly81lJdSXgqoBK3oCUyjeDdsueSH4dQovVYDSpiF4OxCHVArA+TLMFmjpHf0d
+        wWUl1JeCdgwca/TD6tIuGOHiBBr1lcdB/gvgdLOflYWud9GPy0qoSQXtGNhwtodNuwqjAV/oO2urfy2P
+        Zi4roSYVtGOA6u54MAwljeaLdFVJFxqYYM8X8bAS/bishJpU0I6BtSfesSmmmlegESKJFdX0seer7hHQ
+        sDzUVusOp/txWQlsnNd1XFTrg0JHL1twAiSmluBed5S1tXrjop/pdayJpIJ2DDS8+Z287oXG5QDycdqv
+        t4XYcywxDZvKe6DgQi+MjKe3YoTLSmBjo0gqSKOj5HMxl4hbrQy3nzcwAYPhHxCMTYKrM4oHUw/k4y5p
+        68fvc56XPn65rMTYBKzHlzMiiDjb4aPyZPMwbK/ug7ziTHOFDi8870+mcxLxy3gXl9UDX5xXA7OlLzzN
+        SkJXcw0uODd+pGQcw0l4hJWx/m+AQQ6kbiYWjEloiURgKZezBv2Nwr9TzdgpY2HOg2NUc5p2y5H/w8jJ
+        +QXXwWjBi4uSbAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="btnNewLicenseApplication.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnNewLicenseApplication.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 112</value>
+  </data>
+  <data name="btnNewLicenseApplication.Size" type="System.Drawing.Size, System.Drawing">
+    <value>270, 44</value>
+  </data>
+  <data name="btnNewLicenseApplication.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="btnNewLicenseApplication.Text" xml:space="preserve">
+    <value>New License Application</value>
+  </data>
+  <data name="&gt;&gt;btnNewLicenseApplication.Name" xml:space="preserve">
+    <value>btnNewLicenseApplication</value>
+  </data>
+  <data name="&gt;&gt;btnNewLicenseApplication.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnNewLicenseApplication.Parent" xml:space="preserve">
+    <value>pnlQuickActions</value>
+  </data>
+  <data name="&gt;&gt;btnNewLicenseApplication.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btnAddPerson.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Left, Right</value>
+  </data>
+  <data name="btnAddPerson.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="btnAddPerson.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 11.25pt, style=Bold</value>
+  </data>
+  <data name="btnAddPerson.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABBlJREFUWEft
+        V91PXEUUxz9A30WbqE3fbMQnU6OmjUn7oDbRGI3xyaJCtIGiaakfbSECwUTxiVh12d02gMCCQKEgUMqW
+        Ai0rbIsCy6fQ7iIfd+8ujfLVhP055zDL3Y/ZXQrhSX+bX+7OnDPzmzlzZubepP8RCQAPedb0t9yrvhbP
+        qk8TxM7onxO0eZb1A1IiNnToj8ys+prVHe2YAc+KL58mKOXCQYZdFN+ke0XPkZLhmFnT31Y12AWue+77
+        U6SsAbnmqgbMft+fsIx2oMD5Cz+prPLbCmdWfKVS1oBnzedVOd9Z8eKTLgv2mFPxqOm9TVL5024L21Xt
+        4lEs9ayUNSAMgUhHYpYQJ8HM6yZ0zg1jcmmen1SmehqEql0CBqSsAYUTHPoEHi9JxYkuc5SNmHndzPbf
+        9EmlPR6lrAGVU/FgM8/ypjYWZSNSPdmLh35V2uNRyhpQOeX12VhgenkhykakerKTn8oej1LWgMqJZhYv
+        Aje00d2NAK0trTElnMqe0Wni3dC3WzlAPNlj5Vkev/Yj7HNDmPhnHvbZQXwsylR/queCsl0iSlkDKici
+        7XMS2WN+nwWDpHK2qFedA07fFJrcTh7o1JI6f6SsAZVTKG/5p3Bh1I5CZy0/b/uno3zMI+14sfqzsIE+
+        af0Q6R3fY2DxTpivlDUQatwO6UwgwcO1OSgZaoPdM4jGqT6c7r6Ip6xpeLo0A13zI5v+UtZAaGcq0pbr
+        9Y5zWHu9E2Fb8ydXG4vn9lZgPRAQFytwoCoblWNd/H/M/xdSyrPwvC1btNO4jZQ1EOwslK57HhT0V+Pl
+        urPKHKB6sj9XdQqv1H+FgPgFQT7f9NfJEtB2d4DrLCNXtzYAmtW+ix8h2XQMR+pz8fnNMpwfboFV3IQ/
+        uFq5TPXJckDW4atSagORA6DI7C/L5HxIOIDvfm/gDl5ryEfnvGuzXkWT6wr7drj/4LDT/0jSJGzj3Xj1
+        Uh7eaPqa20lZA8EO6QKi8L7TUrSlq5ZygkQui4SrEGue57Axqe5oQwH/L+yrwd2/NRyq+RLvthZxOylr
+        QFTydXzGUS4G8IHYZuHbJhbpYHrCkoYzN8plsDdAAwhdAm35Hp+q5xwV1C76OqaXBOqQZv5SzRdRQvGY
+        2l6MvdZ0TC7OSjngsZJj+NZZL0tAVqdZTCwVPQuj1EaTsgbEa1IZdVY0UM8MFUhEOvn2l2biGZFkzdP9
+        vBuqx3s47HNLizhxbePlhaJL/vTyK2UNzNz3PyuM66EdPwgpWV+QpyAdOpTAB8WaU9hp5mcdP8O9qm/4
+        r+lvStlwiFfm3MiOH4TTy14+ptPt5/F6UyEvZ46jkg+uEL8GsSKxvw3Ex0OecNp2JBKwUYP2sJSLDfqM
+        Ep9TVcHE3CEX+INHhD3mzP/DSEr6F82BcQppRbhjAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="btnAddPerson.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="btnAddPerson.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 55</value>
+  </data>
+  <data name="btnAddPerson.Size" type="System.Drawing.Size, System.Drawing">
+    <value>270, 44</value>
+  </data>
+  <data name="btnAddPerson.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="btnAddPerson.Text" xml:space="preserve">
+    <value>Add Person</value>
+  </data>
+  <data name="&gt;&gt;btnAddPerson.Name" xml:space="preserve">
+    <value>btnAddPerson</value>
+  </data>
+  <data name="&gt;&gt;btnAddPerson.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnAddPerson.Parent" xml:space="preserve">
+    <value>pnlQuickActions</value>
+  </data>
+  <data name="&gt;&gt;btnAddPerson.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="lblQuickActionsTitle.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblQuickActionsTitle.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 14.25pt, style=Bold</value>
+  </data>
+  <data name="lblQuickActionsTitle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>61, 8</value>
+  </data>
+  <data name="lblQuickActionsTitle.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="lblQuickActionsTitle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 25</value>
+  </data>
+  <data name="lblQuickActionsTitle.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="lblQuickActionsTitle.Text" xml:space="preserve">
+    <value>Quick Actions</value>
+  </data>
+  <data name="&gt;&gt;lblQuickActionsTitle.Name" xml:space="preserve">
+    <value>lblQuickActionsTitle</value>
+  </data>
+  <data name="&gt;&gt;lblQuickActionsTitle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblQuickActionsTitle.Parent" xml:space="preserve">
+    <value>pnlQuickActions</value>
+  </data>
+  <data name="&gt;&gt;lblQuickActionsTitle.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="pnlQuickActions.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="pnlQuickActions.Location" type="System.Drawing.Point, System.Drawing">
+    <value>820, 8</value>
+  </data>
+  <data name="pnlQuickActions.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>8, 8, 8, 8</value>
+  </data>
+  <data name="pnlQuickActions.Size" type="System.Drawing.Size, System.Drawing">
+    <value>332, 344</value>
+  </data>
+  <data name="pnlQuickActions.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;pnlQuickActions.Name" xml:space="preserve">
+    <value>pnlQuickActions</value>
+  </data>
+  <data name="&gt;&gt;pnlQuickActions.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pnlQuickActions.Parent" xml:space="preserve">
+    <value>tlpBottomSection</value>
+  </data>
+  <data name="&gt;&gt;pnlQuickActions.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tlpBottomSection.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tlpBottomSection.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 270</value>
+  </data>
+  <data name="tlpBottomSection.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 0</value>
+  </data>
+  <data name="tlpBottomSection.RowCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tlpBottomSection.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1160, 360</value>
+  </data>
+  <data name="tlpBottomSection.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;tlpBottomSection.Name" xml:space="preserve">
+    <value>tlpBottomSection</value>
+  </data>
+  <data name="&gt;&gt;tlpBottomSection.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tlpBottomSection.Parent" xml:space="preserve">
+    <value>tlpDashboard</value>
+  </data>
+  <data name="&gt;&gt;tlpBottomSection.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tlpBottomSection.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="pnlTodayAppointments" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="pnlQuickActions" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,70,Percent,30" /&gt;&lt;Rows Styles="Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <data name="tlpDashboard.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tlpDashboard.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tlpDashboard.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>20, 20, 20, 20</value>
+  </data>
+  <data name="tlpDashboard.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>No</value>
+  </data>
+  <data name="tlpDashboard.RowCount" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tlpDashboard.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1200, 650</value>
+  </data>
+  <data name="tlpDashboard.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tlpDashboard.Name" xml:space="preserve">
+    <value>tlpDashboard</value>
+  </data>
+  <data name="&gt;&gt;tlpDashboard.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tlpDashboard.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tlpDashboard.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tlpDashboard.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="pnlHeader" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tlpStatistics" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="tlpBottomSection" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,100" /&gt;&lt;Rows Styles="Absolute,110,Absolute,140,Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>7, 17</value>
+  </data>
+  <data name="$this.AutoScroll" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Segoe UI, 9.75pt</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1200, 650</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>ctrlDashboard</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>

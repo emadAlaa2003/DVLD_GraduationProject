@@ -111,6 +111,27 @@ namespace DVLD_DataAccess
 
         }
 
+
+        public static int GetPendingApplicationsCount()
+        {
+            using (SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString))
+            {
+                string query =
+                    "SELECT COUNT(*) FROM dbo.Applications " +
+                    "WHERE ApplicationStatus = 1";
+
+                using (SqlCommand command =
+                    new SqlCommand(query, connection))
+                {
+                    connection.Open();
+
+                    return Convert.ToInt32(command.ExecuteScalar());
+                }
+            }
+        }
+
+
         public static int AddNewApplication(int ApplicantPersonID, DateTime ApplicationDate, int ApplicationTypeID,
              byte ApplicationStatus, DateTime LastStatusDate,
              float PaidFees, int CreatedByUserID)

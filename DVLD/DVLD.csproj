@@ -189,6 +189,12 @@
     <Compile Include="Applications\Rlease Detained License\frmReleaseDetainedLicenseApplication.Designer.cs">
       <DependentUpon>frmReleaseDetainedLicenseApplication.cs</DependentUpon>
     </Compile>
+    <Compile Include="ctrlDashboard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctrlDashboard.Designer.cs">
+      <DependentUpon>ctrlDashboard.cs</DependentUpon>
+    </Compile>
     <Compile Include="Documents\controls\ctrlDecoumentDetiels.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -214,6 +220,12 @@
       <DependentUpon>frmShowDecoumentInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Documents\ProgressableStreamContent.cs" />
+    <Compile Include="frmSearchLicense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSearchLicense.Designer.cs">
+      <DependentUpon>frmSearchLicense.cs</DependentUpon>
+    </Compile>
     <Compile Include="Licenses\Detain License\frmDetainLicenseApplication.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -555,6 +567,12 @@
     <EmbeddedResource Include="Applications\Rlease Detained License\frmReleaseDetainedLicenseApplication.resx">
       <DependentUpon>frmReleaseDetainedLicenseApplication.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ctrlDashboard.ar-PS.resx">
+      <DependentUpon>ctrlDashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctrlDashboard.resx">
+      <DependentUpon>ctrlDashboard.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Documents\controls\ctrlDecoumentDetiels.ar-PS.resx">
       <DependentUpon>ctrlDecoumentDetiels.cs</DependentUpon>
     </EmbeddedResource>
@@ -584,6 +602,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.ar-PS.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSearchLicense.ar-PS.resx">
+      <DependentUpon>frmSearchLicense.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSearchLicense.resx">
+      <DependentUpon>frmSearchLicense.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Licenses\Controls\ctrlDriverLicenses.ar-PS.resx">
       <DependentUpon>ctrlDriverLicenses.cs</DependentUpon>

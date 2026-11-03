@@ -489,7 +489,6 @@
             this.Controls.Add(this.lblLoggedInUser);
             this.Controls.Add(this.msMainMenue);
             this.DoubleBuffered = true;
-            this.IsMdiContainer = true;
             this.MainMenuStrip = this.msMainMenue;
             this.Name = "frmMain";
             this.Load += new System.EventHandler(this.frmMain_Load);

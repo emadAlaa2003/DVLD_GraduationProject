@@ -86,6 +86,18 @@ namespace DVLD_Buisness
             Mode = enMode.Update;
         }
 
+        public static DataTable GetAllApplications()
+        {
+            return clsApplicationData.GetAllApplications();
+        }
+
+
+        public static int GetPendingApplicationsCount()
+        {
+            return clsApplicationData.GetPendingApplicationsCount();
+        }
+
+
         private bool _AddNewApplication()
         {
             //call DataAccess Layer 

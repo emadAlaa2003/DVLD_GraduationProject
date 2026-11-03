@@ -515,5 +515,78 @@ namespace DVLD_DataAccess
 
             return dt;
         }
+
+
+        public static DataTable GetTodayDashboardAppointments(DateTime day)
+        {
+            DataTable dt = new DataTable();
+
+            string query = @"
+        SELECT
+            TA.TestAppointmentID,
+
+            CONCAT(
+                P.FirstName, ' ',
+                P.SecondName, ' ',
+                P.ThirdName, ' ',
+                P.LastName
+            ) AS Candidate,
+
+            TT.TestTypeTitle AS TestType,
+
+            TA.AppointmentDate AS AppointmentTime,
+
+            CASE
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM dbo.Tests AS T
+                    WHERE T.TestAppointmentID = TA.TestAppointmentID
+                )
+                THEN 'Completed'
+                ELSE 'Scheduled'
+            END AS Status
+
+        FROM dbo.TestAppointments AS TA
+
+        INNER JOIN dbo.LocalDrivingLicenseApplications AS LDLA
+            ON TA.LocalDrivingLicenseApplicationID =
+               LDLA.LocalDrivingLicenseApplicationID
+
+        INNER JOIN dbo.Applications AS A
+            ON LDLA.ApplicationID = A.ApplicationID
+
+        INNER JOIN dbo.People AS P
+            ON A.ApplicantPersonID = P.PersonID
+
+        INNER JOIN dbo.TestTypes AS TT
+            ON TA.TestTypeID = TT.TestTypeID
+
+        WHERE TA.AppointmentDate >= @StartDate
+          AND TA.AppointmentDate < @EndDate
+
+        ORDER BY TA.AppointmentDate ASC;";
+
+            using (SqlConnection connection =
+                new SqlConnection(clsDataAccessSettings.ConnectionString))
+            using (SqlCommand command =
+                new SqlCommand(query, connection))
+            {
+                command.Parameters.Add(
+                    "@StartDate", SqlDbType.DateTime2).Value = day.Date;
+
+                command.Parameters.Add(
+                    "@EndDate", SqlDbType.DateTime2).Value =
+                    day.Date.AddDays(1);
+
+                using (SqlDataAdapter adapter =
+                    new SqlDataAdapter(command))
+                {
+                    adapter.Fill(dt);
+                }
+            }
+
+            return dt;
+        }
+
     }
 }

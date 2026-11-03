@@ -59,6 +59,14 @@ namespace DVLD_Buisness
             Mode = enMode.Update;
         }
 
+
+        public static DataTable GetTodayDashboardAppointments(DateTime day)
+        {
+            return clsTestAppointmentData
+                .GetTodayDashboardAppointments(day);
+        }
+
+
         private bool _AddNewTestAppointment()
         {
             //call DataAccess Layer 

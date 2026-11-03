@@ -153,10 +153,29 @@ namespace DVLD
             _QuestionGenerationTimer = new Timer();
             _QuestionGenerationTimer.Interval = 5000;
             _QuestionGenerationTimer.Tick += _QuestionGenerationTimer_Tick;
+
+            this.Activated += frmMain_Activated;
         }
 
 
-      
+        private void frmMain_Activated(object sender, EventArgs e)
+        {
+            foreach (Control control in this.Controls)
+            {
+                if (control is ctrlDashboard dashboard)
+                {
+                    if (!dashboard.IsDisposed &&
+                        dashboard.IsHandleCreated)
+                    {
+                        dashboard.RefreshDashboardData();
+                    }
+
+                    break;
+                }
+            }
+        }
+
+
 
         private void ApplyMenuDirectionRecursive(
             ToolStripItemCollection items,
@@ -260,14 +279,56 @@ namespace DVLD
             frm.ShowDialog();
         }
 
+
         private void frmMain_Load(object sender, EventArgs e)
         {
             UpdateStatusBar();
             this.BackColor = Color.White;
-            lblLoggedInUser.Text = "LoggedIn User: " + clsGlobal.CurrentUser.UserName;
-            this.Refresh();
 
+            lblLoggedInUser.Text =
+                "LoggedIn User: " + clsGlobal.CurrentUser.UserName;
+
+            // Hide the old welcome screen.
+            pictureBox1.Visible = false;
+
+            // Create and display the Dashboard.
+
+            ctrlDashboard dashboard = new ctrlDashboard();
+
+            // Place the Dashboard below the main menu.
+            int top = msMainMenue.Bottom;
+            int bottom = this.ClientSize.Height;
+
+            // Keep the bottom status bar visible.
+            foreach (Control control in this.Controls)
+            {
+                if (control is StatusStrip && control.Visible)
+                {
+                    bottom = Math.Min(bottom, control.Top);
+                }
+            }
+
+            dashboard.Dock = DockStyle.None;
+            dashboard.Location = new Point(0, top);
+
+            dashboard.Size = new Size(
+                this.ClientSize.Width,
+                Math.Max(1, bottom - top));
+
+            dashboard.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Bottom |
+                AnchorStyles.Left |
+                AnchorStyles.Right;
+
+            this.Controls.Add(dashboard);
+
+            // Keep the Dashboard and main menu visible.
+            dashboard.BringToFront();
+            msMainMenue.BringToFront();
+            lblLoggedInUser.BringToFront();
         }
+
 
         private void currentUserInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
